@@ -1,25 +1,11 @@
 ---
 title: ''
 --- 
-
-
-<div style="text-align: center">
-
-```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
-
-knitr::include_graphics("imagenes/ERAMO2021.png")
-
-```
-
-</p>
-<br>
 <div style="text-align: justify">
 <div class=text-justify>
-
-</div>
-</br>
-</br>
 <div class=text-justify>
+
+<br>
 
 # **1. Introducción**
 

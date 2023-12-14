@@ -449,7 +449,7 @@ $endif$
 
 </head>
 
-<body style="padding:125px 0px 0px;">
+<body style="padding:25px 0px 0px;">
 
 $if(theme)$
 
