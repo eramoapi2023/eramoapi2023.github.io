@@ -1,26 +1,26 @@
 {
-    "id": "4953DE5F",
+    "id": "CC2B4557",
     "path": "D:/ERAMO2023/eramoapi2023.github.io/_site.yml",
     "project_path": "_site.yml",
     "type": "yaml",
-    "hash": "1274843825",
+    "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1702572196297.0,
+    "created": 1702582847020.0,
     "source_on_save": false,
-    "relative_order": 1,
+    "relative_order": 2,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "20,19",
+        "cursorPosition": "20,16",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1702573581,
+    "lastKnownWriteTime": 1702575055,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1702573581998,
+    "last_content_update": 1702575055,
     "read_only": false,
     "read_only_alternatives": []
 }
