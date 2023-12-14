@@ -1,0 +1,110 @@
+---
+title: "Curso de Diseño de Muestras Complejas"
+--- 
+
+<br>
+<br>
+
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+               cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+<div class=text-left>
+
+# **Material didáctico del curso** 
+****
+
+## **Presentaciones Muestras Complejas**
+
+<br>
+
+
+### **Parte 1**
+
+<iframe src="materiales/01_Diseno_de_muestras_complejas.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+
+<br>
+<br>
+
+### **Parte 2 **
+
+<iframe src="materiales/02_Diseno_de_muestras_complejas.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+<br>
+<br>
+
+### **Parte 3**
+
+<iframe src="materiales/03_Diseno_de_muestras_complejas.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+<br>
+<br>
+
+### **Parte 3a**
+
+<iframe src="materiales/03a_Diseno_de_muestras_complejas.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+<br>
+<br>
+
+### **Parte 4**
+
+<iframe src="materiales/04_Diseno_de_muestras_complejas.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+<br>
+<br>
+
+### **Parte 4a**
+
+<iframe src="materiales/04a_Diseno_de_muestras_complejas.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+<br>
+<br>
+
+### **Parte 5**
+
+<iframe src="materiales/05_Diseno_de_muestras_complejas.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+<br>
+<br>
+<br>
+
+### [**Teorema de Chebyshev**](materiales/Teorema_de_Chebyshev.pptx)
+
+<br>
+<br>
+<br>
+<br>
+
+
+## **Libros**
+
+<br>
+
+
+### **Analyzing Complex Survey Data**
+
+<iframe src="materiales/Analyzing_Complex_Survey_Data.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+<br>
+<br>
+
+### **Complex Survey R Guide**
+
+<iframe src="materiales/Complex_Survey_R_Guide.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+</div>
+
+

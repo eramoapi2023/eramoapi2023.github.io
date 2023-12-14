@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1566522048675.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4033031364",
+    "id" : "F05FA735",
+    "lastKnownWriteTime" : 1567063040,
+    "last_content_update" : 1567063040099,
+    "path" : "D:/raul/proyecto/diseno.R",
+    "project_path" : "diseno.R",
+    "properties" : {
+        "cursorPosition" : "197,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

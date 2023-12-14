@@ -1,0 +1,12 @@
+DBI
+RPostgreSQL
+ggplot2
+plotly
+sp
+rgeos
+rgdal
+leaflet
+leaflet.extras
+mapview
+htmltools
+htmlwidgets

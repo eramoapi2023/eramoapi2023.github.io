@@ -1,0 +1,1895 @@
+---
+title: '**Resultados Agropecuario Prueba Piloto 2021**'
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+  pdf_document: default
+--- 
+
+
+```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
+
+knitr::include_graphics("imagenes/ERAMO2021.png")
+
+```
+
+
+<div class=text-justify>
+
+<br>
+<br>
+
+### **Consideración inicial acerca de los resultados obtenidos:**
+El siguiente contenido corresponde al análisis de los datos recopilados en el operativo de la Prueba Piloto ERAMO 2021 para el cuestionario aplicado a las unidades de producción Agrícola y pecuario/ganadero. Es importante mencionar que estos resultados **no son considerados de carácter oficial ni estadísticamente representativos** ya que no provienen de una muestra estadísticamente representativa. 
+<br>
+
+### **Resumen de los cuestionarios captados:**
+Como resultado del procesamiento de la información, se identificaron 448 cuestionarios completos obtenidos en las unidades con actividad tanto agrícola como pecuaria, de los cuales 311 son referidos exclusivamente a unidades de producción agrícola, 120 a unidades de producción pecuaria y los 17 restantes llevan de manera simultánea ambas actividades de producción. 
+<br>
+
+Se obtuvieron datos relacionados a la producción de 421 productos agrícolas, siendo 351 (83%) los que reportaron haber tenido pérdida en al menos uno de sus procesos de producción. En cuanto a las unidades de producción pecuaria, la cantidad de productos con pérdida correspondió a 128 (73.9%) de un total de 173 registros de productos. 
+
+<br>
+
+```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
+
+knitr::include_graphics("imagenes/agropecuario.png")
+
+```
+
+Sobre estos registros es que se consideró nuestro **universo de estudio**, en el que, mediante un procesamiento analítico sobre las variables, se logró generar algunos **indicadores y gráficos** con la finalidad de compartir y difundir los resultados obtenidos de esta **Prueba Piloto 2021.**
+
+<br>
+
+# **1. Resultados de las Unidades de Producción Agrícola y Unidades de Producción Pecuaria**
+
+<br>
+
+## 1.1. Unidades de producción que llevan registro en el manejo o pérdida de los productos
+
+<br>
+
+```{r graf_1.1.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select reeg, sum(frec) as frec
+from
+(select b.descrip as reeg, count(*) as frec
+	from explotacion.agropecuario a
+	join catalogos.si_no b
+	on a.registro_a = b.gid
+	where registro_a In(1,2) and cuest_pecuario = 0
+	group by b.descrip
+union all
+	select b.descrip as reeg, count(*) as frec
+	from explotacion.agropecuario a
+	join catalogos.si_no b
+	on a.registro_p = b.gid
+	where registro_p In(1,2) and cuest_agricola = 0
+	group by b.descrip
+ union all
+	select b.descrip as reeg, count(*) as frec
+	from explotacion.agropecuario a
+	join catalogos.si_no b
+	on a.registro_p = b.gid
+	where registro_p In(1,2) and cuest_agricola = 1 and cuest_pecuario = 1
+	group by b.descrip
+) as query
+group by reeg");
+	
+library(plotly)
+
+data <- datos[,c('reeg', 'frec')]
+colors <- c('rgb(214, 234, 248)', 'rgb(33, 97, 140)')
+fig <- plot_ly(data, labels = ~reeg, values = ~frec, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent', 
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',reeg , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#1.1.a. Procesos en los que las UP declaran llevar registro del manejo o pérdida de alimentos
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+Del total de las unidades de producción encuestadas, una proporción del 39.1% declaró llevar un registro para el manejo o pérdida en sus productos agrícolas y/o pecuarios. 
+
+Se identificaron los parciales para cada uno de los apartados que contaron con registro para el manejo o pérdida de sus productos: 36% en agrícola y 47% en pecuario.
+
+<br>
+
+```{r graf_1.1.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"Select *
+From public.con_sin_registro11b
+where tipo != 'Ambos'");
+
+library(plotly)
+data <- datos[,c('tipo', 'con_registro', 'sin_registro')]
+
+fig <- plot_ly(data, x = ~tipo, y = ~con_registro, type = 'bar', name = 'Con registro',
+               marker = list(color = 'rgb(33, 97, 140))'))
+fig <- fig %>% add_trace(y = ~sin_registro, name = 'Sin registro',
+                         marker = list(color = 'rgb(214, 234, 248)', showlegend = TRUE))
+
+fig <- fig %>% layout(title=("1.1.b Porcentaje de productores que llevan un registro <br> para manejo o pérdida de sus productos por apartado"),
+xaxis = list(title = "Apartado", categoryorder = "total ascending"),
+yaxis = list(title = "Porcentaje", barmode = 'group'))
+
+#1.1.B. Porcentaje de productores que llevan un registro <br> para manejo o pérdida de sus productos por apartado
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+<br>
+
+## 1.2. Procesos en los que las Unidades de Producción llevan registro para el manejo o pérdida de sus productos.
+
+<br>
+
+```{r graf_1.2.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select *
+From public.proc_ma_pe_agricola12a;")
+	
+
+library(plotly)
+
+data <- datos[,c('proceso', 'frec')]
+fig <- plot_ly(data, x = ~proceso, y = ~frec, 
+  name = 'Frecuencia', type = 'bar', 
+  marker = list(color = 'rgb(174, 214, 241)'))
+
+fig <- fig %>% layout(title=("1.2.a. Procesos en los que las Unidades de Producción Agrícolas llevaron registro <br>para el manejo o pérdida de sus productos"),
+xaxis = list(title = "Proceso", categoryorder = "total descending"),
+yaxis = list(title = "Frecuencia"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+* Se identificó una unidad de producción Agrícola, en la que lleva registro en todos los procesos.
+
+Es importante mencionar que el cuestionario permitía seleccionar uno o más procesos de producción. En las unidades de producción agrícola, se identificó que el 96% de los productores llevaron registro en el proceso de Cosecha, en los procesos de Venta y Almacenamiento reportaron 34 y 29 puntos porcentuales, continuando con los procesos con menor frecuencia Selección/Empaque, Transporte y Otro Proceso con 22, 12 y 3 puntos porcentuales respectivamente. 
+
+<br>
+
+```{r graf_1.2.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.109.1.31",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select *
+From public.proc_ma_pe_pecuario12b");
+
+  
+library(plotly)
+data <- datos[,c('proceso', 'frec')]
+fig <- plot_ly(data, x = ~proceso, y = ~frec, name = 'Frecuencia', type = 'bar',
+marker = list(color = 'rgb(46, 134, 193)'))
+
+fig <- fig %>% layout(title=("1.2.b. Procesos en los que las Unidades de Producción Pecuarias llevan registro <br>en el manejo o pérdida de sus productos"),
+xaxis = list(title = "Proceso", categoryorder = "total descending"),
+yaxis = list(title = "Frecuencia"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+* Sólo en 5 unidades de producción pecuaria declararon llevar registro en todos los procesos. 
+
+En el caso de las unidades de producción pecuaria, los procesos más comunes en los que se realiza registro en el manejo o pérdida de sus productos son: Nacimiento/Ordeña y Desarrollo/Engorda con 36 y 32 puntos porcentuales, los demás procesos como el Sacrificio/Muerte, Almacenamiento, Transporte y Otro proceso correspondieron a valores de 16, 15, 12 y 2 puntos porcentuales respectivamente.
+
+<br>
+<br>
+
+## 1.3. Número de alimentos reportados por tipo de Unidad de Producción
+
+
+
+```{r graf_1.3, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select *
+From public.prod_declarados13");
+
+library(plotly)
+data <- datos[,c('cant', 'up_ag', 'up_pc')]
+fig <- plot_ly(data, x = ~cant, y = ~up_ag, type = 'bar', name = 'UP Agrícola',
+               marker = list(color = 'rgb(46, 134, 193)'))
+fig <- fig %>% add_trace(y = ~up_pc, name = 'UP Pecuaria',
+              marker = list(color = 'rgb(214, 234, 248)'))
+
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Cantidad de productos", categoryorder = "total descending"),
+yaxis = list(title = "Frecuencia", barmode = 'group'))
+
+#dbDisconnect(conn)
+#1.3. Cantidad de productos reportados por las Unidades de Producción
+fig
+
+```
+
+
+La mayoría de las unidades de producción (80% aprox.), registró solamente un producto y en mínimos casos 4 o más productos. 
+
+<br>
+<br>
+
+## 1.4. Productos reportados
+Se logró captar información de 53 diferentes productos cultivados y/o cosechados en las unidades de producción agrícola. Destacan por su frecuencia el Maíz grano, el Melón y el Frijol con 120, 67 y 31 registros (28.5%, 15.9% y 7.3% respectivamente), el resto de los productos se muestran en la siguiente gráfica, acompañados con su frecuencia. 
+
+<br>
+
+```{r graf_1.4.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select producto, sum(frec) frec
+from
+(select prod.descrip producto, count(*) frec
+  from explotacion.productos_agricola pda join catalogos.prod_agricola prod on pda.producto_a = prod.gid
+  where prod.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3')
+  group by prod.descrip
+union
+  select nom_otro_producto_a producto, count(*) frec
+  from explotacion.productos_agricola
+  where producto_a = 901 and nom_otro_producto_a <> 'NE'
+  group by nom_otro_producto_a
+union
+  select nom_otro_producto_a producto, count(*) frec
+  from explotacion.productos_agricola
+  where producto_a = 902 and nom_otro_producto_a <> 'NE'
+  group by nom_otro_producto_a
+union
+  select nom_otro_producto_a producto, count(*) frec
+  from explotacion.productos_agricola
+  where producto_a = 903
+  group by nom_otro_producto_a) as query
+group by producto
+order by frec, producto");
+
+library(plotly)
+data <- datos[,c('producto', 'frec')]
+fig <- plot_ly(data, x = ~producto, y = ~frec, type = 'bar', 
+      marker = list(color = 'rgb(33, 97, 140)'))
+
+fig <- fig %>% layout(title=("1.4.a. Productos cultivados y/o cosechados <br> en Unidades de Producción Agrícola"),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Frecuencia"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+<br>
+
+En el apartado pecuario, se logró captar 18 diferentes productos criados, cultivados, recolectados y/o vendidos, destacando por su frecuencia la Carne de bovino, la Leche de bovino y la Carne de porcino (36.4%, 15% y 12.7% respectivamente), el resto de los productos se muestran en la siguiente gráfica, acompañados con su frecuencia. 
+
+```{r graf_1.4.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+#datos <- dbGetQuery(conn,"Select *
+#From explotacion.prod_pecuarios_14b");
+
+datos <- dbGetQuery(conn,"Select producto, sum(frec) frec
+From
+  (select prod.descrip producto, count(*) frec
+   from explotacion.productos_pecuario pda join catalogos.prod_pecuario prod on pda.producto_p = prod.gid
+   where prod.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3')
+   group by prod.descrip
+union
+   select nom_otro_producto_p producto, count(*) frec
+   from explotacion.productos_pecuario
+   where producto_p = 991 and nom_otro_producto_p <> 'NE'
+   group by nom_otro_producto_p
+union
+   select nom_otro_producto_p producto, count(*) frec
+   from explotacion.productos_pecuario
+   where producto_p = 992 and nom_otro_producto_p <> 'NE'
+   group by nom_otro_producto_p
+union
+   select nom_otro_producto_p producto, count(*) frec
+   from explotacion.productos_pecuario
+   where producto_p = 993 and nom_otro_producto_p <> 'NE'
+   group by nom_otro_producto_p) as query
+group by producto
+order by frec, producto");
+
+library(plotly)
+data <- datos[,c('producto', 'frec')]
+fig <- plot_ly(data, x = ~producto, y = ~frec, type = 'bar', 
+      marker = list(color = 'rgb(46, 134, 193)'))
+
+fig <- fig %>% layout(title=("1.4.b. Productos criados, cultivados, recolectados y/o<br> por las Unidades de Producción Pecuaria"),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Frecuencia"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+<br>
+<br>
+
+## 1.5. Hectáreas cultivadas/sembradas de los productos reportados por las Unidades de Producción Agrícola.
+
+Una de las principales variables captadas en la ERAMO 2021 es la referida al número de hectáreas ocupadas para el cultivo/siembra en cada uno de los producto declarados. La siguiente gráfica muestra el comportamiento de esta variable, donde el *Maíz grano* es el producto agrícola con mayor número de hectáreas ocupadas para el cultivo/siembra y el que tuvo representatividad en la mayoría de las entidades participantes. 
+
+```{r graf_1.5, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select producto, sum(ha_prod) ha_prod
+From
+  (Select b.descrip producto, sum(ha_producto) ha_prod
+   From explotacion.productos_agricola a
+   Join catalogos.prod_agricola b on a.producto_a = b.gid
+   where b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3')
+   Group by b.descrip
+Union 
+	Select nom_otro_producto_a producto, sum(ha_producto) ha_prod
+  	 From explotacion.productos_agricola a
+  	 Join explotacion.agropecuario b on a.id_agrop = b.id_agrop
+  	 Where producto_a = 901 
+  	 Group by nom_otro_producto_a 
+   Union
+  	 Select nom_otro_producto_a producto, sum(ha_producto) ha_prod
+  	 From explotacion.productos_agricola a
+  	 Join explotacion.agropecuario b on a.id_agrop = b.id_agrop
+  	 Where producto_a = 902
+  	 Group by nom_otro_producto_a
+  Union
+  	Select nom_otro_producto_a producto, sum(ha_producto) ha_prod
+  	From explotacion.productos_agricola a
+  	Join explotacion.agropecuario b on a.id_agrop = b.id_agrop 
+  	Where producto_a = 903
+  	Group by nom_otro_producto_a) otros
+Group by producto, ha_prod
+Order by ha_prod asc");
+
+library(plotly)
+data <- datos[,c('producto', 'ha_prod')]
+fig <- plot_ly(data, x = ~producto, y = ~ha_prod, type = 'bar', 
+      marker = list(color = 'rgb(214, 234, 250)'))
+
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Hectáreas"))
+
+#dbDisconnect(conn)
+#1.5. Cantidad de héctareas acumuladas en los productos agrícolas para cultivar/sembrar 
+
+fig
+```
+<br>
+<br>
+
+## 1.6. Destino de consumo de los productos reportados por Unidades de Producción.
+
+Algo relevante sobre cada producto reportado, es conocer el destino de consumo al cual fue dirigido, ya sea para el consumo humano, consumo animal, combinación de estos e inclusive desconocimiento por parte del informante.
+
+<br>
+
+#### 1.6.a. Destino de los productos declarados en las Unidades de Producción Agrícola
+
+```{r graf_1.6.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select destino, suma
+From
+  (Select (Values ('Totalmente consumo humano'::text)) as destino, 
+       (Select sum(consumo_hum_a)
+        From explotacion.productos_agricola
+        Where consumo_hum_a = 100) as suma
+Union
+   Select (Values ('Totalmente consumo animal'::text)) as destino,
+       (Select sum(consumo_anim_a)
+        From explotacion.productos_agricola
+        Where consumo_anim_a = 100) as suma
+Union
+   Select (Values ('Totalmente consumo desconocido'::text)) as destino,
+       (Select sum(consumo_desc_a)
+        From explotacion.productos_agricola
+        where consumo_desc_a = 100) as suma
+Union
+   Select (Values ('Consumo humano, animal y desconocido'::text)) as destino,
+       (Select (sum(consumo_hum_a) + sum(consumo_anim_a)+ sum(consumo_desc_a)) 
+        From explotacion.productos_agricola
+        Where consumo_hum_a <> 100 and consumo_anim_a <> 100 and consumo_desc_a <> 100) as suma) todo");
+
+library(plotly)
+
+data <- datos[,c('destino', 'suma')]
+colors <- c('rgb(174, 214, 241)', 'rgb(214, 234, 248)', 'rgb(46, 134, 193)', 'rgb(33, 97, 140)')
+fig <- plot_ly(data, labels = ~destino, values = ~suma, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',destino , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+La mayor proporción de los productos es destinada para el **consumo humano** con un 66%.
+
+<br>
+
+#### 1.6.b. Destino de los productos declarados en las Unidades de Producción Pecuaria
+
+```{r graf_1.6.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select destino as destino_p, suma as suma_p
+From
+  (Select (Values ('Totalmente consumo humano'::text)) as destino,
+       (Select sum(consumo_hum_p)
+        From explotacion.productos_pecuario
+        Where consumo_hum_p = 100) as suma
+Union
+   Select (Values ('Totalmente consumo animal'::text)) as destino,
+       (Select sum(consumo_anim_p)
+        From explotacion.productos_pecuario
+        Where consumo_anim_p = 100) as suma
+Union
+   Select (Values ('Totalmente consumo desconocido'::text)) as destino,
+       (Select sum(consumo_desc_p)
+        From explotacion.productos_pecuario
+        Where consumo_desc_p = 100) as suma
+Union
+   Select (Values ('Consumo humano, animal y desconocido'::text)) as destino,
+       (Select (sum(consumo_hum_p) + sum(consumo_anim_p) + sum(consumo_desc_p))
+        From explotacion.productos_pecuario
+        Where consumo_hum_p <> 100 and consumo_anim_p <> 100 and consumo_desc_p <> 100) as suma) todo");
+
+library(plotly)
+
+data <- datos[,c('destino_p', 'suma_p')]
+colors <- c('rgb(33, 97, 140)', 'rgb(46, 134, 193)', 'rgb(214, 234, 248)', 'rgb(174, 214, 241)')
+fig <- plot_ly(data, labels = ~destino_p, values = ~suma_p, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',destino_p , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+El destino de consumo en los productos pecuarios fue en su mayoría para el **Consumo Humano** con 89 puntos porcentuales.
+
+* Cabe mencionar que la producción de alimentos obtenida en las unidades pecuarias, se aprovecha casi en su totalidad, así también, se identificó que de los productos reportados ninguno fue en exclusiva para consumo animal.
+
+<br>
+<br>
+
+## 1.7. Mercado objetivo de los productos reportados por las Unidad de Producción.
+
+El mercado objeto de los productos reportados es también una característica que la Prueba Piloto 2021 recabó, las opciones de respuesta fueron Mercado minorista; Mercado mayorista; Dirigido a entidades de gobierno nacionales; y Mercado extranjero.
+
+<br>
+
+#### 1.7.a. Mercado objetivo de los productos reportados en las Unidades de Producción Agrícola
+
+```{r graf_1.7.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select mercado, suma
+From
+  (select (values ('Mercado minorista'::text)) as mercado,
+      (select sum(mercado_min_a)
+       from explotacion.productos_agricola
+       where mercado_min_a = 100) as suma
+union
+  select (values ('Mercado mayorista'::text)) as mercado,
+      (select sum(mercado_may_a)
+       from explotacion.productos_agricola
+       where mercado_may_a = 100) as suma
+union
+  select (values ('Mercado entidades gobierno'::text)) as mercado,
+      (select sum(mercado_ent_a)
+       from explotacion.productos_agricola
+       where mercado_ent_a = 100) as suma
+union
+  select (values ('Mercado extranjero'::text)) as mercado,
+      (select sum(mercado_extr_a)
+       from explotacion.productos_agricola
+       where mercado_extr_a = 100) as suma
+Union	   
+  select (values ('Mercado mixto'::text)) as mercado,
+      (select sum(mercado_min_a) + sum(mercado_may_a) + sum(mercado_ent_a) + sum(mercado_extr_a)
+       from explotacion.productos_agricola
+       where (mercado_min_a <> 100 and mercado_may_a <> 100 and mercado_ent_a <> 100 and mercado_extr_a <> 100)) as suma) merc
+Order by mercado");
+
+library(plotly)
+
+data <- datos[,c('mercado', 'suma')]
+colors <- c('rgb(46, 134, 193)', 'rgb(214, 234, 248)', 'rgb(174, 214, 241)', 'rgb(33, 97, 140)')
+fig <- plot_ly(data, labels = ~mercado, values = ~suma, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',mercado , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+De acuerdo a la gráfica anterior, el mercado minorista predominó con un valor porcentual de 50.6, para el mercado de entidades de gobierno nacionales, reportó sólo el 1.19% del total de la producción, ya que para este rubro se consideran sólo a los productores de maíz y frijol registrados en convenio con DICONSA. 
+
+<br>
+
+#### 1.7.b. Mercado objetivo de los productos reportados por Unidades de Producción Pecuaria
+
+<br>
+
+```{r graf_1.7.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select mercado_p, suma_p
+From
+  (select (values ('Mercado minorista'::text)) as mercado_p,
+      (select sum(mercado_min_p)
+       from explotacion.productos_pecuario
+       where mercado_min_p = 100) as suma_p
+union
+  select (values ('Mercado mayorista'::text)) as mercado_p,
+      (select sum(mercado_may_p)
+       from explotacion.productos_pecuario
+       where mercado_may_p = 100) as suma_p
+union
+  select (values ('Mercado entidades gobierno'::text)) as mercado_p,
+      (select sum(mercado_ent_p)
+       from explotacion.productos_pecuario
+       where mercado_ent_p = 100) as suma_p
+union
+  select (values ('Mercado extranjero'::text)) as mercado_p,
+      (select sum(mercado_extr_p)
+       from explotacion.productos_pecuario
+       where mercado_extr_p = 100) as suma_p
+Union	   
+  select (values ('Mercado mixto'::text)) as mercado_p,
+      (select sum(mercado_min_p) + sum(mercado_may_p) + sum(mercado_ent_p) + sum(mercado_extr_p)
+       from explotacion.productos_pecuario
+       where (mercado_min_p <> 100 and mercado_may_p <> 100 and mercado_ent_p <> 100 and mercado_extr_p <> 100)) as suma_p) merc
+Order by mercado_p");
+
+library(plotly)
+
+data <- datos[,c('mercado_p', 'suma_p')]
+colors <- c('rgb(214, 234, 248)', 'rgb(174, 214, 241)', 'rgb(46, 134, 193)', 'rgb(33, 97, 140)')
+fig <- plot_ly(data, labels = ~mercado_p, values = ~suma_p, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',mercado_p , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+Situación similar ocurre en la producción pecuaria, donde el mercado minorista es el que reportó 72.8 puntos porcentuales sobresaliendo de las demás categorías.
+
+El mercado extranjero y el de entidades de gobierno nacionales obtuvieron ambos un valor de 1.73%, ya que estás aplican principalmente en los estados colindantes con la frontera norte del pais, así como aquellos productores de leche de bovino que se encontraron en convenio con LICONSA, respectivamente.
+
+<br>
+<br>
+
+## 1.8. Cosecha esperada vs. Cosecha final obtenida en las Unidades de Producción Agrícola.
+
+Una forma de identificar la PDA en los productos reportados, es por medio de las variables cosecha esperada-producción esperada (la que se esperaba obtener) y cosecha final-producción obtenida (la que se obtuvo finalmente). En la siguientes gráficas se muestra el comportamiento de estas variables para ambos apartados. 
+
+```{r graf_1.8, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select producto, round(sum(ton_estimada), 2) ton_inicial, round(sum(ton_final), 2) ton_final, round(sum(diferencia), 2) diferencia
+from
+	(select b.descrip producto, sum(ton_estimada_a) ton_estimada, sum(ton_final_a) ton_final, sum(ton_final_a - ton_estimada_a) diferencia
+  	from explotacion.productos_agricola a join catalogos.prod_agricola b on a.producto_a = b.gid
+  	 where a.producto_a not in (901, 902, 903)
+  	group by producto
+union
+  	select nom_otro_producto_a producto, sum(ton_estimada_a) ton_estimada, sum(ton_final_a) ton_final, sum(ton_final_a - ton_estimada_a) diferencia
+  	from explotacion.productos_agricola
+  	where producto_a = 901 and nom_otro_producto_a <> 'NE'
+  	group by producto
+union
+  	select nom_otro_producto_a producto, sum(ton_estimada_a) ton_estimada, sum(ton_final_a) ton_final, sum(ton_final_a - ton_estimada_a) diferencia
+  	from explotacion.productos_agricola
+  	where producto_a = 902 and nom_otro_producto_a <> 'NE'
+  	group by producto
+union
+  	select nom_otro_producto_a producto, sum(ton_estimada_a) ton_estimada, sum(ton_final_a) ton_final, sum(ton_final_a - ton_estimada_a) diferencia
+  	from explotacion.productos_agricola
+  	where producto_a = 903
+  	group by producto) as query
+group by producto
+order by ton_inicial desc, ton_final desc");
+
+library(plotly)
+data <- datos[,c('producto', 'ton_inicial', 'ton_final')]
+fig <- plot_ly(data, x = ~producto, y = ~ton_inicial, type = 'bar', name = 'Toneladas esperadas',
+               marker = list(color = 'rgb(46, 134, 193)'))
+fig <- fig %>% add_trace(y = ~ton_final, name = 'Toneladas cosechadas',
+              marker = list(color = 'rgb(214, 234, 248)'))
+
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Tonelada", barmode = 'group'))
+
+#1.8. Cosecha esperada vs. Cosecha final de los productos agrícolas reportados
+#dbDisconnect(conn)
+
+fig
+
+```
+
+El maíz grano al ser el producto más reportado, fue el que acumuló mayor número de toneladas, tanto esperadas como producidas. Productos considerados que obtuvieron ganancias fueron la **manzana, sandía y cebolla**, ya que la registraron mayor cantidad de toneladas cosechadas que las esperadas.
+<br>
+
+## 1.9. Producción esperada vs. Producción obtenida en Unidades de Producción Pecuaria
+
+
+```{r graf_1.9, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select producto, round(sum(ton_inicial), 2) ton_inicial_f, round(sum(ton_final), 2) ton_final_f
+From
+(Select b.descrip producto, sum(ton_estimada_p) ton_inicial, sum(ton_final_p) ton_final
+    from explotacion.productos_pecuario a
+    join catalogos.prod_pecuario b
+    on a.producto_p = b.gid
+    where b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3')
+                group by b.descrip
+union
+    Select nom_otro_producto_p producto, sum(ton_estimada_p) ton_inicial, sum(ton_final_p) ton_final
+    from explotacion.productos_pecuario
+    where nom_otro_producto_p <> 'NE' and producto_p = 991
+    group by nom_otro_producto_p
+union
+    Select nom_otro_producto_p producto, sum(ton_estimada_p) ton_inicial, sum(ton_final_p) ton_final
+    from explotacion.productos_pecuario
+    where nom_otro_producto_p <> 'NE' and producto_p = 992
+    group by nom_otro_producto_p
+union
+    Select nom_otro_producto_p producto, sum(ton_estimada_p) ton_inicial, sum(ton_final_p) ton_final
+    from explotacion.productos_pecuario
+    where nom_otro_producto_p <> 'NE' and producto_p = 993
+    group by nom_otro_producto_p
+) as query
+group by producto
+order by ton_inicial_f desc, ton_final_f desc");
+
+library(plotly)
+data <- datos[,c('producto', 'ton_inicial_f', 'ton_final_f')]
+fig <- plot_ly(data, x = ~producto, y = ~ton_inicial_f, type = 'bar', name = 'Toneladas esperadas',
+               marker = list(color = 'rgb(33, 97, 140)'))
+fig <- fig %>% add_trace(y = ~ton_final_f, name = 'Toneladas cosechadas',
+              marker = list(color = 'rgb(214, 234, 248)'))
+
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Tonelada", barmode = 'group'))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+Se puede observar que la producción de **huevo** finalmente obtenida es mayor a la producción esperada, esto también sucedió para los productos **ganado porcino (carne) y ovino**. 
+<br>
+<br>
+
+# **2. Unidades de Producción Agrícola. Pérdidas, causas y destino**
+
+Uno de los objetivos primordiales de la **Prueba Piloto ERAMO 2021**, es el identificar el **volumen de la pérdida** de los productos reportados, las **principales causas**, así como **principales destinos** de los residuos. Un hallazgo interesante es que el concepto de **Pérdida de alimentos** es muy ambiguo entre los productores de alimentos, ya que gran parte de estos la perciben de diferente manera.
+
+<br>
+
+## 2.1 Pérdidas
+
+La pérdida, se refiere a todas las cantidades de productos alimenticios, comestibles para las personas y el ganado que, directa o indirectamente salen por completo de la cadena de producción/suministro posterior a la cosecha/sacrificio (de ganado) al ser desechadas, incineradas o retiradas de algún otro modo y no vuelven a ingresar con ningún otro propósito (como alimento animal, uso industrial, etc.). (FAO, 2019).
+
+<br>
+
+### 2.1.1 Porcentaje de productos con al menos un registro de pérdida en alguno de sus proceso de producción
+
+De los productos reportados, una proporción del 28% afirmó no haber tenido pérdida en su producción, es decir, casi 3 cuartas partes del total de productos agrícolas (72%) reportaron pérdida.
+
+<br>
+
+```{r graf_2.1.1.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="85%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select *
+from public.porc_perd_agricola211a");
+
+library(plotly)
+
+data <- datos[,c('tipo', 'frec')]
+colors <- c('rgb(46, 134, 193)', 'rgb(214, 234, 248)', 'rgb(174, 214, 241)', 'rgb(33, 97, 140)')
+
+fig <- plot_ly(data, labels = ~tipo, values = ~frec, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',tipo , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = T)
+
+fig <- fig %>% layout(title = '', autosize = T, 
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+
+fig
+
+```
+
+### 2.1.2. Porcentaje global de pérdida con respecto a las toneladas cosechadas.
+
+#### 2.1.2.a. Porcentaje global de pérdida
+
+El porcentaje global de pérdida se calcula a partir de la sumatoria de los valores de pérdida y los valores de la cosecha finalmente obtenida, obteniendo que cerca del 17% de los alimentos agrícolas producidos no lograron concluir su proceso dentro de la cadena de abasto alimentaria.
+
+<br>
+
+```{r graf_2.1.2, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="85%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"Select *
+From public.porc_perd_vs_toneladas212");
+
+library(plotly)
+
+data <- datos[,c('toneladas', 'prod_per')]
+colors <- c('rgb(174, 214, 241)', 'rgb(33, 97, 140)')
+
+fig <- plot_ly(data, labels = ~toneladas, values = ~prod_per, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',toneladas , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+
+#### 2.1.2.b. Porcentaje de pérdida de alimentos (toneladas) en UP Agrícola por proceso
+
+```{r graf_2.1.3.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select proceso, round(sum(ton_perd_a),3) ton_perdida
+from
+(
+	select b.descrip proceso, a.ton_perd_a
+	from explotacion.perdida_agricola a
+	join catalogos.proceso_cp_ag b
+	on a.proceso_perd_a = b.gid
+) as query
+group by proceso
+order by ton_perdida desc");
+
+library(plotly)
+
+data <- datos[,c('proceso', 'ton_perdida')]
+colors <- c('rgb(214, 234, 248)', 'rgb(46, 134, 193)', 'rgb(174, 214, 241)', 'rgb(33, 97, 140)', 'rgb(129, 164, 193 )', 'rgb(163, 195, 223)')
+fig <- plot_ly(data, labels = ~proceso, values = ~ton_perdida, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',proceso , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+
+#### 2.1.2.c. Volumen de pérdida por proceso de producción
+
+```{r graf_2.1.3.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select b.descrip proceso, round(a.ton_perd_a,3) toneladas
+from explotacion.perdida_agricola a
+join catalogos.proceso_cp_ag b
+on a.proceso_perd_a = b.gid");
+
+library(plotly)
+data <- datos[,c('proceso', 'toneladas')]
+fig <- plot_ly(data, x = ~proceso, y = ~toneladas, type = 'box', color = ~proceso)
+
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Tonelada", barmode = 'group'))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+<br>
+<br>
+
+### 2.1.3. Porcentaje de pérdida por producto alimenticio reportado.
+
+El Ajo y el Dátil reportaron valores porcentuales superiores al 90%, esto se debe a que son productos con poca representatividad y los pocos registros presentan un alto porcentaje de pérdida (ver gráfico).
+
+<br>
+
+```{r graf_2.1.4.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select producto, round(sum(ton_perd_a)/sum(ton_final_a)*100,2) porc_perdida
+from
+(select b.descrip producto, c.ton_final_a, a.ton_perd_a
+	from explotacion.perdida_agricola a
+	join catalogos.prod_agricola b
+	on a.producto_a = b.gid
+	join explotacion.productos_agricola c
+	on a.id_agrop = c.id_agrop and a.producto_a = c.producto_a
+	where b.descrip not in ('Otro producto 1','Otro producto 2','Otro producto 3')
+union all
+	select c.nom_otro_producto_a producto, c.ton_final_a, a.ton_perd_a
+	from explotacion.perdida_agricola a
+	join explotacion.productos_agricola c
+	on a.id_agrop = c.id_agrop and a.producto_a = c.producto_a 
+	where c.producto_a in ('901','902','903')
+	order by ton_perd_a
+) as query
+group by producto
+order by porc_perdida");
+
+library(plotly)
+data <- datos[,c('producto', 'porc_perdida')]
+fig <- plot_ly(data, x = ~producto, y = ~porc_perdida, type = 'bar',
+      marker = list(color = 'rgb(174, 214, 241)'))  
+#'rgb(214, 234, 250)', 'rgb(155, 200, 200)'
+fig <- fig %>% layout(title=("2.1.3.a. Porcentaje de pérdida por producto alimenticio (agrupado)."),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+Otra forma de mostrar estos datos es a través del diagrama de cajas y bigotes, en él se muestran los datos atomizados, así como algunas medidas de tendencia central.
+
+<br>
+
+```{r graf_2.1.4.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select producto, porc_perdida
+From
+  (select b.descrip producto, c.ton_final_a, a.ton_perd_a, (a.ton_perd_a/c.ton_final_a*100) porc_perdida
+  from explotacion.perdida_agricola a
+  join catalogos.prod_agricola b
+    on a.producto_a = b.gid
+  join explotacion.productos_agricola c
+    on a.id_agrop = c.id_agrop and a.producto_a = c.producto_a
+  where b.descrip not in ('Otro producto 1','Otro producto 2','Otro producto 3')
+union all
+  select c.nom_otro_producto_a producto, c.ton_final_a, a.ton_perd_a, a.ton_perd_a/c.ton_final_a*100 porc_perdida
+  from explotacion.perdida_agricola a
+  join explotacion.productos_agricola c
+    on a.id_agrop = c.id_agrop and a.producto_a = c.producto_a 
+  where c.producto_a in ('901','902','903')
+  order by ton_perd_a) query");
+
+library(plotly)
+
+data <- datos[,c('producto', 'porc_perdida')]
+fig <- plot_ly(data, x = ~producto, y = ~porc_perdida, type = 'box', quartilemethod="linear", color = ~producto)
+       
+fig <- fig %>% layout(title=("2.1.3.b. Porcentaje de pérdida por producto alimenticio (desglosado)."),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+<br>
+
+## 2.2. Principales causas de la pérdida en los productos agrícolas declarados
+
+La **causa de la pérdida** es una de las variables prioritarias en esta prueba. A partir de un análisis a las respuestas emitidas por las unidades de producción en cada uno de sus productos es que se logró construir un catálogo de **causas de la pérdida en los productos alimenticios agrícolas.**
+
+<br>
+
+```{r graf_2.2.1.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select causa, round(ton_perdida*100/(select sum(ton_perd_a) from explotacion.perdida_agricola),2) porc
+from(
+	SELECT b.descrip causa, round(sum(ton_perd_a),2) ton_perdida
+	FROM explotacion.perdida_agricola a 
+	join catalogos.causa_agricola b
+	on a.causa_perd_a = b.id
+	group by b.descrip, b.id
+) as query
+order by porc desc;")
+
+library(plotly)
+data <- datos[,c('causa', 'porc')]
+fig <- plot_ly(data, x = ~causa, y = ~porc, type = 'bar',
+      marker = list(color = 'rgb(33, 97, 140)'))  
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Causa", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+Los **Factores meteorológicos**, **Plagas y enfermedades** y **Calidad del producto**, son las principales causas de la pérdida de alimentos para los productores agrícolas.  
+<br>
+<br>
+
+## 2.3. Principales destinos de la pérdida en los productos agrícolas reportados
+
+Al igual que la causa de la pérdida de los productos alimenticios, el **destino de los residuos alimenticios** es también una de las variables principales. A partir del comportamiento de las respuestas obtenidas por los informantes se logró definir el respectivo catálogo.
+
+```{r graf_2.2.2.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select destino, round(ton_perdida*100/(select sum(ton_perd_a) from explotacion.perdida_agricola),2) porc
+from(
+	Select b.descrip destino, round(sum(ton_perd_a),2) ton_perdida
+	From explotacion.perdida_agricola a 
+	join catalogos.destino_agricola b
+	on a.destino_perd_a = b.id
+	group by b.descrip, b.id
+)as query
+order by porc desc;")
+
+library(plotly)
+data <- datos[,c('destino', 'porc')]
+fig <- plot_ly(data, x = ~destino, y = ~porc, type = 'bar',
+      marker = list(color = 'rgb(33, 97, 140)'))  
+     #'rgb(33, 97, 140)', 'rgb(33, 97, 140)'
+fig <- fig %>% layout(title=("Destino de la pérdida de alimentos Agrícolas"),
+xaxis = list(title = "Destino", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+De acuerdo con la gráfica anterior, las categorías **Desecho, basura** y **No hubo producción**, son los principales destinos de los residuos alimenticios agrícolas, con un valores porcentuales de 34.8 y 27.3 respectivamente.
+
+<br>
+
+# **3. Unidades de Producción Pecuaria. Pérdidas, causas y destinos**
+
+Conocer el **volumen de pérdida** de los productos pecuarios, las **principales causas** que lo originan, así como el **destino final de estos**, es parte de los objetivos de la **Prueba Piloto ERAMO 2021**, esto permite identificar cuáles son los factores que interrumpen el ciclo de producción provocando que estos alimentos no lleguen a ser consumidos.
+
+<br>
+
+## 3.1. Pérdidas reportadas
+
+### 3.1.1. Porcentaje de productos con al menos un registro de pérdida en alguno de sus proceso de producción.
+
+<br>
+
+```{r graf_3.1.1.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select *
+From public.porc_perdida_pecuario311;")
+
+library(plotly)
+
+data <- datos[,c('perdida', 'frecc')]
+colors <- c('rgb(214, 234, 248)', 'rgb(46, 134, 193)', 'rgb(174, 214, 241)', 'rgb(33, 97, 140)', 'rgb(220, 200, 200)', 'rgb(155, 200, 200)')
+
+fig <- plot_ly(data, labels = ~perdida, values = ~frecc, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',perdida , ''),
+marker = list(colors = colors, line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+
+### 3.1.2. Porcentaje global de pérdida con respecto a las toneladas producidas.
+
+<br>
+
+#### 3.1.2.a. Porcentaje global de pérdida de alimentos en UP Pecuaria
+
+
+<br>
+
+```{r graf_3.1.2, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select *
+  From public.porc_perd_vs_toneladas312;")
+
+library(plotly)
+
+data <- datos[,c('toneladas', 'prod_per')]
+colors <- c('rgb(214, 234, 248)', 'rgb(33, 97, 140)')
+
+fig <- plot_ly(data, labels = ~toneladas, values = ~prod_per, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',toneladas , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+El **porcentaje global de pérdida de alimentos en el apartado pecuario** es de 1.56%, este resultado concuerda con las cifras estimadas por los expertos, mencionando que la mayor parte de la pérdida de alimentos está presente en las Unidades de Producción Agrícola.
+
+<br>
+
+#### 3.1.2.b. Porcentaje de pérdida por proceso de producción
+
+<br>
+
+```{r graf_3.1.3.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select proceso, round(sum(ton_perd_p), 2) ton_perdida
+From
+	(Select b.descrip proceso, a.ton_perd_p
+	From explotacion.perdida_pecuario a
+	Join catalogos.proceso_cp_pe b
+	on a.proceso_perd_p = b.gid) as query
+group by proceso
+order by ton_perdida desc");
+
+library(plotly)
+
+data <- datos[,c('proceso', 'ton_perdida')]
+colors <- c('rgb(214, 234, 248)', 'rgb(46, 134, 193)', 'rgb(174, 214, 241)', 'rgb(38, 121, 192)', 'rgb(195, 214, 239)', 'rgb(33, 97, 140)', 'rgb(174, 214, 241)')
+fig <- plot_ly(data, labels = ~proceso, values = ~ton_perdida, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',proceso, ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+La mayor cantidad de pérdida de alimentos se da durante el **Nacimiento/Ordeña** con 63.8%, seguido del proceso de **Desarrollo/Engorda** con el 25%.
+
+<br>
+
+#### 3.1.2.c. Volumen de pérdida por proceso de producción
+
+```{r graf_3.1.3.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select b.descrip proceso, a.ton_perd_p ton_perdida
+	From explotacion.perdida_pecuario a
+	Join catalogos.proceso_cp_pe b
+	on a.proceso_perd_p = b.gid
+  order by ton_perd_p desc");
+
+library(plotly)
+data <- datos[,c('proceso', 'ton_perdida')]
+fig <- plot_ly(data, x = ~proceso, y = ~ton_perdida, type = 'box', quartilemethod="linear", color = ~proceso)
+
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Proceso", categoryorder = "total descending"),
+yaxis = list(title = "Toneladas"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+
+### 3.1.3. Porcentaje de pérdida por producto alimenticio. 
+
+En las siguientes gráficas se aprecia el porcentaje de pérdida para cada uno de los productos reportados (3.1.3.a.), así como los datos atomizados (3.1.3.b.). 
+<br>
+
+```{r graf_3.1.4.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select producto, round((sum(perdida)/sum(manejo))*100, 2) porc_perdida
+From (Select c.descrip producto, b.ton_final_p manejo, ton_perd_p perdida
+  from explotacion.perdida_pecuario a
+  join explotacion.productos_pecuario b
+    on a.id_agrop = b.id_agrop and a.producto_p = b.producto_p
+  join catalogos.prod_pecuario c
+    on a.producto_p = c.gid
+  where a.producto_p not in (991, 992, 993)
+union all
+  Select a.nom_otro_producto_p producto, b.ton_final_p manejo, ton_perd_p perdida
+  From explotacion.perdida_pecuario a
+  join explotacion.productos_pecuario b
+    on a.id_agrop = b.id_agrop and a.producto_p = b.producto_p
+  where a.producto_p = 991
+union all
+  Select a.nom_otro_producto_p producto, b.ton_final_p manejo, ton_perd_p perdida
+  From explotacion.perdida_pecuario a
+  join explotacion.productos_pecuario b
+    on a.id_agrop = b.id_agrop and a.producto_p = b.producto_p
+  where a.producto_p = 992
+union all
+  Select a.nom_otro_producto_p producto, b.ton_final_p manejo, ton_perd_p perdida
+  From explotacion.perdida_pecuario a
+  join explotacion.productos_pecuario b
+    on a.id_agrop = b.id_agrop and a.producto_p = b.producto_p
+  where a.producto_p = 993) as query
+group by producto
+order by porc_perdida");
+
+library(plotly)
+data <- datos[,c('producto', 'porc_perdida')]
+fig <- plot_ly(data, x = ~producto, y = ~porc_perdida, type = 'bar', 
+marker = list(color = 'rgb(46, 134, 193)'))
+
+fig <- fig %>% layout(title=("3.1.3.a. Porcentaje de pérdida por producto alimenticio (agrupado)"),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+
+```{r graf_3.1.4.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select c.descrip producto, ton_final_p manejo, ton_perd_p perdida, (ton_perd_p/ton_final_p)*100 porcent
+from explotacion.perdida_pecuario a
+join explotacion.productos_pecuario b
+on a.id_agrop = b.id_agrop and a.producto_p = b.producto_p
+join catalogos.prod_pecuario c
+on a.producto_p = c.gid
+where a.producto_p not in (991,992,993)
+union all
+select a.nom_otro_producto_p producto, b.ton_final_p manejo, ton_perd_p perdida, (ton_perd_p/ton_final_p)*100 porcent
+from explotacion.perdida_pecuario a
+join explotacion.productos_pecuario b
+on a.id_agrop = b.id_agrop and a.producto_p = b.producto_p
+where a.producto_p = 991
+union all
+select a.nom_otro_producto_p producto, b.ton_final_p manejo, ton_perd_p perdida, (ton_perd_p/ton_final_p)*100 porcent
+from explotacion.perdida_pecuario a
+join explotacion.productos_pecuario b
+on a.id_agrop = b.id_agrop and a.producto_p = b.producto_p
+where a.producto_p = 992
+union all
+select a.nom_otro_producto_p producto, b.ton_final_p manejo, ton_perd_p perdida,(ton_perd_p/ton_final_p)*100 porcent
+from explotacion.perdida_pecuario a
+join explotacion.productos_pecuario b
+on a.id_agrop = b.id_agrop and a.producto_p = b.producto_p
+where a.producto_p = 993
+order by porcent desc;")
+
+library(plotly)
+data <- datos[,c('producto', 'porcent')]
+fig <- plot_ly(data, x = ~producto, y = ~porcent, type = 'box', quartilemethod="linear", color = ~producto)
+
+fig <- fig %>% layout(title=("3.1.3.b. Porcentaje de pérdida por producto alimenticio (desglosado)"),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+<br>
+
+## 3.2. Principales causas de la pérdida en los productos pecuario reportados
+
+El análisis de las respuestas obtenidas referentes a las principales causas de pérdida para los productos alimenticios pecuarios permitió la construcción de un catálogo de causas reportadas a partir de una categorización, los resultados se presentan a continuación. 
+
+```{r graf_3.2.1.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select causa, round(ton_perdida*100/(select sum(ton_perd_p) from explotacion.perdida_pecuario),2) porc
+from(
+	SELECT b.descrip causa, round(sum(ton_perd_p),2) ton_perdida
+	FROM explotacion.perdida_pecuario a 
+	join catalogos.causa_pecuario b
+	on a.causa_perd_p = b.id
+	group by b.descrip, b.id
+) as query
+order by porc desc;")
+
+library(plotly)
+data <- datos[,c('causa', 'porc')]
+fig <- plot_ly(data, x = ~causa, y = ~porc, type = 'bar',
+      marker = list(color = 'rgb(33, 97, 140)'))  
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Causa", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+Las **Enfermedades y Muerte** es la principal causa de la pérdida de alimentos en el sector pecuario con más del 75%
+
+<br>
+
+## 3.3. Principales destinos de la pérdida en los productos pecuario reportados
+
+Para esta variable, también se realizó un análisis de las respuestas emitidas por parte del informante para una   categorización permitiendo la construcción del respectivo catálogo. El resultado obtenido se muestra en la siguiente gráfica.
+
+<br>
+
+```{r graf_3.2.2.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"Select destino, round(ton_perdida*100/(select sum(ton_perd_p) from explotacion.perdida_pecuario), 2) porc
+From (select b.descrip destino, round(sum(ton_perd_p), 2) ton_perdida
+      From explotacion.perdida_pecuario a
+	    join catalogos.destino_pecuario b
+	      on a.destino_perd_p = b.gid
+      Group by b.descrip, b.gid) query
+order by porc desc;")
+
+library(plotly)
+data <- datos[,c('destino', 'porc')]
+fig <- plot_ly(data, x = ~destino, y = ~porc, type = 'bar', 
+marker = list(color = 'rgb(174, 214, 241)'))
+
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Destino", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+
+EL **Desecho, basura** es el principal destino de la pérdida de alimentos para el sector pecuario, con más del 45% de la pérdida global.
+
+<br>
+<br>
+
+# **4. Bancos de alimentos, redes alimentarias y percepción ambiental**
+
+Se logró identificar, entre los productores, el conocimiento relacionado a los **Bancos de alimentos**, las **Redes alimentarias**, así como a la **percepción ambiental** y sus acciones como productores de alimentos para evitar o disminuir la pérdida de alimentos.
+
+<br>
+
+## 4.1. Conocimiento sobre bancos de alimentos en las unidades de producción
+
+Los Bancos de Alimentos se definen como entidades sin ánimo de lucro que reciben y recogen alimentos excedentes de comercios, empresas o personas para repartirlos con las personas que los necesitan.
+
+Del total de unidades de producción, el 28% indicó tener conocimiento sobre los bancos de alimentos. Por el contrario, más del 70% indicó no tener conocimiento sobre los bancos de alimento, el porcentaje restante no dio una respuesta (ND).
+<br>
+
+```{r graf_4.1, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select b.descrip as resp, count(*) frec
+from explotacion.agropecuario a
+join catalogos.si_no b
+on a.conoce_bancos = b.gid
+group by b.descrip
+order by descrip desc;")
+
+library(plotly)
+
+data <- datos[,c('resp', 'frec')]
+colors <- c('rgb(174, 214, 241)', 'rgb(46, 134, 193)', 'rgb(33, 97, 140)', 'rgb(214, 234, 248)', 'rgb(155, 200, 200)', 'rgb(220, 200, 200)')
+fig <- plot_ly(data, labels = ~resp, values = ~frec, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',resp , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+<br>
+
+## 4.2. Conocimiento sobre Redes alimentarias en las unidades de producción
+
+Estás se refieren a las iniciativas organizadas para responder a los retos del sistema agroalimentario actual, involucrando a productores, transformadores y consumidores, con la intención de construir sistemas alimentarios más locales, justos, democráticos y sustentables.
+
+El resultado muestra una proporción del 9.15% sobre el total de unidades de producción que indican tener conocimiento en el tema. Cerca del 83.3% no posee conocimiento al respecto, el porcentaje restante no dio respuesta (ND).
+<br>
+
+```{r graf_4.2, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select b.descrip as resp, count(*) frec
+from explotacion.agropecuario a
+join catalogos.si_no b
+on a.conoce_red_alim = b.gid
+group by b.descrip
+order by descrip desc");
+
+library(plotly)
+
+data <- datos[,c('resp', 'frec')]
+colors <- c('rgb(214, 234, 248)', 'rgb(33, 97, 140)', 'rgb(174, 214, 241)', 'rgb(174, 214, 241)', 'rgb(46, 134, 193)', 'rgb(155, 200, 200)')
+fig <- plot_ly(data, labels = ~resp, values = ~frec, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',resp , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+<br>
+
+## 4.3. Otras alternativas de manejo
+
+<br>
+
+### 4.3.1. Porcentaje de productores que llevan a cabo acciones alternativas para el manejo de sus productos
+
+El 20.8% de las unidades de producción indicaron llevar a cabo acciones alternas para evitar o disminuir la pérdida en la producción de alimentos agropecuarios.
+
+<br>
+
+```{r graf_4.3.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select b.descrip as resp, count(*) frec
+from explotacion.agropecuario a
+join catalogos.si_no b
+on a.alternativa = b.gid
+group by b.descrip");
+
+library(plotly)
+
+data <- datos[,c('resp', 'frec')]
+colors <- c('rgb(174, 214, 241)', 'rgb(214, 234, 248)', 'rgb(46, 134, 193)', 'rgb(33, 97, 140)')
+fig <- plot_ly(data, labels = ~resp, values = ~frec, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',resp , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+<br>
+
+Al analizar las respuestas de los productores, se logró diseñar dos catálogos, uno para el apartado agrícola y otro para el apartado pecuario, el comportamiento de las variables se muestra en las siguientes gráficas.
+
+<br>
+
+#### 4.3.1.a. Alternativas para el manejo de los productos agrícolas
+
+<br>
+
+```{r graf_4.3.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select resp, round(frec::numeric/cant*100, 2) porc
+from
+(select b.descrip as resp, count(*) frec,
+		(select count(*) from explotacion.agropecuario where esp_alterna_a <> 7) cant
+	from explotacion.agropecuario a
+	join catalogos.alternativa_agricola b
+	on a.esp_alterna_a = b.gid
+	where esp_alterna_a <> 7
+	group by b.descrip
+) as query
+order by porc desc;")
+
+library(plotly)
+data <- datos[,c('resp', 'porc')]
+fig <- plot_ly(data, x = ~resp, y = ~porc, type = 'bar', 
+marker = list(color = 'rgb(46, 134, 193)'))
+
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Alternativa", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+Los productores agrícolas optan por **Transformar los productos**, seguido de **Mejorar prácticas e insumos de producción**.
+
+<br>
+
+#### 4.3.1.b. Alternativas para el manejo de los productos pecuario
+
+<br>
+
+```{r graf_4.3.c, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select resp, round(frec::numeric/cant*100, 2) porc
+from
+(select b.descrip as resp, count(*) frec,
+		(select count(*) from explotacion.agropecuario where esp_alterna_p <> 7) cant
+	from explotacion.agropecuario a
+	join catalogos.alternativa_pecuario b
+	on a.esp_alterna_p = b.gid
+	where esp_alterna_p <> 7
+	group by b.descrip
+) as query
+order by porc desc;")
+
+library(plotly)
+data <- datos[,c('resp', 'porc')]
+fig <- plot_ly(data, x = ~resp, y = ~porc, type = 'bar', 
+marker = list(color = 'rgb(33, 97, 140)'))
+
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Alternativa", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+Las alternativas **Transformar los productos** y **Mejorar prácticas de producción**, son las más reportadas por los productores pecuarios, con un 32.2% en ambos casos.
+
+<br>
+<br>
+
+## 4.4. Conocimiento sobre Campañas para reducir la pérdida de alimentos
+
+Las campañas promueven la disminución de la pérdida o desperdicio de alimentos por parte de los productores. Sólo el 26.8% de los productores tienen conocimiento sobre este concepto. 
+
+<br>
+
+```{r graf_4.4, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select b.descrip as resp, count(*) frec
+from explotacion.agropecuario a
+join catalogos.si_no b
+on a.conoce_programas = b.gid
+group by b.descrip
+order by descrip desc");
+
+library(plotly)
+
+data <- datos[,c('resp', 'frec')]
+colors <- c('rgb(214, 234, 248)', 'rgb(33, 97, 140)', 'rgb(174, 214, 241)', 'rgb(46, 134, 193)', 'rgb(155, 200, 200)')
+fig <- plot_ly(data, labels = ~resp, values = ~frec, type = 'pie',
+textposition = 'inside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',resp , frec),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+<br>
+
+## 4.5. Medidas para evitar o disminuir la pérdida de alimentos
+
+<br>
+
+### 4.5.1. Porcentaje de unidades de producción que ha tomado medidas para evitar o disminuir la pérdida de alimentos 
+
+<br>
+
+```{r graf_4.5.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select b.descrip as resp, count(*) frec
+from explotacion.agropecuario a
+join catalogos.si_no b
+on a.medidas = b.gid
+group by b.descrip
+order by descrip desc");
+
+library(plotly)
+
+data <- datos[,c('resp', 'frec')]
+colors <- c('rgb(214, 234, 248)', 'rgb(33, 97, 140)', 'rgb(174, 214, 241)', 'rgb(46, 134, 193)', 'rgb(155, 200, 200)')
+fig <- plot_ly(data, labels = ~resp, values = ~frec, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',resp , frec),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+Más del 50% de las unidades de producción han tomado medidas para evitar o disminuir la pérdida de alimentos, principalmente a través de **Mejorar prácticas de producción** y **Mejorar insumos de producción** en ambos apartados.
+
+<br>
+
+#### 4.5.1.a. Medidas adoptadas para evitar o disminuir la pérdida de productos en el sector Agrícola
+
+<br>
+
+```{r graf_4.5.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select resp, round(frec::numeric/cant*100, 2) porc
+from
+(select b.descrip as resp, count(*) frec,
+		(select count(*) from explotacion.agropecuario where esp_medida_a <> 8) cant
+	from explotacion.agropecuario a
+	join catalogos.medidas_agricola b
+	on a.esp_medida_a = b.gid
+	where esp_medida_a <> 8
+	group by b.descrip
+) as query
+order by frec desc");
+
+library(plotly)
+data <- datos[,c('resp', 'porc')]
+fig <- plot_ly(data, x = ~resp, y = ~porc, type = 'bar', 
+marker = list(color = 'rgb(174, 214, 241)'))
+
+fig <- fig %>% layout(title=(''),
+xaxis = list(title = "Medida", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+
+#### 4.5.1.b. Medidas adoptadas para evitar o disminuir la pérdida de productos en el sector Pecuario
+
+```{r graf_4.5.c, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+#library(RPostgreSQL)
+
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select b.descrip as resp, count(*) frec
+from explotacion.agropecuario a
+join catalogos.medidas_pecuario b
+on a.esp_medida_p = b.gid
+where esp_medida_p <> 5
+group by b.descrip
+order by frec desc;");
+
+library(plotly)
+
+data <- datos[,c('resp', 'frec')]
+colors <- c('rgb(214, 234, 248)', 'rgb(33, 97, 140)', 'rgb(174, 214, 241)', 'rgb(46, 134, 193)', 'rgb(195, 214, 239)')
+fig <- plot_ly(data, labels = ~resp, values = ~frec, type = 'pie',
+textposition = 'outside',
+textinfo = 'percent',
+insidetextfont = list(color = '#FFFFFF'),
+hoverinfo = 'text',
+text = ~paste('',resp , ''),
+marker = list(colors = colors,
+line = list(color = '#FFFFFF', width = 1)), showlegend = TRUE)
+
+fig <- fig %>% layout(title = '',
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+
+</div>

@@ -1,0 +1,254 @@
+---
+title: "Diseño de la Muestra ERAMO"
+--- 
+
+<br>
+<br>
+
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+               cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+<div class=text-justify>
+
+
+# **Preparación de la carpeta de trabajo** 
+****
+
+## **1. Se crean los subdirectorios**
+
+Esto se hace con la instrucción **dir.create()**, por ejemplo:**
+
+`dir.create("bd_denue")`
+
+<br>
+
+## **2. Se descargan las tablas**
+
+De este modo se conforma la BD del DENUE con los códigos del SCIAN que corresponden a las unidades económicas que generan residuos de alimentos, con la función **download.file()**. 
+
+Ejemplo:
+
+`download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_11_csv.zip","bd_denue/denue_00_11_csv.zip")`
+
+<br>
+
+## **3. Se descomprimen los archivos zip**
+
+Por ejemplo:
+
+`unzip("bd_denue/denue_00_11_csv.zip", exdir = "bd_denue/11")`
+
+<br>
+
+## **4. Se lee el catálogo de claves SCIAN que son objeto de la encuesta:**
+
+<br>
+
+```{r tab00010, echo=FALSE, fig.align='left', warning=FALSE}
+library(DT)
+eramo_scian <- read.csv("tabs/eramo_scian.csv")
+
+DT::datatable(eramo_scian, filter = 'top', options = list(
+  pageLength = 10, autoWidth = TRUE, scrollX = TRUE,
+  fixedColumns = TRUE, language = list(
+    info = "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    paginate = list(previous = 'Anterior', `next` = 'Siguiente'),
+    search =  "Buscar:", lengthMenu = "Mostrar _MENU_ registros" )
+  ))
+
+```
+
+<br>
+
+## **5. Filtrado de registros**
+
+Se dejan únicamente unidades económicas con las claves SCIAN de interés, y que estén ubicadas en las tres zonas metropolitanas más grandes del país: CDMX, Guadalajara y Monterrey.
+
+</div>
+
+<div class=text-left>
+
+`denue46112_46311 <- read.csv("bd_denue/46112_46311/conjunto_de_datos/denue_inegi_46112-46311_.csv",` 
+`encoding = 'UTF-8')` 
+
+`denue46112_46311<- subset(denue46112_46311,  ((is.element(denue46112_46311$codigo_act,eramo_scian$codigo)) &  (denue46112_46311$cve_ent == 9 |                                         (denue46112_46311$cve_ent == 14 & is.element(denue46112_46311$cve_mun, c(120,101,98,39))) |                                                   (denue46112_46311$cve_ent == 19 & is.element(denue46112_46311$cve_mun, c(39,26,46,21,6,48,19))))))`
+
+</div>
+
+<div class=text-justify>
+
+<br>
+
+## **6. Después del filtrado de UE** 
+
+Al filtrar, queda una tabla de 171,773 registros. A continuación se muestran los primeros 500.
+
+<br>
+
+```{r tab00011, echo=FALSE, fig.align='left', warning=FALSE}
+library(DT)
+mm_eramo_ejemplo <- read.csv("tabs/mm_eramo_ejem.csv")
+
+DT::datatable(mm_eramo_ejemplo, filter = 'top', options = list(
+  pageLength = 3, autoWidth = TRUE, scrollX = TRUE,
+  fixedColumns = TRUE, language = list(
+    info = "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    paginate = list(previous = 'Anterior', `next` = 'Siguiente'),
+    search =  "Buscar:", lengthMenu = "Mostrar _MENU_ registros" )
+  ))
+
+```
+
+<br>
+
+## **7. Se asigna valor numérico (o level) a cada estrato.**
+
+<br>
+
+`mm_eramo$estrato[mm_eramo$per_ocu == "0 a 5 personas"] <- 1`  
+`mm_eramo$estrato[mm_eramo$per_ocu == "6 a 10 personas"] <- 2`  
+`mm_eramo$estrato[mm_eramo$per_ocu == "11 a 30 personas"] <- 3`  
+`mm_eramo$estrato[mm_eramo$per_ocu == "31 a 50 personas"] <- 4`  
+`mm_eramo$estrato[mm_eramo$per_ocu == "51 a 100 personas"] <- 5`  
+`mm_eramo$estrato[mm_eramo$per_ocu == "101 a 250 personas"] <- 6`  
+`mm_eramo$estrato[mm_eramo$per_ocu == "251 y más personas"] <- 7`  
+
+<br>
+
+Como era de esperarse, los estratos altos tienen poca población:
+
+<br>
+`tapply(mm_eramo$estrato,mm_eramo$estrato,length)`  
+```{r}
+tapply(mm_eramo$estrato,mm_eramo$estrato,length)  
+```
+
+
+
+<br>
+
+## **8. Supuestos**
+
+De aquí en adelante se establece una simulación bajo los siguientes supuestos:
+
+8.1 Se requiere una muestra para una prueba piloto en las 3 zonas metropolitanas, la cual operativamente ($) conviene que sea de máximo 150 unidades económicas por ciudad. Por lo tanto, se tendrá una muestra total de 450 establecimientos.
+
+8.2 Las tres ciudades se comportarán aproximadamente igual respecto a la variable de interés (cantidad semanal promedio de residuos de alimentos y materia orgánica generada por los establecimientos), por lo que diseñar la muestra para una ciudad equivale a replicar dicho diseño para las otras dos.
+
+8.3 Por el momento, se supone que el comportamiento de la variable de interés en los establecimientos no depende de la clase de actividad a la que pertenecen. Este supuesto puede no ser bueno, pero la intención de la prueba piloto es arrojar luz sobre dicho comportamiento (podría **indicar tendencias** de comportamiento hasta el nivel de sector de actividad, por ejemplo). Por ello es que se elige tener una muestra probabilística pese a ser una prueba piloto.
+
+8.4 Por conveniencia, debido a las dificultades para entrevistar a establecimientos muy grandes, se fijan los tamaños de muestra de la siguiente forma:
+
+Estrato 1 = 59  
+Estrato 2 = 38  
+Estrato 3 = 30  
+Estrato 4 = 10  
+Estrato 5 = 7  
+Estrato 6 = 3  
+Estrato 7 = 3 
+
+8.5 Se simula una muestra de 150 UE por zona metropolitana, asignando valores aleatoriamente a la variable de interés, como si ya se hubiera captado información de la prueba piloto. 
+
+La intención es sólo didáctica, para realizar el cálculo del estimador de interés y su varianza. 
+
+
+<br>
+
+## **9. Conglomerados**
+
+Se toman las AGEB's que la misma BD del DENUE provee, como conglomerados.
+
+Podemos ver la distribución del tamaño de dichas AGEB's en la muestra, por ejemplo, para el caso de Guadalajara:
+
+</div>
+
+<div class=text-left>
+
+`agebs_guad <- paste(mm_eramo$ageb[mm_eramo$cve_ent == 14])`
+`summary(as.vector(table(agebs_guad)))`
+`plot(table(agebs_guad))`
+
+</div>
+<div class=text-justify>
+
+```{r graf1}
+agebs_guad <- as.vector(mm_eramo$ageb[which(mm_eramo$cve_ent == 14)])
+summary(as.vector(table(agebs_guad)))
+plot(table(agebs_guad))
+```
+
+
+
+## **10. Selección de la muestra**
+
+Hacemos selección de AGEB's
+
+</div>
+
+<div class=text-left>
+
+`mi <- sort(tapply(rep(1,length(agebs_guad)),agebs_guad,sum),decreasing = T)`  
+`mi2 <- as.data.frame(names(mi))`  
+`mi2$probs <- mi/sum(mi)`  
+`sample(mi2[,1], size=15, replace = FALSE, prob = mi2[,2])`  
+
+`[1] 422A 3726 5366 2145 3360 3923 2115 0435 447A 3382 2639 4565 507A 6230...`  
+`1204 Levels: 0012 0026 0027 0030 0031 0034 0046 0050 0054 005A 0064 0068... `  
+<br>
+
+Y seleccionamos las UE definidas para cada estrato:
+
+`est3_guad <- subset(mues_agebs_guad, mues_agebs_guad$estrato == 3)`  
+`mues_est3 <- sample(est3_guad$id, size = 30)`  
+`mues_def_est3 <- subset(mues_agebs_guad, is.element(mues_agebs_guad$id,mues_est3))`
+
+</div>
+
+**La tabla con la muestra es:
+
+```{r aaaaaa, echo=TRUE}
+
+library(DT)
+
+MUESTRA <- rbind(mues_def_est1,
+                 mues_def_est2,
+                 mues_def_est3,
+                 mues_def_est4,
+                 mues_def_est5,
+                 mues_def_est6,
+                 mues_def_est7)
+
+
+DT::datatable(MUESTRA, filter = 'top', options = list(
+  pageLength = 3, autoWidth = TRUE, scrollX = TRUE,
+  fixedColumns = TRUE, language = list(
+    info = "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    paginate = list(previous = 'Anterior', `next` = 'Siguiente'),
+    search =  "Buscar:", lengthMenu = "Mostrar _MENU_ registros" )
+  ))
+
+```
+
+
+
+
+
+<div class=text-justify>
+
+
+
+
+</div>
+

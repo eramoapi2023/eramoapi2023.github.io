@@ -1,0 +1,48 @@
+---
+title: "Encuesta de Residuos de Alimentos y Materia Orgánica (ERAMO)"
+--- 
+
+<br>
+<br>
+
+
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+               cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+<div class=text-justify>
+
+# **Objetivos** 
+****
+
+**General:**
+
+Contribuir al cálculo del impacto ambiental y socioeconómico, a partir de la medición de alimentos perdidos y desperdiciados en la cadena alimentaria; así como otros tipos de residuos orgánicos, que permitan elaborar políticas públicas en materia de seguridad alimentaria, de economía y de medio ambiente, tanto en México como en toda la Región de América del Norte.
+
+**Específico:**
+
+Medir la pérdida y el desperdicio de alimentos que se generan en la cadena de abastecimiento, desde el momento de la postcosecha en el campo, que incluye manejo y almacenamiento de plantas o de animales (ganado, aves, mariscos); hasta el momento de su consumo en los hogares; asimismo, se propone cuantificar otros residuos orgánicos, tales como los provenientes de la jardinería; todo lo anterior a través de una encuesta dirigida a determinados sectores; y cuyos resultados deben servir para el mejoramiento en los procesos productivos, hábitos de consumo, recuperación y reciclaje de alimentos.
+
+<br>
+<br>
+
+## **Descripción**
+
+La Encuesta sobre Residuos Alimenticios y Materia Orgánica (ERAMO) es un proyecto que impulsa la Dirección de Estadísticas del Medio Ambiente, perteneciente a la Dirección General de Geografía y Medio Ambiente del INEGI, mediante el que se pretende captar información sobre las cantidades de residuos de alimentos que se pierden y desperdician desde el momento posterior a la cosecha hasta el momento en que se consumen en los hogares, esto en el caso del alimento vegetal; mientras que, en el caso del alimento animal, desde el momento posterior al sacrificio de los animales domésticos en los mataderos, captura y cultivo de peces y mariscos,así como la obtención de productos animales derivados (leche, huevo, etcétera) hasta su consumo. Además, incluirá otros tipos de materia orgánica, consistente en residuos orgánicos como, por ejemplo, la recolección de aquella materia vegetal que resulta de la poda y limpia de parques y jardines públicos y privados.
+
+Para mayor detalle, consultar el [Documento de Diseño Metodológico de la ERAMO](http://10.109.1.9/pagina_sai/eramo/sintesismet_v20ago2019.html){target="_blank"}
+
+<br>
+
+<img src="imag/desperdicio.jpg" width="800" height="600" align="center"/>

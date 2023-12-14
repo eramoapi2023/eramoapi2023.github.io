@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1566499991582.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1369358259",
+    "id" : "AFE66514",
+    "lastKnownWriteTime" : 1566445718,
+    "last_content_update" : 1566445718,
+    "path" : "C:/Users/Aula6.06/Desktop/proyecto/cap2.Rmd",
+    "project_path" : "cap2.Rmd",
+    "properties" : {
+        "cursorPosition" : "39,0",
+        "scrollLine" : "17"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

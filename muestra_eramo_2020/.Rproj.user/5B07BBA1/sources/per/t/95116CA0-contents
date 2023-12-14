@@ -1,0 +1,349 @@
+# Diseño de la muestra para prueba piloto ERAMO
+
+# Carpeta para la BD 
+dir.create("bd_denue")
+
+
+# Descarga de base de datos del DENUE
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_11_csv.zip","bd_denue/denue_00_11_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_43_csv.zip","bd_denue/denue_00_43_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_46111_csv.zip","bd_denue/denue_00_46111_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_46112-46311_csv.zip","bd_denue/denue_00_46112-46311_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_46321-46531_csv.zip","bd_denue/denue_00_46321-46531_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_46591-46911_csv.zip","bd_denue/denue_00_46591-46911_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_31-33_csv.zip","bd_denue/denue_00_31-33_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_72_csv.zip","bd_denue/denue_00_72_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_56_csv.zip","bd_denue/denue_00_56_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_62_csv.zip","bd_denue/denue_00_62_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_48-49_csv.zip","bd_denue/denue_00_48-49_csv.zip")
+download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_61_csv.zip","bd_denue/denue_00_61_csv.zip")
+
+
+# Descomprime los archivos zip
+unzip("bd_denue/denue_00_11_csv.zip", exdir = "bd_denue/11")
+unzip("bd_denue/denue_00_43_csv.zip", exdir = "bd_denue/43")
+unzip("bd_denue/denue_00_46111_csv.zip", exdir = "bd_denue/46111")
+unzip("bd_denue/denue_00_46112-46311_csv.zip", exdir = "bd_denue/46112_46311")
+unzip("bd_denue/denue_00_46321-46531_csv.zip", exdir = "bd_denue/46321_46531")
+unzip("bd_denue/denue_00_46591-46911_csv.zip", exdir = "bd_denue/46591_46911")
+unzip("bd_denue/denue_00_31-33_csv.zip", exdir = "bd_denue/31_33")
+unzip("bd_denue/denue_00_72_csv.zip", exdir = "bd_denue/72")
+unzip("bd_denue/denue_00_56_csv.zip", exdir = "bd_denue/56")
+unzip("bd_denue/denue_00_62_csv.zip", exdir = "bd_denue/62")
+unzip("bd_denue/denue_00_48-49_csv.zip", exdir = "bd_denue/48_49")
+unzip("bd_denue/denue_00_61_csv.zip", exdir = "bd_denue/61")
+
+##### Construcción de la muestra
+
+## Catalogo de claves SCIAN para la encuesta
+eramo_scian <- read.csv("tabs/eramo_scian.csv")
+
+## Lectura y filtrado de tablas
+denue11 <- read.csv("bd_denue/11/conjunto_de_datos/denue_inegi_11_.csv", 
+                    encoding = 'UTF-8')
+denue11 <- subset(denue11, ((is.element(denue11$codigo_act,eramo_scian$codigo))
+                             & (denue11$cve_ent == 9 |  
+                            (denue11$cve_ent == 14 & is.element(denue11$cve_mun, c(120,101,98,39))) |
+                            (denue11$cve_ent == 19 & is.element(denue11$cve_mun, c(39,26,46,21,6,48,19))))))
+                  
+denue43 <- read.csv("bd_denue/43/conjunto_de_datos/denue_inegi_43_.csv", 
+                    encoding = 'UTF-8')
+denue43 <- subset(denue43, ((is.element(denue43$codigo_act,eramo_scian$codigo))
+                            & (denue43$cve_ent == 9 |  
+                                 (denue43$cve_ent == 14 & is.element(denue43$cve_mun, c(120,101,98,39))) |
+                                 (denue43$cve_ent == 19 & is.element(denue43$cve_mun, c(39,26,46,21,6,48,19))))))
+
+denue46111 <- read.csv("bd_denue/46111/conjunto_de_datos/denue_inegi_46111_.csv", 
+                       encoding = 'UTF-8')
+denue46111 <- subset(denue46111, ((is.element(denue46111$codigo_act,eramo_scian$codigo))
+                                  & (denue46111$cve_ent == 9 |  
+                                       (denue46111$cve_ent == 14 & is.element(denue46111$cve_mun, c(120,101,98,39))) |
+                                       (denue46111$cve_ent == 19 & is.element(denue46111$cve_mun, c(39,26,46,21,6,48,19))))))
+rm(denue46111) # ninguna observación de la población de interés
+
+denue46112_46311<- read.csv("bd_denue/46112_46311/conjunto_de_datos/denue_inegi_46112-46311_.csv", 
+                            encoding = 'UTF-8')
+denue46112_46311<- subset(denue46112_46311, ((is.element(denue46112_46311$codigo_act,eramo_scian$codigo))
+                                             & (denue46112_46311$cve_ent == 9 |  
+                                                  (denue46112_46311$cve_ent == 14 & is.element(denue46112_46311$cve_mun, c(120,101,98,39))) |
+                                                  (denue46112_46311$cve_ent == 19 & is.element(denue46112_46311$cve_mun, c(39,26,46,21,6,48,19))))))
+
+denue46321_46531<- read.csv("bd_denue/46321_46531/conjunto_de_datos/denue_inegi_46321-46531_.csv", 
+                            encoding = 'UTF-8')
+denue46321_46531<- subset(denue46321_46531, ((is.element(denue46321_46531$codigo_act,eramo_scian$codigo))
+                                             & (denue46321_46531$cve_ent == 9 |  
+                                                  (denue46321_46531$cve_ent == 14 & is.element(denue46321_46531$cve_mun, c(120,101,98,39))) |
+                                                  (denue46321_46531$cve_ent == 19 & is.element(denue46321_46531$cve_mun, c(39,26,46,21,6,48,19))))))
+
+denue46591_46911<- read.csv("bd_denue/46591_46911/conjunto_de_datos/denue_inegi_46591-46911_.csv", 
+                            encoding = 'UTF-8')
+denue46591_46911<- subset(denue46591_46911, ((is.element(denue46591_46911$codigo_act,eramo_scian$codigo))
+                                             & (denue46591_46911$cve_ent == 9 |  
+                                                  (denue46591_46911$cve_ent == 14 & is.element(denue46591_46911$cve_mun, c(120,101,98,39))) |
+                                                  (denue46591_46911$cve_ent == 19 & is.element(denue46591_46911$cve_mun, c(39,26,46,21,6,48,19))))))
+rm(denue46591_46911) # ninguna observación de la población de interés
+
+denue31_33<- read.csv("bd_denue/31_33/conjunto_de_datos/denue_inegi_31-33_.csv", 
+                      encoding = 'UTF-8')
+denue31_33<- subset(denue31_33, ((is.element(denue31_33$codigo_act,eramo_scian$codigo))
+                                 & (denue31_33$cve_ent == 9 |  
+                                      (denue31_33$cve_ent == 14 & is.element(denue31_33$cve_mun, c(120,101,98,39))) |
+                                      (denue31_33$cve_ent == 19 & is.element(denue31_33$cve_mun, c(39,26,46,21,6,48,19))))))
+
+denue72<- read.csv("bd_denue/72/conjunto_de_datos/denue_inegi_72_.csv", 
+                   encoding = 'UTF-8')
+denue72<- subset(denue72, ((is.element(denue72$codigo_act,eramo_scian$codigo))
+                           & (denue72$cve_ent == 9 |  
+                                (denue72$cve_ent == 14 & is.element(denue72$cve_mun, c(120,101,98,39))) |
+                                (denue72$cve_ent == 19 & is.element(denue72$cve_mun, c(39,26,46,21,6,48,19))))))
+
+denue56<- read.csv("bd_denue/56/conjunto_de_datos/denue_inegi_56_.csv", 
+                   encoding = 'UTF-8')
+denue56<- subset(denue56, ((is.element(denue56$codigo_act,eramo_scian$codigo))
+                           & (denue56$cve_ent == 9 |  
+                                (denue56$cve_ent == 14 & is.element(denue56$cve_mun, c(120,101,98,39))) |
+                                (denue56$cve_ent == 19 & is.element(denue56$cve_mun, c(39,26,46,21,6,48,19))))))
+rm(denue56) # ninguna observación de la población de interés
+
+denue62<- read.csv("bd_denue/62/conjunto_de_datos/denue_inegi_62_.csv", 
+                   encoding = 'UTF-8')
+denue62<- subset(denue62, ((is.element(denue62$codigo_act,eramo_scian$codigo))
+                           & (denue62$cve_ent == 9 |  
+                                (denue62$cve_ent == 14 & is.element(denue62$cve_mun, c(120,101,98,39))) |
+                                (denue62$cve_ent == 19 & is.element(denue62$cve_mun, c(39,26,46,21,6,48,19))))))
+
+denue48_49<- read.csv("bd_denue/48_49/conjunto_de_datos/denue_inegi_48-49_.csv", 
+                      encoding = 'UTF-8')
+denue48_49<- subset(denue48_49, ((is.element(denue48_49$codigo_act,eramo_scian$codigo))
+                                 & (denue48_49$cve_ent == 9 |  
+                                      (denue48_49$cve_ent == 14 & is.element(denue48_49$cve_mun, c(120,101,98,39))) |
+                                      (denue48_49$cve_ent == 19 & is.element(denue48_49$cve_mun, c(39,26,46,21,6,48,19))))))
+
+denue61<- read.csv("bd_denue/61/conjunto_de_datos/denue_inegi_61_.csv", 
+                   encoding = 'UTF-8')
+denue61<- subset(denue61, ((is.element(denue61$codigo_act,eramo_scian$codigo))
+                           & (denue61$cve_ent == 9 |  
+                                (denue61$cve_ent == 14 & is.element(denue61$cve_mun, c(120,101,98,39))) |
+                                (denue61$cve_ent == 19 & is.element(denue61$cve_mun, c(39,26,46,21,6,48,19))))))
+
+## Unión de tablas
+mm_eramo <- rbind(denue11,denue43,denue46112_46311,denue46321_46531,
+                  denue31_33,denue72,denue62,denue48_49,denue61)
+
+## Tabla ejemplo
+mm_eramo_ejem <- mm_eramo[1:500,]
+##write.csv(mm_eramo,"tabs/mm_eramo.csv")
+##write.csv(mm_eramo_ejem,"tabs/mm_eramo_ejem.csv")
+
+## Se asigna número (o nivel) a cada estrato (7)
+mm_eramo$estrato[mm_eramo$per_ocu == "0 a 5 personas"] <- 1
+mm_eramo$estrato[mm_eramo$per_ocu == "6 a 10 personas"] <- 2
+mm_eramo$estrato[mm_eramo$per_ocu == "11 a 30 personas"] <- 3
+mm_eramo$estrato[mm_eramo$per_ocu == "31 a 50 personas"] <- 4
+mm_eramo$estrato[mm_eramo$per_ocu == "51 a 100 personas"] <- 5
+mm_eramo$estrato[mm_eramo$per_ocu == "101 a 250 personas"] <- 6
+mm_eramo$estrato[mm_eramo$per_ocu == "251 y más personas"] <- 7
+
+# AGEB´s
+agebs_guad <- as.vector(mm_eramo$ageb[which(mm_eramo$cve_ent == 14)])
+summary(as.vector(table(agebs_guad)))
+plot(table(agebs_guad))
+
+# Selección de conglomerados Guadalajara:
+mi <- sort(tapply(rep(1,length(agebs_guad)),agebs_guad,sum),decreasing = T)
+mi2 <- as.data.frame(names(mi))
+mi2$probs <- mi/sum(mi)
+muestr <- sample(mi2[,1], size=15, replace = FALSE, prob = mi2[,2])
+agebs_sel_guad <- c("422A","3726","5366","2145","3660","3923","2115",
+                    "0435","447A","3382","2639","4565","507A","6230","2435")
+mm_eramo_guad <- subset(mm_eramo, mm_eramo$cve_ent == 14)
+mues_agebs_guad <- subset(mm_eramo_guad, is.element(mm_eramo_guad$ageb, agebs_sel_guad))
+
+# Seleccón de UE
+est7_guad <- subset(mues_agebs_guad, mues_agebs_guad$estrato == 7)
+mues_est7 <- sample(est7_guad$id, size = 3)
+mues_def_est7 <- subset(mues_agebs_guad, 
+                          is.element(mues_agebs_guad$id,mues_est7))
+
+est6_guad <- subset(mues_agebs_guad, mues_agebs_guad$estrato == 6)
+mues_est6 <- sample(est6_guad$id, size = 3)
+mues_def_est6 <- subset(mues_agebs_guad, 
+                        is.element(mues_agebs_guad$id,mues_est6))
+
+est5_guad <- subset(mues_agebs_guad, mues_agebs_guad$estrato == 5)
+mues_est5 <- sample(est5_guad$id, size = 7)
+mues_def_est5 <- subset(mues_agebs_guad, 
+                        is.element(mues_agebs_guad$id,mues_est5))
+
+est4_guad <- subset(mues_agebs_guad, mues_agebs_guad$estrato == 4)
+mues_est4 <- sample(est4_guad$id, size = 10)
+mues_def_est4 <- subset(mues_agebs_guad, 
+                        is.element(mues_agebs_guad$id,mues_est4))
+
+est3_guad <- subset(mues_agebs_guad, mues_agebs_guad$estrato == 3)
+mues_est3 <- sample(est3_guad$id, size = 30)
+mues_def_est3 <- subset(mues_agebs_guad, 
+                        is.element(mues_agebs_guad$id,mues_est3))
+
+est2_guad <- subset(mues_agebs_guad, mues_agebs_guad$estrato == 2)
+mues_est2 <- sample(est2_guad$id, size = 38)
+mues_def_est2 <- subset(mues_agebs_guad, 
+                        is.element(mues_agebs_guad$id,mues_est2))
+
+est1_guad <- subset(mues_agebs_guad, mues_agebs_guad$estrato == 1)
+mues_est1 <- sample(est1_guad$id, size = 59)
+mues_def_est1 <- subset(mues_agebs_guad, 
+                        is.element(mues_agebs_guad$id,mues_est1))
+
+
+MUESTRA <- rbind(mues_def_est1,mues_def_est2,mues_def_est3,mues_def_est4,mues_def_est5,mues_def_est6,mues_def_est7)
+
+#####
+
+write.csv(MUESTRA,"tabs/MUESTRA.csv")
+
+
+# Mapa
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(raster)
+library(bitops)
+library(rjson)
+library(stringr)
+
+puntos1a <- SpatialPointsDataFrame(mues_def_est1[,c(40,39)],mues_def_est1[,-c(40,39)])
+writeOGR(puntos1a, "shape_files", "puntos1", driver="ESRI Shapefile", encoding = 'UTF-8',
+         overwrite_layer=T)
+puntos11 <- readOGR("shape_files/puntos1.shp", encoding = 'UTF-8',
+                      "puntos1", verbose=FALSE)
+puntos11@data$latitud <- puntos1a$latitud
+puntos11@data$longitud <- puntos1a$longitud
+
+
+puntos2a <- SpatialPointsDataFrame(mues_def_est2[,c(40,39)],mues_def_est2[,-c(40,39)])
+writeOGR(puntos2a, "shape_files", "puntos2", driver="ESRI Shapefile", encoding = 'UTF-8',
+         overwrite_layer=T)
+puntos21 <- readOGR("shape_files/puntos2.shp", encoding = 'UTF-8',
+                    "puntos2", verbose=FALSE)
+puntos21@data$latitud <- puntos2a$latitud
+puntos21@data$longitud <- puntos2a$longitud
+
+
+puntos3a <- SpatialPointsDataFrame(mues_def_est3[,c(40,39)],mues_def_est3[,-c(40,39)])
+writeOGR(puntos3a, "shape_files", "puntos3", driver="ESRI Shapefile", encoding = 'UTF-8',
+         overwrite_layer=T)
+puntos31 <- readOGR("shape_files/puntos3.shp", encoding = 'UTF-8',
+                    "puntos3", verbose=FALSE)
+puntos31@data$latitud <- puntos3a$latitud
+puntos31@data$longitud <- puntos3a$longitud
+
+
+puntos4a <- SpatialPointsDataFrame(mues_def_est4[,c(40,39)],mues_def_est4[,-c(40,39)])
+writeOGR(puntos4a, "shape_files", "puntos4", driver="ESRI Shapefile", encoding = 'UTF-8',
+         overwrite_layer=T)
+puntos41 <- readOGR("shape_files/puntos4.shp", encoding = 'UTF-8',
+                    "puntos4", verbose=FALSE)
+puntos41@data$latitud <- puntos4a$latitud
+puntos41@data$longitud <- puntos4a$longitud
+
+
+puntos5a <- SpatialPointsDataFrame(mues_def_est5[,c(40,39)],mues_def_est5[,-c(40,39)])
+writeOGR(puntos5a, "shape_files", "puntos5", driver="ESRI Shapefile", encoding = 'UTF-8',
+         overwrite_layer=T)
+puntos51 <- readOGR("shape_files/puntos5.shp", encoding = 'UTF-8',
+                    "puntos5", verbose=FALSE)
+puntos51@data$latitud <- puntos5a$latitud
+puntos51@data$longitud <- puntos5a$longitud
+
+
+puntos6a <- SpatialPointsDataFrame(mues_def_est6[,c(40,39)],mues_def_est6[,-c(40,39)])
+writeOGR(puntos6a, "shape_files", "puntos6", driver="ESRI Shapefile", encoding = 'UTF-8',
+         overwrite_layer=T)
+puntos61 <- readOGR("shape_files/puntos6.shp", encoding = 'UTF-8',
+                    "puntos6", verbose=FALSE)
+puntos61@data$latitud <- puntos6a$latitud
+puntos61@data$longitud <- puntos6a$longitud
+
+
+puntos7a <- SpatialPointsDataFrame(mues_def_est7[,c(40,39)],mues_def_est7[,-c(40,39)])
+writeOGR(puntos7a, "shape_files", "puntos7", driver="ESRI Shapefile", encoding = 'UTF-8',
+         overwrite_layer=T)
+puntos71 <- readOGR("shape_files/puntos7.shp", encoding = 'UTF-8',
+                    "puntos7", verbose=FALSE)
+puntos71@data$latitud <- puntos7a$latitud
+puntos71@data$longitud <- puntos7a$longitud
+
+
+m <- leaflet() %>% addTiles() %>% addFullscreenControl()
+m %>% setView(lng = -103.3, lat = 20.6, zoom = 10.4)  %>%
+  addMarkers(data=puntos11, 
+             clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+             popup = paste0( "<strong>Establecimiento: </strong>", mues_def_est1$nom_estab, "</br>",
+                             "<strong>Actividad: </strong>", mues_def_est1$nombre_act, "</br>",
+                             "<strong>Colonia: </strong>", mues_def_est1$nomb_asent, "</br>",
+                             "<strong>Municipio: </strong>", mues_def_est1$municipio, "</br>",
+                             "<strong>Entidad: </strong>", mues_def_est1$entidad), 
+             group = "Estrato 1")  %>%
+  addMarkers(data=puntos21, 
+            clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+            popup = paste0( "<strong>Establecimiento: </strong>", mues_def_est2$nom_estab, "</br>",
+                            "<strong>Actividad: </strong>", mues_def_est2$nombre_act, "</br>",
+                            "<strong>Colonia: </strong>", mues_def_est2$nomb_asent, "</br>",
+                            "<strong>Municipio: </strong>", mues_def_est2$municipio, "</br>",
+                            "<strong>Entidad: </strong>", mues_def_est2$entidad), 
+             group = "Estrato 2")  %>%
+addMarkers(data=puntos31, 
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Establecimiento: </strong>", mues_def_est3$nom_estab, "</br>",
+                           "<strong>Actividad: </strong>", mues_def_est3$nombre_act, "</br>",
+                           "<strong>Colonia: </strong>", mues_def_est3$nomb_asent, "</br>",
+                           "<strong>Municipio: </strong>", mues_def_est3$municipio, "</br>",
+                           "<strong>Entidad: </strong>", mues_def_est3$entidad), 
+                           group = "Estrato 3") %>%
+  addMarkers(data=puntos41, 
+             clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+             popup = paste0( "<strong>Establecimiento: </strong>", mues_def_est4$nom_estab, "</br>",
+                             "<strong>Actividad: </strong>", mues_def_est4$nombre_act, "</br>",
+                             "<strong>Colonia: </strong>", mues_def_est4$nomb_asent, "</br>",
+                             "<strong>Municipio: </strong>", mues_def_est4$municipio, "</br>",
+                             "<strong>Entidad: </strong>", mues_def_est4$entidad), 
+                             group = "Estrato 4") %>%
+  addMarkers(data=puntos51, 
+             clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+             popup = paste0( "<strong>Establecimiento: </strong>", mues_def_est5$nom_estab, "</br>",
+                             "<strong>Actividad: </strong>", mues_def_est5$nombre_act, "</br>",
+                             "<strong>Colonia: </strong>", mues_def_est5$nomb_asent, "</br>",
+                             "<strong>Municipio: </strong>", mues_def_est5$municipio, "</br>",
+                             "<strong>Entidad: </strong>", mues_def_est5$entidad), 
+                             group = "Estrato 5") %>%
+  addMarkers(data=puntos61, 
+             clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+             popup = paste0( "<strong>Establecimiento: </strong>", mues_def_est6$nom_estab, "</br>",
+                             "<strong>Actividad: </strong>", mues_def_est6$nombre_act, "</br>",
+                             "<strong>Colonia: </strong>", mues_def_est6$nomb_asent, "</br>",
+                             "<strong>Municipio: </strong>", mues_def_est6$municipio, "</br>",
+                             "<strong>Entidad: </strong>", mues_def_est6$entidad), 
+                             group = "Estrato 6") %>%  
+  addMarkers(data=puntos71, 
+             clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+             popup = paste0( "<strong>Establecimiento: </strong>", mues_def_est7$nom_estab, "</br>",
+                             "<strong>Actividad: </strong>", mues_def_est7$nombre_act, "</br>",
+                             "<strong>Colonia: </strong>", mues_def_est7$nomb_asent, "</br>",
+                             "<strong>Municipio: </strong>", mues_def_est7$municipio, "</br>",
+                             "<strong>Entidad: </strong>", mues_def_est7$entidad), 
+                             group = "Estrato 7") %>%  
+
+  addLayersControl(overlayGroups = c("Estrato 1", "Estrato 2", "Estrato 3", 
+                                     "Estrato 4", "Estrato 5", "Estrato 6", "Estrato 7"), 
+                   options = layersControlOptions(collapsed = T), position="topleft") %>% 
+  addMeasure(
+    position = "bottomleft",
+    primaryLengthUnit = "meters",
+    primaryAreaUnit = "sqmeters",
+    activeColor = "#3D535D",
+    completedColor = "#7D4479") %>%   
+  addMouseCoordinates() %>%
+  addHomeButton(extent(puntos11), layer.name = "i",  position = "topleft")

@@ -1,0 +1,37 @@
+---
+title: "Diseño de la Muestra ERAMO"
+--- 
+
+<br>
+<br>
+
+
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+               cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+<div class=text-justify>
+
+
+# **Preparación de la carpeta de trabajo** 
+****
+
+1) Se crean los subdirectorios, con la instrucción *dir.create()*, por ejemplo:
+`dir.create("bd_denue")`
+
+2) Se descargan las tablas para conformar la BD del DENUE con los códigos del SCIAN que corresponden a las unidades económicas que generan residuos de alimentos, con la función *download.file()*, ejemplo:
+`download.file("https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_72_csv.zip","bd_denue/denue_00_72_csv.zip")`
+
+
+

@@ -1,0 +1,9 @@
+DBI
+RPostgreSQL
+sp
+rgeos
+rgdal
+leaflet
+leaflet.extras
+mapview
+DT

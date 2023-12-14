@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567097287570.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1339276793",
+    "id" : "95116CA0",
+    "lastKnownWriteTime" : 1567103498,
+    "last_content_update" : 1567103498921,
+    "path" : "D:/Geografia/ERAMO/muestra_eramo_2020/diseno.R",
+    "project_path" : "diseno.R",
+    "properties" : {
+        "cursorPosition" : "200,5",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
