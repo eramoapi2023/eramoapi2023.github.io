@@ -16,7 +16,7 @@
 <script src="site_libs/header-attrs-2.12/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -35,7 +35,10 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-
+<!-- GOB MX -->	
+<!--<link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">	
+<link rel="stylesheet" type="text/css" href="https://framework-gb.cdn.gob.mx/grafica-ejemplo.css">	
+<!-- GOB MX -->
 <style type="text/css">
   code{white-space: pre-wrap;}
   span.smallcaps{font-variant: small-caps;}
@@ -50,7 +53,7 @@
 
 
 
-
+<link rel="stylesheet" href="my_css/styles.css" type="text/css" />
 
 
 
@@ -75,9 +78,6 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
-details > summary > p:only-child {
-  display: inline;
-}
 pre code {
   padding: 0;
 }
@@ -85,6 +85,10 @@ pre code {
 
 
 <style type="text/css">
+.main-footer{
+  z-index: 999 !important;
+  position: relative;
+}
 .dropdown-submenu {
   position: relative;
 }
@@ -141,7 +145,7 @@ $(document).ready(function () {
   menuAnchor.closest('li.dropdown').addClass('active');
 
   // Navbar adjustments
-  var navHeight = $(".navbar").first().height() + 15;
+  var navHeight = $(".navbar").first().height() + 65;
   var style = document.createElement('style');
   var pt = "padding-top: " + navHeight + "px; ";
   var mt = "margin-top: -" + navHeight + "px; ";
@@ -218,7 +222,7 @@ $(document).ready(function () {
 <style type="text/css">
 
 #TOC {
-  margin: 25px 0px 20px 0px;
+  margin: 20px 0px 20px 0px;
 }
 @media (max-width: 768px) {
 #TOC {
@@ -237,6 +241,10 @@ $(document).ready(function () {
 .toc-content {
   padding-left: 30px;
   padding-right: 40px;
+}
+
+.tocify-extend-page {
+  height: 0 !important;
 }
 
 div.main-container {
@@ -264,6 +272,7 @@ div.tocify {
 
 .tocify ul, .tocify li {
   line-height: 20px;
+  font-size: 14px;
 }
 
 .tocify-subheader .tocify-item {
@@ -281,7 +290,7 @@ div.tocify {
 
 </head>
 
-<body>
+<body style="padding:125px 0px 0px;">
 
 
 <div class="container-fluid main-container">
@@ -298,41 +307,36 @@ div.tocify {
 
 
 
+<!-- NAVEGACION GOB MX -->
+      <nav class="navbar navbar-inverse sub-navbar navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#subenlaces">
+                <span class="sr-only">Interruptor de Navegación</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
 
-<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html">ERAMO</a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="index.html">Introducción</a>
-</li>
-<li>
-  <a href="cap2.html">Documentación de procesos</a>
-</li>
-<li>
-  <a href="establecimientos.html">Resultados Establecimientos</a>
-</li>
-<li>
-  <a href="agropecuario.html">Resultados Agropecuario</a>
-</li>
-<li>
-  <a href="mapas.html">Mapas</a>
-</li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
+              <a class="logo navbar-btn pull-left">
+                  <img class="img-responsive" src="my_css/logoeramo_.png" alt="Inicio">
+              </a>
+
+          </div>
+
+          <div class="collapse navbar-collapse" style="font-size: 14px;" id="subenlaces">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="index.html">Introducción</a></li>
+              <li><a href="cap2.html">Documentación de procesos</a></li>
+              <li><a href="cap3.html">Resultados establecimientos</a></li>
+              <li><a href="cap4.html">Resultados agropecuario</a></li>
+              <li><a href="cap5.html">Mapas</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+<!-- NAVEGACION GOB MX -->
 
 <div id="header">
 
@@ -1860,15 +1864,8 @@ $(document).ready(function ()  {
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
-
+<!-- FOOTER GOB MX -->
+     <!--  <script src="https://framework-gb.cdn.gob.mx/gobmx.js"></script>
+<!-- FOOTER GOB MX -->
 </body>
 </html>
