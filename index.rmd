@@ -7,7 +7,13 @@ title: ''
 
 <br>
 
-# **1. Introducción**
+```{r organicos_aa, fig.align='center', echo=FALSE, out.width = "100%", cache=TRUE}
+
+knitr::include_graphics("imagenes/index.JPG")
+
+```
+
+
 
 </br>
 
@@ -15,19 +21,19 @@ El Instituto Nacional de Estadística y Geografía presenta la **Encuesta sobre 
 
 En relación a los recursos naturales, los alimentos que se pierden y desperdician consumen una cuarta parte del agua utilizada anualmente por la agricultura, requieren un área de cultivo similar a la extensión territorial de China y generan un estimado del 8% de las emisiones globales de gases de efecto invernadero (GEI). De hecho, si los alimentos que se pierden y desperdician fueran un país, sería el tercer emisor de GEI más grande del planeta, solo detrás de China y Estados Unidos (WRI, 2016).
 
-La **Organización de las Naciones Unidas (ONU)**, ha volteado su mirada hacia este problema y ha propuesto incluir, entre los **Objetivos de Desarrollo Sostenible (ODS)**, la meta [**12.3**](https://www.un.org/sustainabledevelopment/es/sustainable-consumption-production/) la cual establece "*De aquí a 2030, reducir a la mitad el desperdicio de alimentos per capita mundial en la venta al por menor y a nivel de los consumidores y reducir las pérdidas de alimentos en las cadenas de producción y suministro, incluidas las pérdidas posteriores a la cosecha*".
+La **Organización de las Naciones Unidas (ONU)** ha volteado su mirada hacia este problema y ha propuesto incluir, entre los **Objetivos de Desarrollo Sostenible (ODS)**, la meta [**12.3**](https://www.un.org/sustainabledevelopment/es/sustainable-consumption-production/) la cual establece "*De aquí a 2030, reducir a la mitad el desperdicio de alimentos per capita mundial en la venta al por menor y a nivel de los consumidores y reducir las pérdidas de alimentos en las cadenas de producción y suministro, incluidas las pérdidas posteriores a la cosecha*".
 
 Como parte del compromiso de México con el cumplimiento de los ODS, el INEGI, desde 2019, realiza trabajos con el objetivo de contribuir al cálculo del impacto ambiental y socioeconómico que resulta de la pérdida y desperdicio de alimentos y materiales orgánicos, mediante la generación de información estadística y geográfica veraz y oportuna con la finalidad de apoyar a los tomadores de decisiones en la elaboración de políticas públicas sobre recursos naturales, energía y el medio ambiente en general. 
 
-La ERAMO impulsa un nuevo tema de estudio para el instituto, pretende ir a todas las etapas de la cadena de abasto alimentaria para recabar información que contribuya a la medición del fenómeno, traduciendose a políticas nacionales encaminada al fomento de su reducción, recuperación de alimentos y reciclaje de desechos alimentarios.
+La ERAMO impulsa un nuevo tema de estudio para el instituto, pretende ir a todas las etapas de la cadena de abasto alimentaria para recabar información que contribuya a la medición del fenómeno. Esta información puede ser de utilidad para la emisión de políticas nacionales encaminada al fomento de su reducción, recuperación de alimentos y reciclaje de desechos alimentarios.
 
-Este proyecto, impulsado por la **Dirección de Estadísticas del Medio Ambiente**, perteneciente a la **Dirección General de Geografía y Medio Ambiente** de INEGI, el cual pretende captar información sobre el volumen de residuos de alimentos que se pierden y desperdician desde el momento posterior a la cosecha y crianza de los animales hasta la etapa de venta al menudeo y la de servicios alimentarios (preparación de alimentos y servicios de restaurantes, hospedaje, salones para eventos, cafeterías, etc).
+Este proyecto, impulsado por la **Dirección de Estadísticas del Medio Ambiente**, perteneciente a la **Dirección General de Geografía y Medio Ambiente** de INEGI, pretende captar información sobre el volumen de residuos de alimentos que se pierden y desperdician desde el momento posterior a la cosecha y crianza de los animales hasta la etapa de venta al menudeo y la de servicios alimentarios (preparación de alimentos y servicios de restaurantes, hospedaje, salones para eventos, cafeterías, etc).
 
 La encuesta está dirigida a identificar la **pérdida** de alimentos, entendida como aquellos alimentos destinados al consumo humano que, debido al mal funcionamiento de los sistemas de producción y distribución de estos, disminuyen en cantidad o calidad. Se cree que la causa principal de la pérdida de alimentos sucede dentro de la cadena de abasto alimentaria; por ejemplo, alimentos que se pudren en el campo o en bodegas debido a un mal manejo, tecnología o refrigeración inadecuada, o alimentos que no llegan al mercado debido a una infraestructura deficiente y que por lo tanto no se consumen.
 
 También, pretende caracterizar el **desperdicio** de alimentos, entendido como aquellos alimentos destinados al consumo humano que se desechan (partes tanto comestibles como no comestibles) de manera intencional. Usualmente se asocia al desperdicio de alimentos con lo que sucede a lo largo de la cadena alimentaria desde la tienda de venta al menudeo hasta el punto de consumo propuesto. El desperdicio de alimentos, en algunas ocaciones, se debe a decisiones que tienen que ver con cálculos erroneos en la preparación de alimentos o a descuidos en el manejo de los alimentos.
 
-La diferencia principal entre la **pérdida y el despericio** de alimentos estriba en que la pérdida tiende a centrarse en las etapas iniciales de la cadena de abasto alimentaria es decir, en las etapas de producción y procesamiento de alimentos, mientras que el desperdicio de alimentos se concentra sobre todo en las etapas finales de la cadena  distribución, venta al menudeo, servicios de preparación de alimentos y consumo). El INEGI, junto con otras instituciones, organizaciones y la academia pretenden definir los mecanismos para captar la información necesaria que de soporte a las iniciativas en curso y las venideras para abordar y ofrecer soluciones a este problema nacional y mundial.
+La diferencia principal entre la **pérdida y el despericio** de alimentos estriba en que la pérdida tiende a centrarse en las etapas iniciales de la cadena de abasto alimentaria, es decir, en las etapas de producción y procesamiento de alimentos, mientras que el desperdicio de alimentos se concentra sobre todo en las etapas finales de la cadena  distribución, venta al menudeo, servicios de preparación de alimentos y consumo. El INEGI, en conjunto con otras instituciones, organizaciones y la academia pretenden definir los mecanismos para captar la información necesaria que de soporte a las iniciativas en curso y las venideras para abordar y ofrecer soluciones a este problema nacional y mundial.
 
 <br>
 
@@ -39,49 +45,31 @@ La diferencia principal entre la **pérdida y el despericio** de alimentos estri
 
 <br>
 
-Entre los efectos ambientales que resultan de la pérdida y desperdicio de alimentos se encuentra el tema del recurso hidríco, el cual es necesario analiza, al menos en dos niveles: el consumo del recurso destinado para la producción de alimentos y como residuos que terminan contaminando los ríos y cuerpos de agua. Aprovechar de manera eficiente los alimentos y sus residuos evita que se contaminen las aguas superficiales y subterráneas.
+Entre los efectos ambientales que resultan de la pérdida y desperdicio de alimentos se encuentra el tema del recurso hidríco, el cual es necesario analizar, al menos en dos niveles: el consumo del recurso destinado para la producción de alimentos y como residuos que terminan contaminando los ríos y cuerpos de agua. Aprovechar de manera eficiente los alimentos y sus residuos evita que se contaminen las aguas superficiales y subterráneas.
 
 En algunos países se ha comprendido la importancia de un manejo apropiado de los residuos orgánicos y alimentarios, tal es el caso en estados de Norteamérica, donde se les obliga a definir metas de aprovechamiento para evitar que lleguen a los sitios de disposición final. Entre los aprovechamientos se pueden mencionar a la Universidad Purdue (Indiana), donde los desechos alimentarios se recolectan del campus y se envían a plantas de tratamiento de aguas residuales para codigestión, lo que contribuye a la generación de electricidad para la planta de tratamiento misma.
 
 <br/>
 
-<p align="center"> **Consumo de agua en la producción de alimentos que se pierden o desperdician, para los países de América del Norte** </p>
-
-<br/>
-############ Manuel, la fuente no contiene los valores que aparecen en el archivo agua.csv.
-
-```{r agua1, echo=FALSE, out.width= "60%", warning=FALSE}
-library(kableExtra)
-agua1 <- read.csv("tab/agua.csv", encoding = "UTF")
-names(agua1) <- c( "País / Región", "Consumo de agua (Miles de millones de metros cúbicos)")
-
-kableExtra::kable(agua1, align = c('l','r')) %>%
- kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
-
-```  
-**Fuente**: [Kummu et al.(2012), _Lost food, wasted resources: Global food supply chain losses and their impacts onfreshwater, cropland, and fertiliser use_, Science of the Total Environment 438 (2012) 477–489](pdfs/kummu_2012.pdf){target="_blank"} 
-</br>
-</br>
-
-La pérdida y desperdicio de alimentos conllevan un derroche de recursos naturales para que sea posible su producción, no se trata solamente del suelo o fertilizantes, sino también del agua que se necesitó para su desarrollo. Como se aprecia en el cuadro anterior, más de 17 millones de metros cúbicos al año fueron utilizados en la producción de alimentos que terminaron en la basura o en aguas residuales.
+La pérdida y desperdicio de alimentos conllevan un derroche de recursos naturales para que sea posible su producción, no se trata solamente del suelo o fertilizantes, sino también del agua que se necesitó para su desarrollo. Se estima que más de 17 millones de metros cúbicos de agua al año son utilizados en la producción de alimentos que terminan en la basura o en aguas residuales.
 
 </br>
 
 **Suelos**
 
-Los impactos que genera la cantidad de residuos orgánicos que llegan a los sitios de disposición final municipales y privados en México, repercuten no sólo con las emisiones de metano, pues los residuos que llegan a estos sitios pueden estar compuestos hasta en un 50% de residuos orgánicos, lo que se traduce en superficie y espacio destinado para recibir los residuos municipales se debe (al menos por lo que toca a la mitad del problema) a los residuos de este tipo.
+Los impactos que genera la cantidad de residuos orgánicos que llegan a los sitios de disposición final municipales y privados en México repercuten no sólo con las emisiones de metano, pues los residuos que llegan a estos sitios pueden estar compuestos hasta en un 50% de residuos orgánicos, lo que se traduce en superficie y espacio destinado para recibir los residuos municipales se debe (al menos por lo que toca a la mitad del problema) a los residuos de este tipo.
 
-De acuerdo con el informe **Huella del despilfarro de alimentos** de FAO (2013), entre los impactos al ambiente que resultan de la cadena alimentaria, desde su producción hasta la pérdida y desperdicio de alimentos, podemos encontrar: millones de hectáreas de tierras de cultivo desperdiciadas; millones de toneladas de fertilizantes aplicados; millones de m<sup>3</sup> de espacio ocupado en rellenos sanitarios; millones de dólares estadounidenses (USD) pagados en tarifas por descarga o depósito de desechos; millones de USD en concepto de pérdida de biodiversidad y billones de kilocalorías (kcal = 1,000 calorías) en posible pérdida de energía.
+De acuerdo con el informe **Huella del despilfarro de alimentos** de FAO (2013), entre los impactos al ambiente que resultan de la cadena alimentaria, desde su producción hasta la pérdida y desperdicio de alimentos, podemos encontrar: millones de hectáreas de tierras de cultivo desperdiciadas; millones de toneladas de fertilizantes aplicados; millones de m<sup>3</sup> de espacio ocupado en rellenos sanitarios; millones de dólares (USD) pagados en tarifas por descarga o depósito de desechos; millones de USD en concepto de pérdida de biodiversidad y billones de kilocalorías en posible pérdida de energía.
 
-El momento de la producción de alimentos se caracteriza por ser el de mayor exposición a la pérdida de alimentos, pues los factores que inciden para que ello suceda son numerosos y van desde la semilla, los abonos, las plagas y enfermedades de los cultivos, la tecnología, forma de producción, monocultivo, tipo de intercalado, el clima, estándares de calidad y los precios de mercado, sólo por mencionar algunos. Las pérdidas pueden ser parciales o totales y generalmente se cuantifica por toneladas y pueden ser de desde decenas hasta miles de ellas. 
+El momento de la producción de alimentos se caracteriza por ser el de mayor exposición a la pérdida de alimentos, pues los factores que inciden para que ello suceda son numerosos y van desde la semilla, los abonos, las plagas y enfermedades de los cultivos, la tecnología, forma de producción, monocultivo, tipo de intercalado, el clima, estándares de calidad y los precios de mercado, sólo por mencionar algunos. Las pérdidas pueden ser parciales o totales y generalmente se cuantifica por toneladas, pueden ser de desde decenas hasta miles de ellas. 
 
-El suelo juega un papel importante en la cantidad y calidad de los alimentos producidos, pues la erosión y salinización reducen la capacidad de los suelos para el intercambio de nutrientes con los cultivos. [Estimaciones de la FAO del año 2015](http://www.fao.org/news/story/es/item/357165/icode/){target="_blank"}, indican que se pierden aproximadamente 7.6 millones de toneladas de producción de cereales por estas causas. El reto para el año 2050, no sólo es producir más alimentos para la creciente población mundial sino además, evitar que cerca de 1.5 millones de kilómetros cuadrados de tierras agrícolas se pierdan por causa de la erosión.
+El suelo juega un papel importante en la cantidad y calidad de los alimentos producidos, pues la erosión y salinización reducen la capacidad de los suelos para el intercambio de nutrientes con los cultivos. [Estimaciones de la FAO del año 2015](http://www.fao.org/news/story/es/item/357165/icode/){target="_blank"}, indican que se pierden aproximadamente 7.6 millones de toneladas de producción de cereales por estas causas. El reto para el año 2050, no sólo es producir más alimentos para la creciente población mundial sino además, evitar que cerca de 1.5 millones de km<sup>2</sup> de tierras agrícolas se pierdan por causa de la erosión.
 
 </br>
 
 **Gases de Efecto Invernadero**
 
-Un tema fuertemente vinculado a la pérdida y el desperdicio de alimentos, es la generación de metano, al ser uno de los gases con mayor capacidad de efecto invernadero, la fuente de este gas resulta de la descomposición de los residuos orgánicos ubicados en los sitios de disposición final. La **Comisión de Cooperación Ambiental para América del Norte (CCA)**, estima que los tres países que conforman el TLCAN, generan aproximadamente el equivalente a 200 millones de toneladas de CO<sub>2eq</sub> al año.
+Un tema fuertemente vinculado a la pérdida y el desperdicio de alimentos es la generación de metano al ser uno de los gases con mayor capacidad de efecto invernadero. La fuente de este gas resulta de la descomposición de los residuos orgánicos ubicados en los sitios de disposición final. La **Comisión de Cooperación Ambiental para América del Norte (CCA)**, estima que los tres países que conforman el TLCAN generan aproximadamente el equivalente a 200 millones de toneladas de CO<sub>2eq</sub> al año.
 
 Los países de América del Norte han generado información sobre la cantidad de emisiones de GEI que resultan de los rellenos sanitarios ubicados en sus territorios, con el objeto de cumplir con el compromiso de la **Convención Marco de las Naciones Unidas sobre el Cambio Climático (CMNUCC)**, el cual trata de estimaciones relativas a las emisiones de este tipo de gases usando metodologías aprobadas por el **Panel Intergubernamental sobre el Cambio Climático (IPCC)**.
 
@@ -105,7 +93,7 @@ kableExtra::kable(gei1, align = c('l','r')) %>%
 
 **Fuente**: [CCA (2017), _Caracterización y gestión de los residuos orgánicos en América del Norte, informe sintético_, Comisión para la Cooperación Ambiental, Montreal, 52 pp](pdfs/11770-characterization-and-management-organic-waste-in-north-america-white-paper-es.pdf){target="_blank"} 
 
-La cuantificación de la materia orgánica obtenida, es útil para la medición del impacto ambiental que genera su descomposición y conversión a GEI. Para reducir y eventualmente evitar el destino de los residuos orgánicos a los sitios de disposición final es conveniente caracterizar tipo, origen y causa del desecho o desperdicio, que por otra parte permitan elaborar políticas públicas o programas de reducción. Es en este contexto, que la ERAMO puede jugar un papel importante para disponer de información sobre el tipo de residuos y las causas que dan pie a la pérdida y el desperdicio de alimentos. 
+La cuantificación de la materia orgánica obtenida, es útil para la medición del impacto ambiental que genera su descomposición y conversión a GEI. Para reducir y eventualmente evitar el destino de los residuos orgánicos a los sitios de disposición final es conveniente caracterizar tipo, origen y causa del desecho o desperdicio, que por otra parte permitan elaborar políticas públicas o programas de reducción. Es en este contexto que la ERAMO puede jugar un papel importante para disponer de información sobre el tipo de residuos y las causas que dan pie a la pérdida y el desperdicio de alimentos. 
 
 </br>
 </br>
@@ -129,15 +117,13 @@ Diversas instituciones nacionales e internacionales del medio ambiente, académi
 
 </br>
 
-La relevante información que se espera obtener de la ERAMO, es viable para ser considerada Información de Interés Nacional ya que atendiendo las disposiciones del Reglamento referido para tal denominación, publicado el 9 de abril de 2018 en el Diario Oficial de la Federación (DOF), en él se señalan cuatro criterios: primero, la ERAMO se encuentra incluida en el tema de residuos sólidos; segundo, la ERAMO es necesaria para sustentar el diseño y la evaluación de las políticas públicas de alcance nacional, por lo que ambos criterios aplican; tercero y cuarto, indican que la información deba ser generada en forma regular y periódica, así como ser elaborada con base en una metodología científicamente sustentada, que también son viables de cubrir.
+El impacto del crecimiento mundial estimado para el año 2050 predice que la población ascenderá a más de 9 mil millones de personas lo que implica un aumento del 70% de la producción actual de alimentos, lo cual demandará ampliar de 1,400 millones de hectáreas a más de 1,600 en el mismo lapso de tiempo, a costa de los recursos naturales existentes para ese entonces, como son los suelos con vegetación, agua y ecosistemas en general.
 
-El impacto del crecimiento mundial estimado para el año 2050, predice que la población ascenderá a más de 9 mil millones de personas, lo que implica un aumento del 70% de la producción actual de alimentos, lo cual demandará ampliar de 1,400 millones de hectáreas a más de 1,600 en el mismo lapso de tiempo, a costa de los recursos naturales existentes para ese entonces, como son los suelos con vegetación, agua y ecosistemas en general.
-
-Los residuos orgánicos generados en Canadá, Estados Unidos y México, se depositan predominantemente en rellenos sanitarios, basureros y tiraderos a cielo abierto, lo que resulta en una alta concentración de emisiones de metano que al no ser capturados y utilizados para producir electricidad, son liberados al aire con los consecuentes daños al ambiente. Al identificar la fuente que da origen a los residuos, permitirá proponer medidas que apoyen a mitigar la generación de dichas emisiones.
+Los residuos orgánicos generados en Canadá, Estados Unidos y México se depositan predominantemente en rellenos sanitarios, basureros y tiraderos a cielo abierto, lo que resulta en una alta concentración de emisiones de metano que al no ser capturados y utilizados para producir electricidad, son liberados al aire con los consecuentes daños al ambiente. Al identificar la fuente que da origen a los residuos permitirá proponer medidas que apoyen a mitigar la generación de dichas emisiones.
 
 Al reconocer y caracterizar los residuos alimenticios y orgánicos y sus posibles destinos, como el composteo, bancos de alimentos, alimentación animal, generación de biomaterial, codigestión anaerobia, entre otros, contribuirán al diseño de políticas que permitarán eficientar el manejo y uso de dichos residuos.
 
-Según la CCA, la pérdida y el desperdicio de alimentos (PDA), es un tema que cobra cada vez mayor relevancia. Canadá, Estados Unidos y México, países donde anualmente se pierden y desperdician, durante la cadena de abasto alimentaria, incluidas las etapas de precosecha y consumo, casi 170 millones de toneladas de alimentos producidos para consumo humano, provocando un enorme agotamiento de recursos para su producción, reflejados en la evidente erosión de una gran superficies de suelo provocado por los cambios en su uso, fragmentación de ecosistemas que repercute en la pérdida de flora y fauna, el mal uso de los recursos hídricos, incidiendo en problemas de salud humana.
+Según la CCA la pérdida y el desperdicio de alimentos (PDA) es un tema que cobra cada vez mayor relevancia. Canadá, Estados Unidos y México, países donde anualmente se pierden y desperdician alimentos durante la cadena de abasto alimentaria, incluidas las etapas de precosecha y consumo, representa alrededor de 170 millones de toneladas de alimentos producidos para consumo humano, provocando un enorme agotamiento de recursos para su producción, reflejados en la evidente erosión de una gran superficies de suelo provocado por los cambios en su uso, fragmentación de ecosistemas que repercute en la pérdida de flora y fauna, el mal uso de los recursos hídricos, incidiendo en problemas de salud humana.
 
 La preocupación sobre la PDA, ha involucrado no solo a gobiernos y el sector privado, si no que también a organizaciones como Save Food, Piensa-Aliméntate-Ahorra, dirigido por la FAO; el PNUMA; Foro de Bienes de Consumo, "Every Crumb Counts (Cada Miga Cuenta)" de Food Drink Europe, el Compromiso Courtauld 2025 en el Reino Unido y la Alianza para la Reducción de Desperdicio de Alimento en los Estados Unidos, solo por mencionar algunos con la conciecia y relevancia que cobra día a día este fenómeno mundial.
  
@@ -148,7 +134,7 @@ La preocupación sobre la PDA, ha involucrado no solo a gobiernos y el sector pr
 
 </br>
 
-La Dirección de Estadísticas del Medio Ambiente, en conjunto con la Red **12.3** (grupo de investigadores y docentes interdisciplinarios de nivel superior y postgrado), realizaron la prueba piloto denominada ERAMO (Ecuesta Nacional sobre Residuos Alimenticios y Materia Orgánica), el proyecto intenta obtener información sobre los residuos alimenticios procedentes de la industria alimentaria, de servicios de alimento públicos y privados; a fin de conocer el origen de su generación, cantidad, composición, reutilización, tratamiento y disposición final, con el propósito de generar información valiosa para conocer el fenómeno de la PDA y facilitar, en lo posible, la toma de decisiones técnicamente sustentadas. Lo anterior está fundamentado en las siguientes disposiciones legales:
+La Dirección de Estadísticas del Medio Ambiente, en conjunto con la Red **12.3** (grupo de investigadores y docentes interdisciplinarios de nivel superior y postgrado), diseñaron una encuesta que intenta obtener información sobre los residuos alimenticios a fin de conocer el origen de su generación, cantidad, composición, reutilización, tratamiento y disposición final, lo anterior está fundamentado en las siguientes disposiciones legales:
 
 </br>
 
@@ -201,15 +187,15 @@ La encuesta está dirigida a los sectores productivos: agricultura, cría de ani
 
 Para una mejor comprensión de los momentos de la cadena de alimentos que comprende la encuesta, se muestran los conceptos que la CCA considera como objeto de estudio.
 
-- “La producción de alimentos **poscosecha**, abarca las actividades poscosecha que se llevan a cabo en la granja y también aquellas que implican cosecha, manejo y almacenamiento de plantas o de animales (ganado, aves, mariscos) o sus partes, pero que se realizan fuera del sector agrícola (adaptado de Grolleaud, 2001).  
+- “La producción de alimentos **poscosecha** abarca las actividades poscosecha que se llevan a cabo en la granja y también aquellas que implican cosecha, manejo y almacenamiento de plantas o de animales (ganado, aves, mariscos) o sus partes, pero que se realizan fuera del sector agrícola (adaptado de Grolleaud, 2001).  
 
-- El procesamiento de alimentos, es la **transformación** de alimentos crudos en productos aptos para consumo, cocinado o almacenado (EUFIC, 2016). El término 'procesamiento de alimentos' equivale a la 'transformación o fabricación de alimentos'.  
+- El procesamiento de alimentos es la **transformación** de alimentos crudos en productos aptos para consumo, cocinado o almacenado (EUFIC, 2016). El término 'procesamiento de alimentos' equivale a la 'transformación o fabricación de alimentos'.  
 
-- La **distribución**, abarca el transporte y la distribución de productos alimenticios antes de la recepción por el consumidor e incluye la venta al mayoreo e intermediación (adaptado de Perner, 2008).  
+- La **distribución** abarca el transporte y la distribución de productos alimenticios antes de la recepción por el consumidor e incluye la venta al mayoreo e intermediación (adaptado de Perner, 2008).  
 
-- La **venta** al menudeo, se refiere a la oferta de alimentos para uso en el hogar, en negocios de servicio directo al consumidor (tiendas o mercados). Excluyendo la venta en restaurantes o en ámbitos institucionales (adaptado de Suttle, s.f.).  
+- La **venta** al menudeo se refiere a la oferta de alimentos para uso en el hogar, en negocios de servicio directo al consumidor (tiendas o mercados). Excluyendo la venta en restaurantes o en ámbitos institucionales (adaptado de Suttle, s.f.).  
 
-- Los **servicios alimentarios**, abarcan la preparación de alimentos y los servicios de comida, bocadillos y bebidas para consumo fuera del hogar (o para llevar), en establecimientos formales o de comida rápida y en ámbitos comerciales e institucionales, como restaurantes, salones de eventos, hoteles y cafeterías.” CCA (2017:6)
+- Los **servicios alimentarios** abarcan la preparación de alimentos y los servicios de comida, bocadillos y bebidas para consumo fuera del hogar (o para llevar), en establecimientos formales o de comida rápida y en ámbitos comerciales e institucionales, como restaurantes, salones de eventos, hoteles y cafeterías.” CCA (2017:6)
 
 </br>
 </br>
@@ -218,9 +204,9 @@ Para una mejor comprensión de los momentos de la cadena de alimentos que compre
 
 </br>
 
-La Comisión de Cooperación Ambiental para América del Norte, decidió usar diversos métodos de medición existentes para la obtención de datos sobre la PDA, entre ellos se encuentran: los diarios o bitácoras de los informantes; la medición directa; entrevistas y encuestas; balance de masas; datos sustitutos o indirectos; registros administrativos; así como el análisis de composición de desechos.  
+La Comisión de Cooperación Ambiental para América del Norte decidió usar diversos métodos de medición existentes para la obtención de datos sobre la PDA, entre ellos se encuentran: los diarios o bitácoras de los informantes; la medición directa; entrevistas y encuestas; balance de masas; datos sustitutos o indirectos; registros administrativos; así como el análisis de composición de desechos.  
 
-En el caso de la prueba piloto ERAMO, el método definido para la obtención de la información sobre pérdida y desperdicio es una encuesta, a partir de una muestra representativa de todos los sectores de actividad relacionados con los alimentos, que para nuestro país incluyó alrededor de 180 clases de actividad, considerando desde la producción agropecuaria en el sector primario, la transformación de los alimentos en el sector secundario hasta la comercialización y venta de productos en el sector terciario.
+En el caso de la prueba piloto ERAMO el método definido para la obtención de la información sobre pérdida y desperdicio es una encuesta, a partir de una muestra representativa de todos los sectores de actividad relacionados con los alimentos, que para nuestro país incluyó alrededor de 180 clases de actividad, considerando desde la producción agropecuaria en el sector primario, la transformación de los alimentos en el sector secundario hasta la comercialización y venta de productos en el sector terciario.
 
 Para la organización de la información, se adoptó el **Modelo Genérico del Proceso Estadístico (GSBPM por sus siglas en inglés)**, desarrollado por la **Comisión Económica de las Naciones Unidas para Europa (UNECE)**, el cual describe y define el conjunto de procesos necesarios para producir estadísticas oficiales, mismo que provee un marco estándar y una terminología armonizada para ayudar a las organizaciones estadísticas a modernizar los procesos de producción estadística, así como compartir métodos y componentes.
 
@@ -264,20 +250,7 @@ knitr::include_graphics("imagenes/esquema_general.png")
 
 Las categorías relacionadas con el subtema particular de residuos de alimentos correspondieron a la pérdida y el desperdicio de alimentos, las cuales están fuertemente vinculadas con aspectos como la producción de alimentos y el abasto/suministro para la población, en consecuencia se trata también de un tema de seguridad alimentaria, también ligado con los aspectos ambientales, como son la generación de emisiones de metano, la sobre acumulación de residuos orgánicos en los rellenos sanitarios, aguas residuales y alcantarillado, así como el consumo de energía, agroquímicos, entre otros.  
 
-Las variables, generalmente pueden identificarse con diferentes criterios, como son: las cualitativas, asociadas a valores nominales, las cuantitativas, relativas a valores numéricos. Para esta encuesta, el tipo y cantidad de residuos alimenticios que se perdieron en la cadena productiva son el centro de atención, seguido de las principales causas que lo orgininan y el destino de estos, tanto para los residuos de los alimentos, como para las partes que no fueron comestibles. Enseguida se muestra la estructura de cómo se organizaron los temas, categorías y variables de estudio.  
-
-<br>
-
-**Tema: Residuos alimenticios**
-
-```{r tab2, echo=FALSE, fig.align='left', warning=FALSE}
-library(kableExtra)
-tab2 <- read.csv("tab/temas_variables_eramo.csv", encoding = "UTF-8" )
-names(tab2) <- c("Subtema", "Categoría", "Variable", "Clasificación")
-kableExtra::kable(tab2) %>%
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
-
-```
+Las variables, generalmente pueden identificarse con diferentes criterios, como son: las cualitativas, asociadas a valores nominales, las cuantitativas, relativas a valores numéricos. Para esta encuesta, el tipo y cantidad de residuos alimenticios que se perdieron en la cadena productiva son el centro de atención, seguido de las principales causas que lo orgininan y el destino de estos, tanto para los residuos de los alimentos, como para las partes que no fueron comestibles. 
 
 <br>
 
@@ -287,27 +260,13 @@ kableExtra::kable(tab2) %>%
 
 La CCA se apoyó de diversos Clasificadores internacionales para la organización de las unidades de observación, así como de los productos asociados para las distintas actividades económicas, incluyendo aquellas que se sabe producen cantidades significativas de residuos orgánicos (como son los residuos alimenticios), señalando los siguientes:   
 
-	Codex General Standard for Food Additives (GSFA) System or United Nations Central Production Classification (CPC) system.
+[Codex General Standard for Food Additives (GSFA) System or United Nations Central Production Classification (CPC) system.](https://www.fao.org/fao-who-codexalimentarius/sh-proxy/en/?lnk=1&url=https%253A%252F%252Fworkspace.fao.org%252Fsites%252Fcodex%252FStandards%252FCXS%2B192-1995%252FCXS_192e.pdf)
 
-</br>
+[Sustainable Agriculture Coding & ID in Agriculture/Fresh.](https://unece.org/fileadmin/DAM/cefact/cf_forums/2017_Geneva/PPTs/MinConf_Agri__Frug1Com.pdf)
 
-<iframe src="pdfs/CXS_192e.pdf" style="width:100%; height:650px;" frameborder="0"></iframe>
+[Sustainable Agriculture Code.](https://www.unilever.com/files/a3f52ce3-22f7-4048-9c5b-55fa3a7895c4/ul-sac-v1-march-2010-spread.pdf)
 
-**Situado en:** <br>
-http://www.fao.org/gsfaonline/docs/CXS_192e.pdf
-
-</br>
-
-<iframe src="pdfs/MinConf_Agri__Frug1Com.pdf" style="width:100%; height:650px;" frameborder="0"></iframe>
-
-**Situado en:** <br>
-https://unece.org/fileadmin/DAM/cefact/cf_forums/2017_Geneva/PPTs/MinConf_Agri__Frug1Com.pdf
-
-<br>
-
-[United Nations International Standard Industrial Classifications of All Economic Activities (ISIC)](https://stat.unido.org/content/learning-center/international-standard-industrial-classification-of-all-economic-activities-%2528isic%2529){target="_blank"}
-
-</br>
+[United Nations International Standard Industrial Classifications of All Economic Activities (ISIC)](https://unstats.un.org/unsd/publication/seriesm/seriesm_4rev4e.pdf)
 
 Existen otros sistemas de clasificación regionales y nacionales, la mayoría derivados del ya mencionado ISIC; al respecto, existe un listado por parte de las Naciones Unidas: The UN Statistics Division Lists National Classification Systems.
 
@@ -324,7 +283,7 @@ México utiliza el Sistema de Clasificación Industrial de América del Norte, 2
 
 </br>
 
-Una vez justificada la relevancia de contar con información referida a la PDA, se procedió a realizar pruebas conceptuales y de estrategia operativa, hasta conformar una prueba piloto en 2021 (ejercicios previos a una encuesta de cobertura nacional). Este mecanismo que permitió conocer qué alimentos son los que mayormente se producen y comercializan, las fases de la cadena alimentaria donde se ocurre el fenómeno de pérdida o desperdicio, las principales causas y el destino final de estos alimentos, así como las diferentes medidas que se llevan a cabo para disminuir la pérdida y el desperdicio de alimentos. Con ello se generaron datos estadísticos que aportaron a la documentación oficial sobre el tema.
+Una vez justificada la relevancia de contar con información referida a la PDA, se procedió a realizar pruebas conceptuales y de estrategia operativa, hasta conformar una prueba piloto en 2021 (ejercicios previos a una encuesta de cobertura nacional). Este mecanismo permitió conocer qué alimentos son los que mayormente se producen y comercializan, las fases de la cadena alimentaria donde se ocurre el fenómeno de pérdida o desperdicio, las principales causas y el destino final de estos alimentos, así como las diferentes medidas que se llevan a cabo para disminuir la pérdida y el desperdicio de alimentos. Con ello se generaron datos estadísticos que aportaron a la documentación oficial sobre el tema.
 
 Las pruebas se llevaron a cabo sobre una muestra de cada sector definido para las unidades de observación, mediante una entrevista directa, los primeros objetivos consistieron en probar los instrumentos de captación, en cuanto a su contenido, redacción, secuencia, diseño y distribución de la bateria de preguntas, la probabilidad para captar la información de cada pregunta; las etapas del diseño operativo y de estrategia de levantamiento; así como la posibilidad de encontrar a los informantes adecuados, cálcular el tiempo de la entrevista, distribuir las cargas de trabajo, entre otros aspectos importantes a considerar.  
 
@@ -360,16 +319,16 @@ Adicionalmente, se pretende identificar el grado de familiaridad de los informan
 
 **Destino**. Se refiere a dónde se dirige el material retirado de la cadena de suministro de alimentos. Hay una gama de posibles destinos, que representan un rango de usos alternativos y valor potencial. Las 10 categorías utilizadas en el Estándar de PDA son:
 
-•	Pienso (alimentación animal)
-•	Bio-materiales/procesamiento bioquímico
-•	Codigestión/digestión anaeróbica
-•	Composta/procesos aeróbicos
-•	Combustión controlada
-•	Aplicación de la tierra
-•	Vertedero
-•	No cosechado/arado
-•	Desperdicio/desechos/basura
-•	Alcantarillado/tratamiento de aguas residuales
+* Pienso (alimentación animal)
+* Bio-materiales/procesamiento bioquímico
+* Codigestión/digestión anaeróbica
+* Composta/procesos aeróbicos
+* Combustión controlada
+* Aplicación de la tierra
+* Vertedero
+* No cosechado/arado
+* Desperdicio/desechos/basura
+* Alcantarillado/tratamiento de aguas residuales
 
 **Destinados al consumo humano**. Finalidad original de una sustancia en la cadena de suministro de alimentos, esto es, ser ingerida como alimento por el consumidor final.
 
@@ -424,71 +383,39 @@ Adicionalmente, se pretende identificar el grado de familiaridad de los informan
 </br>
 </br>
 
-# **Documento de referencia:**
-
-</br>
-
-<p align="center"> **Guía práctica: Por qué y cómo cuantificar la pérdida y el desperdicio de alimentos** </p>
-
-</br>
-
-<iframe src="pdfs/Guia_ambiental.pdf" style="width:100%; height:600px;" frameborder="0"></iframe>
-
-</br>
-</br>
-
-
 # **Fuentes de Información**
- 
+
 </br>
+
+[Plan Estratégico de la Comisión para la Cooperación Ambiental 2015 - 2020.](http://www.cec.org/files/documents/planes_estrategicos/strategic_plan_2015_2020_sp.pdf)
+
+[CCA (2019-2020). Plan Operativo de la Comisión para la Cooperación Ambiental, Comisión para la Cooperación Ambiental.](http://www.cec.org/files/documents/planes_operativos/operational-plan_2019-2020.pdf)
  
-CCA (2014). Plan operativo anual 2015-2017
-<br/>
-[CCA (2017–2018). Operational Plan of the Commission for Environmental Cooperation.]
+[CCA (2017-2018). Plan Operativo de la Comisión para la Cooperación Ambiental, Comisión para la Cooperación Ambiental.](http://www.cec.org/files/documents/planes_operativos/operational-plan_2017-2018.pdf)
 
-[CCA (2015-2016). Plan Operativo de la Comisión para la Cooperación Ambiental, Comisión para la Cooperación Ambiental.]
-
-(http://www.cec.org/files/documents/planes_operativos/operational-plan_2015-2016.pdf){target="_blank"}
+[CCA (2015-2016). Plan Operativo de la Comisión para la Cooperación Ambiental, Comisión para la Cooperación Ambiental.](http://www.cec.org/files/documents/planes_operativos/operational-plan_2015-2016.pdf)
  
 [Protocolo para la captación, (2019). FLW, Protocol Guidance on FLW Quantification Methods.](http://www.flwprotocol.org/flw-standard/tools-resources/){target="_blank"}
- 
 
-[WRI, 2016. Estándar de Contabilización y Reporte sobre Pérdida y Desperdicio de Alimentos. Resumen ejecutivo. versión 1.0., World Resources Institute, FLW Protocol Steering Committee.](https://flwprotocol.org/wp-content/uploads/2016/05/FLW-Standard-executive-summary-SPANISH.pdf){target="_blank"} 
-<br>
+[WRI, 2016. Estándar de Contabilización y Reporte sobre Pérdida y Desperdicio de Alimentos. Resumen ejecutivo. versión 1.0., World Resources Institute, FLW Protocol Steering Committee.](https://flwprotocol.org/wp-content/uploads/2016/05/FLW-Standard-executive-summary-SPANISH.pdf)
 
- 
-<p align="left"> **Estrategía global para el mejoramiento de las estadísticas agropecuarias y rurales.** </p>
- 
-</br>
- 
-<iframe src="pdfs/am082s.pdf" style="width:100%; height:600px;" frameborder="0"></iframe>
- 
-</br>
+[Estrategía global para el mejoramiento de las estadísticas agropecuarias y rurales.](https://www.fao.org/3/am082s/am082s.pdf)
  
 [2017. Comunidad de práctica (CdP) en reducción de las Pérdidas de Alimentos.](https://www.fao.org/documents/card/fr/c/9ce5c715-70a9-4456-8980-f5404ca913e9/){target="_blank"}
  
-</br>
-<p align="left"> **Pérdidas y desperdicio de alimentos en el mundo .** </p>
-</br>
+[Pérdidas y desperdicio de alimentos en el mundo.](https://www.fao.org/3/i2697s/i2697s.pdf)
+
+[Por qué y cómo cuantificar la pérdida y el desperdicio de alimentos. Guía práctica.](http://www.cec.org/files/documents/publications/11814-why-and-how-measure-food-loss-and-waste-practical-guide-es.pdf)
  
-<iframe src="pdfs/Perdida_desperdicio_alimentos_mundo.pdf" style="width:100%; height:600px;" frameborder="0"></iframe>
-</br>
+[Pérdidas y desperdicios de alimentos en América Latina y el Caribe.](https://www.fao.org/3/i7248s/i7248s.pdf)
+
+[Taller de la FAO: Seguimiento del ODS indicador 12.3.1 - Índice Global de Pérdida de Alimentos](https://www.fao.org/3/CA1945ES/ca1945es.pdf)
+
  
-<p align="left"> **Por qué y cómo cuantificar la pérdida y el desperdicio de alimentos. Guía práctica.** </p>
-</br>
- 
-<iframe src="pdfs/Guia_ambiental.pdf" style="width:100%; height:600px;" frameborder="0"></iframe>
-</br>
- 
-<p align="left"> **Pérdidas y desperdicios de alimentos en América Latina y el Caribe.** </p>
-</br>
- 
-<iframe src="pdfs/Perdida_Desperdicio.pdf" style="width:100%; height:600px;" frameborder="0"></iframe>
-</br>
- 
-<p align="left"> **ODS 12.3.1.a Índice de pérdida de alimentos. Una introducción.** </p>
-</br>
- 
+[ODS 12.3.1.a Índice de pérdida de alimentos. Una introducción.](https://www.fao.org/policy-support/policy-themes/food-loss-food-waste/es/)
+
+<br>
+
 <iframe src="pdfs/ODS12_3_1_a_IPA.pdf" style="width:100%; height:600px;" frameborder="0"></iframe>
 </br>
 

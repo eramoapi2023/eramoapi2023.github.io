@@ -3,7 +3,7 @@
     "path": "D:/ERAMO2023/eramoapi2023.github.io/my_css/styles.css",
     "project_path": "my_css/styles.css",
     "type": "css",
-    "hash": "150036295",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1702584039793.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "264,145",
-        "scrollLine": "264"
+        "cursorPosition": "263,165",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1702588768,
+    "lastKnownWriteTime": 1702937658,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1702588768426,
+    "last_content_update": 1702937658134,
     "read_only": false,
     "read_only_alternatives": []
 }

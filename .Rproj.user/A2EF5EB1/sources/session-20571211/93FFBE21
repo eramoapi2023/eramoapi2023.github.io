@@ -3,7 +3,7 @@
     "path": "D:/ERAMO2023/eramoapi2023.github.io/SaderTemplate.html",
     "project_path": "SaderTemplate.html",
     "type": "html",
-    "hash": "4255891997",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1702583047648.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "451,23",
-        "scrollLine": "439"
+        "cursorPosition": "522,36",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1702588515,
+    "lastKnownWriteTime": 1702935419,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1702588515370,
+    "last_content_update": 1702935419682,
     "read_only": false,
     "read_only_alternatives": []
 }

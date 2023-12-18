@@ -1,33 +1,30 @@
----
-title: "**Encuesta de Residuos Alimenticios y Materia Orgánica, 2021**"
---- 
-
-<br>
-<br>
-
+<div style="text-align: justify">
 <div class=text-justify>
+<div class=text-justify>
+
+<br>
 
 ```{r organicos_aa, fig.align='center', echo=FALSE, out.width = "100%", cache=TRUE}
 
-knitr::include_graphics("imagenes/ERAMO2021.png")
+knitr::include_graphics("imagenes/procesos.JPG")
 
 ```
 
 <br>
 <br>
 
-# **1. Objetivos de la ERAMO**
+# **2.1. Objetivos de la ERAMO**
  
 <br>
  
-### **1.1. Objetivo general de la ERAMO**. 
+### **2.1.1. Objetivo general de la ERAMO**. 
 
 Contribuir al cálculo del impacto ambiental y socio económico que resulta de la pérdida y desperdicio de alimentos y materiales 
 orgánicos, mediante la generación de información estadística y geográfica veraz y oportuna; con la finalidad de apoyar a los tomadores de decisiones en la elaboración de políticas públicas sobre los recursos naturales, energía y medio ambiente en general, así como aspectos económicos, sociales y de seguridad alimentaria.   
 
 <br>
 
-### **1.2. Objetivos específicos**. 
+### **2.1.2. Objetivos específicos**. 
 
 
 •  Aumentar la claridad de temas, variables y conceptos.
@@ -48,11 +45,11 @@ orgánicos, mediante la generación de información estadística y geográfica v
 <br>
 <br>
 
-# **2. Antecedentes**
+# **2.2. Antecedentes**
 
 <br>
 
-### **2.1. Internacionales** 
+### **2.2.1. Internacionales** 
 
 Diversas instituciones y esfuerzos colaborativos mundiales se encuentran trabajando en una propuesta de metodología para la medición de la PDA. A
 continuación, se mencionan algunos de ellos para ilustrar el desarrollo y avance en esta materia:
@@ -85,7 +82,17 @@ por muchas otras instituciones que trabajan para la medición de la pérdida y d
 
 <br>
 
-### **2.2. Nacionales**
+### **2.2.2. Nacionales**
+
+<br>
+
+#### **Prueba piloto sobre pérdida de alimentos poscosecha en frutas y hortalizas** 
+
+A principios de julio de 2018 la FAO propuso al INEGI la realización de una prueba piloto, con la finalidad probar la metodología de indicadores de pérdida de alimentos SDG 12.3 en frutas y verduras. La metodología se basa en una medición nacional de pérdida de alimentos desarrollada por el Instituto de Investigación en Estadísticas Agropecuarias de la India (ICAR, por sus siglas en inglés). Una característica especial de esta metodología es que combina la encuesta (entrevistas cara a cara con los productores) y medición real (tomando muestras del producto en campo) de las pérdidas de alimentos. La prueba piloto dejó como aprendizaje, que cada producto, frutas o vegetales, debe tener un tratamiento diferenciado para la estimación de pérdidas o mermas en los diferentes eslabones de la cadena de valor, el cual debe estar en función de los flujos de comercialización que sigue cada producto.
+
+<iframe src="pdfs/pueba-piloto_2018-DGCE.pdf" style="width:100%; height:650px;" frameborder="0"></iframe>
+
+<br>
 
 En 2019 se constituyó un grupo de trabajo denominado **Grupo Interinstitucional de Expertos (GIE)**, con la finalidad de diseñar una encuesta sobre residuos alimenticios dirigida a toda la cadena alimentaria, a fin de conocer su origen, cantidad, composición, reutilización, tratamiento y disposición final; con el propósito de generar información valiosa para conocer el fenómeno y facilitar, en lo posible, la toma de decisiones técnicamente sustentada. 
 
@@ -133,7 +140,9 @@ medio de entrevistas directas en las unidades de la muestra definida sólo para 
 
 El número captado de entrevistas completas fue de 120, la duración de la entrevista tuvo un tiempo aproximado de 16 minutos, esto se realizó en 
 un cuestionario electrónico, para ello fue necesario cargar estos cuestionarios en dispositivos móviles que tuvieran sensor GPS y con sistema 
-operativo Android. Posteriormente se descargó la información desde una plataforma informática llamada Survey Solutions del Banco Mundial
+operativo Android. Posteriormente se descargó la información desde una plataforma informática llamada Survey Solutions del Banco Mundial.
+
+<br>
 
 #### **Prueba de instrumentos de captación y estrategia operativa ERAMO 2020**
 
@@ -175,8 +184,6 @@ En dicho ejercicio participaron 14 entidades captando 255 entrevistas completas:
 <br>
 
 #### **Prueba Piloto ERAMO 2021**
-
-<br>
 
 A inicios del año 2021, el Comité Técnico Especializado (CTE) en conjunto con el personal de la Subdirección de Estadísticas Ambientales de Recursos Naturales (SEARN) del INEGI, acordaron llevar a cabo un tercer ejercicio denominado Prueba Piloto ERAMO 2021 (PP ERAMO 2021) dirigido a los establecimientos económicos prestadores de servicios alimentarios y a las unidades de producción agrícola y/o pecuaria.
 
@@ -266,17 +273,19 @@ labelOptions = labelOptions(
 ```
 <p align="center"> **Entidades participantes** </p>
 
-Mediante un levantamiento presencial o vía remota, según las condiciones epidemiológicas y climáticas, con un estimado de 300 cuestionarios por entidad (200 unidades de producción agropecuaria y 100 de establecimientos); con cargas de trabajo distribuidas en equipos de estudiantes de las diferentes instituciones académicas participantes, colaborando como prestadores de servicio social; equipos coordinados por una o más personas designadas como coordinadores responsables en cada entidad.A Continuación se abordará una sintesís metodológica sobre dicha prueba piloto.
+<br>
+
+Mediante un levantamiento presencial o vía remota, según las condiciones epidemiológicas y climáticas, con un estimado de 300 cuestionarios por entidad (200 unidades de producción agropecuaria y 100 de establecimientos); con cargas de trabajo distribuidas en equipos de estudiantes de las diferentes instituciones académicas participantes, colaborando como prestadores de servicio social; equipos coordinados por una o más personas designadas como coordinadores responsables en cada entidad. A Continuación se abordará una sintesís metodológica sobre dicha prueba piloto.
 
 <br>
 
-# **3. Síntesis de la prueba Piloto 2021**
+# **2.3. Síntesis de la prueba Piloto 2021**
 
 <br>
 
-### **3.1 Cobertura Geográfica y Sectorial de la Prueba**
+### **2.3.1. Cobertura Geográfica y Sectorial de la Prueba**
 
-Para cada uno de los participantes, designados como entrevistadores, se realizó una intensa jornada de capacitación a distancia, en grupos distribuidos en diversas sesiones. Todos ellos recibieron amplio adiestramiento en temas que van desde la contextualización conceptual en pérdida y desperdicio de alimentos, conformación de la entrevista, contenido de los cuestionarios, procedimientos operativos, uso de la aplicación de entrevistador Survey Solutions, entre otros temas.
+Para cada uno de los participantes designados como entrevistadores, se realizó una intensa jornada de capacitación a distancia, en grupos distribuidos en diversas sesiones. Todos ellos recibieron amplio adiestramiento en temas que van desde la contextualización conceptual en pérdida y desperdicio de alimentos, conformación de la entrevista, contenido de los cuestionarios, procedimientos operativos, uso de la aplicación de entrevistador Survey Solutions, entre otros temas.
 
 Se llevaron a cabo sesiones de capacitación especiales para todos aquellos designados como supervisores del levantamiento de la información, brindándoles acceso a las herramientas de visualización, seguimiento y control de las entrevistas captadas por los entrevistadores bajo su cargo.
 
@@ -286,9 +295,9 @@ La muestra de establecimientos y unidades agropecuarias no pudo ser de utilidad 
 
 <br>
 
-### **3.2 Periodo de realización** 
+### **2.3.2. Periodo de realización** 
 
-El 24 de septiembre 2021, se impartió la primera capacitación a los participantes de la entidad de Guanajuato, el resto de capacitaciones se impartió entre los días 29 de septiembre al 8 de octubre del mismo año en sesiones de trabajo de 4 horas por grupo y dos grupos por día, eventualmente hubo algunos grupos de recuperación en los días siguientes. En su mayoría, las capacitaciones en comento se realizaron a través de la plataforma Microsoft Teams; la única capacitación presencial fue realizada en la entidad Baja California, por petición propia de los responsables de la ERAMO en dicha entidad.
+El 24 de septiembre 2021 se impartió la primera capacitación a los participantes de la entidad de Guanajuato, el resto de capacitaciones se impartió entre los días 29 de septiembre al 8 de octubre del mismo año en sesiones de trabajo de 4 horas por grupo y dos grupos por día, eventualmente hubo algunos grupos de recuperación en los días siguientes. En su mayoría, las capacitaciones en comento se realizaron a través de la plataforma Microsoft Teams; la única capacitación presencial fue realizada en la entidad Baja California, por petición propia de los responsables de la ERAMO en dicha entidad.
 
 [**Consulta una sesión de capacitación aquí**](https://365inegi.sharepoint.com/sites/Indicadores888/_layouts/15/stream.aspx?id=%2Fsites%2FIndicadores888%2FShared%20Documents%2FERAMO%2FRecordings%2FCurso%5FERAMO%5F8%5Foctubre20211008%5F133942Grabac%2Emp4&referrer=Teams%2ETEAMS%2DELECTRON&referrerScenario=teamsSdk%2DopenFilePreview){target="_blank_"}
 
@@ -297,17 +306,17 @@ El 8 de octubre inició el levantamiento de algunos cuestionarios y es hasta el 
 
 <br>
 
-### **3.3 Estrategia operativa** 
+### **2.3.3. Estrategia operativa** 
 
 Tradicionalmente el INEGI lleva a cabo sus operativos de campo con  personal contratado específicamente para cada censo o encuesta; en esta ocasión, en un ejercicio inédito para el instituto, el operativo de campo se realizó con apoyo de instituciones de educación superior y el Tecnológico Nacional de México. Alrededor de 500 estudiantes fueron capacitados y participaron como entrevistadores; 60 maestros fungieron como supervisores y un equipo de 10 personas en oficinas centrales coordinaron toda la prueba piloto. La retribución a estudiantes es la de reconocimiento de horas para el servicio social o prácticas profesionales y a los profesores un reconocimiento a su participación.
 
 Cada entidad adaptó su estrategia de levantamiento de información a la realidad sanitaria de su entorno, apegándose a las estrategias sugeridas en el manual operativo, por medio de entrevistas a distancia y cuando las condiciones epidemiológicas lo permitían, las entrevistas se realizaron de forma presencial. El periodo de tiempo destinado a la aplicación de entrevistas fue muy amplio debido a las necesidades académicas de cada institución.
 
-En términos generales, el resultado fue muy bueno en lo concerniente a la cobertura y diversidad de unidades de observación captadas, 80% de los cuestionarios se hicieron en establecimientos y 20% en unidades agropecuarias. La diversidad de sectores y productos captados indican que los resultados serán valiosos en el estudio de este tema de importancia mundial.
+En términos generales, el resultado fue muy bueno en lo concerniente a la cobertura y diversidad de unidades de observación captadas, 80% de los cuestionarios se hicieron en establecimientos y 20% en unidades agropecuarias. La diversidad de sectores y productos captados indican que los resultados contribuirán en el estudio de este tema de importancia mundial.
 
 <br>
 
-### **3.4 Actividades realizadas**  
+### **2.3.4. Actividades realizadas**  
 
 <br>
 
@@ -348,11 +357,9 @@ cada institución académica identificar a sus estudiantes como parte del equipo
 
 <br>
 
-### **3.5 Resultados de entrevistas**  
+### **2.3.5. Resultados de entrevistas**  
 
-<br>
-
-1. Se tienen captadas 2,867 entrevistas en el servidor, al cierre del 17 de diciembre de 2021; de las cuales, 2,300 son de establecimientos y 567 de unidades de producción agropecuaria, algunas de ellas fueron descartadas en los procesos de validación de la información, sobre el cual hablaremos más adelante.
+1. Se tienen un total de 2,867 entrevistas en el servidor, al cierre del 17 de diciembre de 2021; de las cuales, 2,300 son de establecimientos y 567 de unidades de producción agropecuaria, algunas de ellas fueron descartadas en los procesos de validación de la información, sobre el cual hablaremos más adelante.
 
 2. El índice de no respuesta es bajo, en términos formales, sólo 10 entrevistas tuvieron resultado “negativa del informante”; sin embargo, en la mayoría de los casos donde se obtuvo una negativa para atender por parte de informante simplemente se omitió el resultado y no se documentó este comportamiento en la plataforma de entrevistas, de acuerdo con comentarios de algunos coordinadores ERAMO en las entidades participantes.
 
@@ -360,7 +367,7 @@ cada institución académica identificar a sus estudiantes como parte del equipo
 
 <br>
 
-### **3.6	Captación de la información**
+### **2.3.6.	Captación de la información**
 
 1. Durante el operativo se puso a prueba el funcionamiento correcto de los dispositivos móviles, sin que se presentaran problemas. Algunas limitaciones que se presentaron furon con aquellos dispositivos con sistema IOS o versiones Android menores a 8.0. Un aspecto para considerar y solventar las limitantes antes mencionadas es utilizando la plataforma web del Survey Solutions, la cual permite, al igual que en los dispositivos moviles, captar datos desde una PC sin estar restringida a utilizar únicamente dispositivos móviles, de este modo se resguardan directamente las entrevistas en el servidor.
 
@@ -372,35 +379,30 @@ cada institución académica identificar a sus estudiantes como parte del equipo
 
 5. La plataforma de Survey Solutions permite la descarga correcta de la base de datos. De forma paralela a la captación de datos en tiempo real, se realizaron descargas parciales de las bases de datos para su análisis, con la finalidad de verificar la estructura, correcto almacenamiento y consistencia lógica de los datos, obteniendo resultados satisfactorios.
 
-6. Una de las principales ventajas de haber realizado la mayoría de las entrevistas en dispositivos móviles, fue la de evitar un proceso de captura manual de cuestionarios. Los datos que ingresaron al sistema, se almacenaron directamente en un respaldo en el repositorio web de la aplicación y al final del levantamiento, se descargaron en una base de datos de formato ".csv" para su procesamiento.
+6. Una de las principales ventajas de haber realizado la mayoría de las entrevistas en dispositivos móviles, fue la de evitar un proceso de captura manual de cuestionarios. Los datos que ingresaron al sistema, se almacenaron directamente en un respaldo en el repositorio web de la aplicación y al final del levantamiento se descargaron en una base de datos de formato ".csv" para su procesamiento.
 
 La prueba piloto de la ERAMO se diseñó de tal manera que gran parte de las variables de interés se obtuvieran mediante preguntas abiertas (ej. causa por la que se producen los residuos) y su codificación se realizara de forma manual. Las variables con categorías de respuesta (catálogos), incluían la opción "Otro(a)", longrando obtener respuestas distintas a las consideradas en la batería de preguntas. Este tipo de codificación requirió de un proceso de análisis, en el que se generaron nuevos criterios de estandarización/homologación de textos, identificación de sinónimos, entre otros, para posteriormente generar catálogos que facilitarían la interpretación de los resultados.
 
 <br>
 <br>
 
-### **3.7.	Procesamiento de la información y calidad de los datos**
+### **2.3.7.	Procesamiento de la información y calidad de los datos**
 
 <br>
 
-#### **3.7.1. Validación en la aplicación** 
-<br>
+#### **2.3.7.1. Validación en la aplicación** 
 
 El diseño del cuestionario, dentro de la plataforma de [Survey Solutions Designer](https://designer.mysurvey.solutions/Identity/Account/Login?ReturnUrl=%2F) permitió incluir algunas validaciones básicas o primarias, que al momento de aplicar la encuesta generan alertas sobre inconsistencias en las respuestas y sobre el flujo del cuestionario, lo que redunda en beneficio de la calidad de la información.
 
 <br>
 
-#### **3.7.2. Variables auxiliares** 
-
-<br>
+#### **2.3.7.2. Variables auxiliares** 
 
 La estructura de la base de datos requiere de variables o preguntas adicionales que permitan presentar la información para un público no especializado y que no exija hacer conversiones a usuarios de la información.
 
 <br>
 
-#### **3.7.3. Validación de los datos en gabinete** 
-
-<br>
+#### **2.3.7.3. Validación de los datos en gabinete** 
 
 La fase posterior a la validación en línea consiste en la elaboración de criterios de validación que permitan corregir las inconsistencias o incongruencias en la base de datos, resultado de múltiples factores que inciden en la calidad de la información (más adelante se detallará).
 La validación parte del procesamiento en el que se logró depurar la información proveniente de campo, en esta etapa se identificaron y resolvieron inconsistencias. Previamente, se analizaron los criterios de validación necesarios para los casos donde la información tuviera omisiones, rangos inválidos y/o incongruencias, con la finalidad de garantizar una mayor integridad.
@@ -424,63 +426,80 @@ La aplicación para el diseño del cuestionario, posibilita de incluir validacio
 5. Congruencias entre unidades de residuos, ejemplo, imposibilitar seleccionar litros con kilogramos    
 6. Congruencias entre tipos de residuos no comestibles y el destino, como banco de alimentos
 
-
 </br>
-
-
 <br>
 
-### **3.7.4. Frecuencias de los datos e indicadores de respuesta por pregunta** 
-
-<br>
+#### **2.3.7.4. Frecuencias de los datos e indicadores de respuesta por pregunta** 
 
 Una herramienta que está incluida en la plataforma genera cuadros o reportes de diversos tipos, entre ellos, aquel que cuantifica las respuestas por variable, también conocida como frecuencia de datos. La generación de indicadores es resultado de la necesidad de presentar o mostrar determinado sentido o dirección de la información obtenida.
 
 <br>
 
-#### **3.7.5. Liberación de la base de datos** 
-
-<br>
+#### **2.3.7.5. Liberación de la base de datos**
 
 Una vez aplicados los tratamientos tanto manuales como automatizados; asegurada la congruencia y consistencia de la información; eliminados los registros de prueba, duplicados; entre otros aspectos, se debe verificar y validar que la base de datos esté en condiciones de su uso para el público en general. En este momento se considera que la base está liberada para su puesta a disposición del público usuario de la información.
 
 <br>
 
-### **3.8.	Presentación de resultados**
+### **2.3.8.	Presentación de resultados**
 
-Debido a los tiempos del levantamiento que cierra el servidor de captura el día 17 de diciembre de 2021, así como la posterior fase de tratamiento de la información, la presentación de resultados se programa para el final del primer trimestre del año 2022, en el que se propone el procedimiento que se expone enseguida.
+Debido a los tiempos del levantamiento que cierra el servidor de captura el día 17 de diciembre de 2021, así como la posterior fase de tratamiento de la información, la presentación de resultados se programa para el final del primer trimestre del año 2022. Primeramente los resultados preliminares se consultaron al Comité Técnico para abordar temas o variables no considerados o mejorar la perspectiva de la presentación, la interpretación de los datos y enfoques, etc, considerando que los resultados del ejercicio reflejan una correspondencia con estudios realizados por expertos en el tema; aún cuando no son estadísticamente representativos, son indicativos del fenómeno
 
-1. Consulta de resultados preliminares al Comité Técnico para abordar temas o variables no considerados o mejorar la perspectiva de la presentación, la interpretación de los datos y enfoques, etc.
+Posteriormente se realizó la presentación de los resultados obtenidos en la prueba piloto 2021 a las Instituciones participantes, siendo de forma presencial, presentando estadísticas nacionales y regionales. La entrega de resultados sirvió para refrendar el compromiso con una encuesta futura, así como agradecer y fortalecer las redes ciudadanas para algún otro proyecto en conjunto con el INEGI.
 
-2. Presentación formal ante el CT, GIE, invitados del TecNM de los resultados obtenidos en la prueba piloto 2021.
 
-3. Presentación ante medios, tomadores de decisiones, investigadores de instancias nacionales e internacionales.
+En la siguiente imagen podemos ver cada una de las instituciones participantes de cada entidad.
+
+<br>
+
+
+```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
+
+knitr::include_graphics("imagenes/Mapa_uni.png")
+
+```
 
 <br>
 <br>
+
+En octubre de 2022 se realiza una reunión con el Centro de Estudios para el Desarrollo Rural Sustentable y la Soberanía Alimentaria (CEDRSSA), para Presentar la metodología y presentación de resultados de la Prueba Piloto 2021 de la ERAMO, así como la evaluación del proceso y resultados de dicha prueba, recibiendo aportaciones sobre causas fundamentales de gente con conocimientos en la generación de desechos y ayudar a detectar puntos críticos.
+
+
+```{r i_1, fig.align='center', echo=FALSE, cache=TRUE}
+
+knitr::include_graphics("imagenes/cedrssa.gif")
+
+```
+
 <br>
 
-# **4. Desarrollo del proyecto**
+En noviembre de 2022 se presentó el proyecto ERAMO en la Décima Novena Sesión del Consejo Consultivo Académico del INEGI. El Dr. Genaro Aguilar Gutiérrez, invitado del Instituto Politécnico Nacional (IPN) y miembro del GIE comentó que dicha encuesta se elaboró con la participación de estudiantes de posgrado y del último semestre de licenciatura y que surge a raíz de los compromisos de los ODS. Para cerrar su intervención, resaltó que la participación ciudadana es una opción viable para la recolección de información, con mínimo consumo de recursos financieros. Mencionó que existe interés y compromiso de diferentes actores nacionales para llevar a cabo una encuesta formal sobre la PDA, con datos estadísticamente representativos, y que el éxito de una encuesta formal depende de la coordinación y asesoría técnica adecuada, en este caso, por parte del INEGI.
+
+[**Consulta la presentación y minuta de reunión**](https://www.inegi.org.mx/inegi/cca/#Sesiones)
+
+<br>
+<br>
+
+# **2.4. Desarrollo del proyecto**
 
 La puesta en práctica de la prueba piloto 2021 de la ERAMO inicia con la evaluación de la prueba realizada en 2020 en 14 entidades federativas con apoyo de la Red PDA 12.3 integrada principalmente por universidades y un par de tecnológicos. Los resultados y aportes de dicha evaluación se ubican en el terreno conceptual, pues los primeros meses del año 2021 fueron dedicados a revisar el marco conceptual, los instrumentos de captación, así como la estrategia operativa.
-<br>
-
-### **4.1. Tecnología y desarrollo informático** 
 
 <br>
 
-#### **4.1.1. Aplicación en dispositivos móviles (celulares)**
+### **2.4.1. Tecnología y desarrollo informático** 
 
-</br>
+La plataforma tecnológica utilizada se encuentra disponible en el sitio [https://mysurvey.solutions/](https://mysurvey.solutions/){target='_blank'}.  Se trata de una aplicación abierta y gratuita desarrollada por el Banco Mundial para el desarrollo de encuestas. La aplicación tiene muchas funcionalidades, como la posibilidad de incluir toma de coordenadas GPS para georreferenciar las unidades de observación, capturar fotografías, incluir validaciones, filtros y pases entre preguntas, incluir catálogos como opciones de respuesta, macros, entre otras funciones.
 
-La plataforma tecnológica utilizada se encuentra disponible en el sitio [https://mysurvey.solutions/](https://mysurvey.solutions/){target='_blank'}. Se trata de una aplicación abierta y gratuita desarrollada por el Banco Mundial para el desarrollo de encuestas. La aplicación tiene muchas funcionalidades, como la posibilidad de incluir toma de coordenadas GPS para georreferenciar las unidades de observación, capturar fotografías, incluir validaciones, filtros y pases entre preguntas, incluir catálogos como opciones de respuesta, macros, entre otras funciones.
+La aplicación puede adaptarse a teléfonos celulares, así como a otros dispositivos como tablets, Lap top o computadora personal para la captación vía web (entrevistas por internet). Como ejemplo de la forma en que funciona la aplicación en un teléfono celular se muestra en el siguiente video:
 
-La aplicación puede adaptarse a teléfonos celulares, así como a otros dispositivos como tablets, Lap top o computadora personal para la captación vía web (entrevistas por internet). La forma en que funciona la aplicación en un teléfono celular se muestra en el siguiente video:
+<br>
 
 <div class=text-center>
 
 <video width="50%" height="50%" controls>
-  <source src="videos/VideoLlenado.mp4" type="video/mp4">
+<source src="imagenes/llenado.mp4" type="video/mp4">
+
+<br>
 
 Un aspecto principal que definió la prueba 2021 fue la imposibilidad de contar con un presupuesto o recursos financieros para un operativo tradicional con personal del INEGI, dispositivos y servidores del instituto, razón por la que se decidió la importancia de llevar a cabo una encuesta que no significara la impresión de cuestionarios, pago de personal, viáticos, etc.; esto es, mediante dispositivos móviles de los estudiantes colaboradores que pudieran capturar la entrevista y posteriormente enviar a un servidor.
 
@@ -488,7 +507,7 @@ Se utilizaron dispositivos móviles con sistema operativo Android, a los que se 
 
 Para que lo anterior sucediera, el entrevistador podía enviar los cuestionarios desde su teléfono utilizando la red de datos móviles o hasta que se encontrara conectado a una red wifi. En el caso de este operativo se decidió que se enviaran los cuestionarios al final de la jornada mediante el acceso a internet.
 
-El resultado fue satisfactorio para una gama importante de dispositivos móviles, pues se utilizaron desde versiones muy sencillas hasta modelos recientes. Para versiones anteriores previamente se detectó la dificultad para operar, para ello se utilizaron alternativas ya mencionadas con anterioridad.
+El resultado fue satisfactorio para una gama importante de dispositivos móviles, pues se utilizaron desde versiones muy sencillas hasta modelos recientes. Para versiones anteriores previamente se detectó la dificultad para operar, para ello se utilizaron alternativas mencionadas con anterioridad.
 
 En la mayoría de los casos, la captura de coordenadas, cuando la entrevista fue presencial, así como la toma de fotografías no fue llevada a cabo con frecuencia, ya que, para la toma de fotografías, los establecimientos o unidades de producción no contaba con evidencia de la pérdida o el desperdicio de alimentos al momento de la entrevista, los unicos establecimientos donde se obtuvieron coordenadas fueron aquellos donde la entrevista se realizó de manera presencial y capturada directamente con el dispositivo movil. 
 
@@ -501,6 +520,7 @@ Diariamente se comprobó que la conexión a la nube fuera satisfactoria para rec
 knitr::include_graphics("imagenes/movil2.jpg")
 
 ```
+
 
 <br>
 <br>
@@ -586,7 +606,7 @@ Entre los objetivos de la prueba se encuentra probar los tiempos de traslado, du
 ### **4.5. Definición de rutas** 
 <br>
 
-Para asegurar que los tiempos de traslado de los equipos de entrevistadores fueran óptimos, se establecieron rutas por la ubicación de las unidades de observación que se encontraran cerca del lugar de residencia del propio entrevistador, se hizo uso de aplicaciones como Google Maps para el trasado de las rutas optimas.
+Para asegurar que los tiempos de traslado de los equipos de entrevistadores fueran óptimos, se establecieron rutas por la ubicación de las unidades de observación que se encontraran cerca del lugar de residencia del propio entrevistador, se hizo uso de aplicaciones como Google Maps para el trazado de las rutas optimas.
 
 <br>
 
@@ -613,7 +633,7 @@ Adicional a la capacitación, y con el objetivo de reforzar el conocimiento sobr
 ### **4.7.	Verificación de insumos de trabajo** 
 <br>
 
-Se diseñó un formato para un pase de lista de los insumos y materiales que los entrevistadores debían portar consigo al momento de salir a campo para la obtención de las entrevistas. 
+Durante la capacitación se realizaban sugerencias al entrevistador que verificara el  material necesario que debían portar consigo al momento de salir a campo para la obtención de las entrevistas, contando primeramente con los cuestionarios impresos de los dos tipos de cuestionarios y pluma para su llenado, llevar los manuales de forma electrónica para cualquier duda que se les pueda presentar durante la entrevista, para la aplicación electrónica corroborar la activación de la herramienta de ubicación (GPS) del dispositivo móvil, la cual permitía obtener las coordenadas al momento de la entrevista y asegurarse que se contara con la pila necesaria del dispositivo. Una actividad adicional que también debería realizarse previa a la salida de campo era la sincronización de la aplicación de entrevista para las realizar actualizaciones al cuestionario o enviar cuestionarios de entrevistas anteriores, dejando claro que durante la entrevista no se requería internet. 
 
 <br>
 
@@ -638,6 +658,15 @@ ubicación de la unidad a la que se le aplicó el cuestionario, en los casos don
 Cabe mencionar que este bien público tiene disponibles aplicaciones para los entrevistadores y para los supervisores, por lo que el proceso de obtención de la entrevista y validación de ésta por parte del supervisor no se realizó al mismo tiempo.
 
 
+
+```{r i_2, fig.align='center', echo=FALSE, cache=TRUE}
+
+knitr::include_graphics("imagenes/Supervision.gif")
+
+```
+
+
+<br>
 <br>
 
 ### **4.10.	Herramientas tecnológicas para el operativo**
@@ -809,13 +838,13 @@ La base de datos liberada para explotación, presenta la siguiente estructura:
 
 | **Tabla** |  **Contenido** | **Registros** | **Campos** |
 |:----------------------|:----------------------|----------------------:|----------------------:|
-| establecimientos.dbf | Datos generales de los establecimientos y tipo de residuos que generan | 120 | 34 |
-| productos_establecimiento.dbf | Residuos de los establecimientos y su caracterización | 152 | 10 |
-| agropecuario.dbf | Datos generales de las unidades de producción agrícolas y/o pecuarias  | 191 | 26 |
-| productos_agricolas.dbf | Residuos agrícolas y su caracterización  | 119 | 9 |
-| productos_pecuarios.dbf | Residuos pecuarios y su caracterización | 106 | 8 |
-| perdidas_agricolas.dbf  | 
-| perdidas_pecuarios.dbf  |
+| establecimientos.dbf | Datos generales de los establecimientos y tipo de residuos que generan | 1962 | 26 |
+| productos_establecimiento.dbf | Residuos de los establecimientos y su caracterización | 5954 | 12 |
+| agropecuario.dbf | Datos generales de las unidades de producción agrícolas y/o pecuarias  | 450 | 23 |
+| productos_agricolas.dbf | Residuos agrícolas y su caracterización  | 422 | 26 |
+| productos_pecuarios.dbf | Residuos pecuarios y su caracterización | 173 | 21 |
+| perdidas_agricolas.dbf  | Pérdidas en los productos agrícolas reportados | 352 | 10 |
+| perdidas_pecuarios.dbf  | Pérdidas en los productos pecuarios reportados | 128 | 10 |
 
 
 <br>

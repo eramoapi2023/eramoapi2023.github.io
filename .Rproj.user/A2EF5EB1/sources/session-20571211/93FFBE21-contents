@@ -499,7 +499,7 @@ $endif$
 
           </div>
 
-          <div class="collapse navbar-collapse" style="font-size: 14px;" id="subenlaces">
+          <div class="collapse navbar-collapse" style="font-size: 16px;" id="subenlaces">
             <ul class="nav navbar-nav navbar-right">
               <li><a href="index.html">Introducción</a></li>
               <li><a href="cap2.html">Documentación de procesos</a></li>
