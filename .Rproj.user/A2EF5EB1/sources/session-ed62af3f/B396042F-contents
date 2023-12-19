@@ -1,0 +1,28 @@
+name: eramo_pp01
+output_dir: '.'
+navbar:
+  title: ERAMO 
+  type: inverse
+  right:
+  - text: Introducción
+    href: index.html
+  - text: Documentación de procesos
+    href: cap2.html
+  - text: Resultados Establecimientos
+    href: establecimientos.html
+  - text: Resultados Agropecuario
+    href: agropecuario.html
+  - text: Mapas
+    href: mapas.html
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    #theme: yeti
+    #highlight: tango
+    font-size: 10px
+    lib_dir: site_libs
+    self_contained: no
+    css: ./my_css/styles.css
+    template: SaderTemplate.html
+   

@@ -1,0 +1,27 @@
+{
+    "id": "C40C8406",
+    "path": "D:/ERAMO2023/eramoapi2023.github.io/mapas.rmd",
+    "project_path": "mapas.rmd",
+    "type": "r_markdown",
+    "hash": "944401393",
+    "contents": "",
+    "dirty": false,
+    "created": 1703017709758.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "31,69",
+        "scrollLine": "0",
+        "last_setup_crc32": "ed62af3fc74a0439"
+    },
+    "folds": "62|111|126|0|\n144|119|267|0|\n280|116|344|0|\n365|125|545|0|\n558|123|805|0|\n818|125|1067|0|\n1080|124|1266|0|\n1284|126|1406|0|\n1425|119|1540|0|\n1552|116|1616|0|\n1629|124|1761|0|\n1774|125|1948|0|\n1961|123|2153|0|\n2166|125|2376|0|\n2393|126|2513|0|\n2530|127|2643|0|\n2655|124|2722|0|\n2735|132|2912|0|\n2924|131|3173|0|\n3185|133|3530|0|\n3549|134|3691|0|\n",
+    "lastKnownWriteTime": 1703020007,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1703020007267,
+    "read_only": false,
+    "read_only_alternatives": []
+}
