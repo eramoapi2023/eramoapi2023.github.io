@@ -215,8 +215,8 @@ datos0$key <- factor(datos0$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
 
@@ -461,8 +461,8 @@ datos6$key <- factor(datos6$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
   
@@ -690,8 +690,8 @@ datos10$key <- factor(datos10$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
   
@@ -951,8 +951,8 @@ datos10$key <- factor(datos10$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
   
@@ -1185,8 +1185,8 @@ datos7$key <- factor(datos7$id_agrop)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
 
@@ -1367,8 +1367,8 @@ library(mapview)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  #addProviderTiles("CartoDB.Positron") %>%
-  addProviderTiles(providers$Esri) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
   addFullscreenControl()
 
 
@@ -1497,8 +1497,8 @@ datos1$key <- factor(datos1$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri, group = "Esri") %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron, group = "Esri") %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
 
@@ -1709,8 +1709,8 @@ datos4$key <- factor(datos4$id_agrop)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
 
@@ -1872,8 +1872,8 @@ datos6$key <- factor(datos6$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
   
@@ -2067,8 +2067,8 @@ datos7$key <- factor(datos7$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
   
@@ -2280,8 +2280,8 @@ datos8$key <- factor(datos8$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
   
@@ -2376,7 +2376,7 @@ m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
 
 ```
 
-<p align="center"> **Mapa 5.13.. Destino de las pérdidas en UPP.** </p>
+<p align="center"> **Mapa 5.13. Destino de las pérdidas en UPP.** </p>
 
 <br/>
 <br/>
@@ -2475,7 +2475,8 @@ m <- leaflet() %>%
   
   #addTiles(group = "OSM") %>% 
   #addProviderTiles("CartoDB.Positron") %>%
-  addProviderTiles(providers$Esri) %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 
 
@@ -2601,7 +2602,7 @@ datos2$key <- factor(datos2$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri, group = "Esri") %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   #addProviderTiles(providers$OpenTopoMap, group = "Topo") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
@@ -2842,7 +2843,7 @@ datos7$key <- factor(datos7$id_estab)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri, group = "Esri") %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   #addProviderTiles(providers$OpenTopoMap, group = "Topo") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
@@ -3059,7 +3060,7 @@ datos10$key <- factor(datos10$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri, group = "Esri") %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   #addProviderTiles(providers$OpenTopoMap, group = "Topo") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
@@ -3361,8 +3362,8 @@ datos15$key <- factor(datos15$gid)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri) %>%
-  #addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
   
@@ -3640,7 +3641,7 @@ datos6$key <- factor(datos6$id_estab)
 m <- leaflet() %>% 
   
   #addTiles(group = "OSM") %>% 
-  addProviderTiles(providers$Esri, group = "Esri") %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
   #addProviderTiles(providers$OpenTopoMap, group = "Topo") %>%
   addFullscreenControl()
 m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
