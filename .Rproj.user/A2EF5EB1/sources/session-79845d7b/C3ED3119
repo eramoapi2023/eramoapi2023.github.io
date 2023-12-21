@@ -1,9 +1,9 @@
 {
     "id": "C3ED3119",
-    "path": "D:/ERAMO2023/eramoapi2023.github.io/index.rmd",
+    "path": "D:/eramoapi2023/eramoapi2023.github.io/index.rmd",
     "project_path": "index.rmd",
     "type": "r_markdown",
-    "hash": "573340167",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1702572272581.0,
@@ -13,14 +13,14 @@
         "source_window_id": "",
         "Source": "Source",
         "cursorPosition": "385,10",
-        "scrollLine": "363"
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1702997593,
+    "lastKnownWriteTime": 1703189469,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1702997593957,
+    "last_content_update": 1703189469,
     "read_only": false,
     "read_only_alternatives": []
 }
