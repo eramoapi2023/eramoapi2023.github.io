@@ -879,49 +879,53 @@ Se tiene previsto un proceso de codificación de las variables abiertas del cues
 
 La información colectada en la prueba piloto permitió diseñar catálogos para algunas variables que se captaron a través de preguntas abiertas, estos catálogos pueden ser consultados en el documento descriptor de la base de datos de explotación presentado anteriormente.
 
+<br>
+<br>
+
 # **2.6.	Evaluación**
 
-Al finalizar el levantamiento de las entrevistas, se les pidió a los maestros e investigadores que apoyaron como supervisores evaluar el trabajo realizado para el proyecto ERAMO, en base a un esquema de preguntas que abarcarían temas sobre la capacitación, la estrategia operativa, aspectos conceptuales, sobre los cuestionarios y resultados, lo cual permitiría identificar los aciertos, así como los punto a perfeccionar para un evento posterior.
- 
-De los 222 capacitados, casi un 82% lograron realizar entrevistas, la mayoría de estas se llevaron a cabo entre familiares y conocidos, ya que la situación de pandemia les impidió aplicar la prueba muestral diseñada para cada entidad, otros factores a la negativa de participar y que cabe la pena mencionar, fueron la desconfianza de los informantes sobre el uso que se le pudiera dar a su información y sobre todo la falta de interés de algunos más, lo que desalentó a varios de los capacitados de poder cumplir con la metas establecidas de común acuerdo con sus supervisores.
- 
+<br>
+
+Al finalizar el levantamiento de las entrevistas, se les pidió a los maestros e investigadores que apoyaron como supervisores evaluar el trabajo realizado para el proyecto ERAMO con base a un esquema de preguntas que abarcarían temas sobre la capacitación, la estrategia operativa, aspectos conceptuales aspectos referentes a los cuestionarios y resultados obtenidos. Sus cometarios u observaciones permitiría identificar los aciertos, así como los punto a perfeccionar para un evento posterior.
+
+<br>
+
+### **2.6.1. Resultados del esquema de evaluación**
+
+De los 222 capacitados, cerca del 82% lograron realizar entrevistas, la mayoría de estas se llevaron a cabo entre familiares y conocidos, principalmente debido a que la situación de pandemia les impidió aplicar la muestra diseñada para cada entidad. Otros factores se deben a la negativa de participar, desconfianza de los informantes sobre el uso que se le pudiera dar a su información y, sobre todo, la falta de interés de algunos informantes, Esto desalentó a varios de los capacitados para cumplir con las metas establecidas en común acuerdo con sus supervisores.
 El desempeño de los capacitados estuvo cerca de ser el óptimo, los supervisores percibieron que aún con los tiempos limitados entre la capacitación y la puesta en marcha, el poco conocimiento del tema de la PDA, los mínimos ejercicios de llenado de los cuestionarios, la poca experiencia en realizar entrevistas, sumando el poco tiempo libre con el que disponían (clases, tareas, exámenes) lograron conseguir buenos resultados.
- 
-Un gran acierto en cuanto a la capacitación fue la puesta en práctica de la modalidad virtual, los horarios accesibles, las sesiones quedaban grabadas y disponibles para su posterior revisión. En contraparte, los supervisores comentaron que la duración de dichas sesiones fue extensa, lo que complicó que el aprendizaje se captara al 100%, sugieren sesiones presenciales, videos cortos de ejercicios de llenado.
- 
-Sobre la estrategia llevada a cabo, la mayoría de los supervisores percibieron que fue inadecuada, los principales desafíos a los que se enfrentaron fueron los datos desactualizados en la prueba muestral, el no haber contado con un directorio de productores con mayor tiempo de antelación, la poca habilidad para realizar entrevistas por parte de los capacitados. Sólo algunas instituciones educativas brindaron apoyo a los maestros/investigadores y a los alumnos, la mayoría tuvieron que realizar las actividades de la ERAMO fuera del horario de clases e inclusive en fines de semana.
- 
-El uso de los dispositivos electrónicos fue bueno ya que llevaba implícito un mejor control, el inconveniente fue la incompatibilidad de la aplicación del sistema operativo con los dispositivos, peor aún en los casos donde las entrevistas se realizaron en lugares abiertos, ya que el texto de la pantalla era poco visible lo que impedía poder leer/escribir en la pantalla.
- 
+Un gran acierto en cuanto a la capacitación fue la puesta en práctica de la modalidad virtual, los horarios accesibles, las sesiones grabadas y disponibles para su posterior revisión. En contraparte, los supervisores comentaron que la duración de dichas sesiones fue extensa, lo que complicó que el aprendizaje se captara al 100%. Sugieren sesiones presenciales, así como videos cortos de ejercicios de llenado.
+Sobre la estrategia llevada a cabo, la mayoría de los supervisores percibieron que fue inadecuada, los principales desafíos a los que se enfrentaron fueron los datos desactualizados en la prueba muestral, el no haber contado con un directorio de productores con mayor tiempo de antelación, además de la poca habilidad para realizar entrevistas por parte de los capacitados. Sólo algunas instituciones educativas brindaron apoyo a los maestros/investigadores y a los alumnos, la mayoría tuvieron que realizar las actividades de la ERAMO fuera del horario de clases e inclusive en fines de semana. 
+El uso de los dispositivos electrónicos fue bueno ya que llevaba implícito un mejor control, el inconveniente fue la incompatibilidad de la aplicación con el sistema operativo de algunos dispositivos. También, se registraron comentario sobre casos donde las entrevistas se realizaron en lugares abiertos, ya que el texto de la pantalla era poco visible, lo que impedía poder leer/escribir en la pantalla. 
 La reacción de los informantes con respecto a responder el cuestionario en general fue positiva, pero se apreció mucha desconfianza, escepticismo, sobre todo en los datos referentes a valores económicos, por lo que optaban por no responder.
  
-En cuanto a la participación/aceptación de los entrevistadores en la etapa de captación de entrevistas, los supervisores identificaron en algunos casos buena actitud y compromiso, en contraparte, algunos reportaron un comportamiento laxo, poco interés, principalmente en los entrevistadores más jóvenes.
- 
+En cuanto a la participación/aceptación de los entrevistadores en la etapa de captación de entrevistas, los supervisores identificaron, en algunos casos, buena actitud y compromiso, en contraparte, algunos reportaron un comportamiento desinteresado, principalmente en los entrevistadores más jóvenes.
 En cuanto al apartado conceptual del cuestionario, hubo mucha confusión tanto para los entrevistadores como para los informantes en lo referente a distinguir entre pérdida y desperdicio. Consideran que es excesivo la cantidad de preguntas en los cuestionarios
+Sobre el contenido de las preguntas del cuestionario, la mayoría de los supervisores externaron su opinión, para algunos les pareció bien, otro comentó que las tablas de causas y destino no se comprendieron a la primera, para alguien más las preguntas sobre pociones y piezas fueron las complicadas de comprender. Un supervisor hace la sugerencia de suplir el concepto de porcentaje por dos preguntas que permitan obtener el cálculo automático de este mismo. 
+En relación con el número de preguntas, la mayoría consideró que fue excesivo, principalmente para los productores que cosechan más de un producto. 
+Los aspectos que proponen cambiar/ajustar en el marco conceptual son, ellos mencionan:
+
+*	Menos preguntas y más puntuales
+*	Mayor claridad en las unidades de medida
+*	Mejorar texto sobre la diferencia entre pérdida, desperdicio, deshecho, merma
+*	Incluir más ejemplos desde la capacitación, para una mejor comprensión de los conceptos
+
+En cuanto a los cuestionarios, un supervisor sugiere adicionar el desperdicio de alimentos en hogares, por otra parte, otro hace mención en incluir preguntas cerradas (opciones de respuesta) para hacer más fluida la entrevista.
+
+En relación con la baja apreciación de desperdicio en los cuestionarios de establecimientos, los supervisores sugieren lo siguiente:
+
+*	Hacer campañas de concientización y sensibilización previa a la entrevista
+*	Implementar registros de pérdida y desperdicio, para obtener respuestas más puntuales
+*	Usar el concepto de desperdicio sólo en establecimientos
+*	Apoyarse de fotos/imágenes, videos cortos sobre pérdida y desperdicios, para que los informantes puedan diferenciar estos conceptos
+
+En cuanto a los resultados, la única propuesta sobre cómo presentar en cuanto a lo conceptual y la estrategia operativa, fue la implementar una difusión a través de contacto con cluster (agroalimentario, biotecnología y similares de acuerdo a los estados), videos y folletos para enviar en distintas plataformas digitales.
  
-Sobre el contenido de las preguntas del cuestionario, la mayoría de los supervisores externaron su opinión, para algunos les pareció bien, otro comentó que las tablas de causas y destino no se comprendieron a la primera, para alguien más las preguntas sobre pociones y piezas fueron las complicadas de comprender, un supervisor más hace la sugerencia de suplir el concepto de porcentaje por dos preguntas que permitan obtener el cálculo automático de este mismo porcentaje.
- 
-En relación con el número de preguntas, la mayoría consideró que fue excesivo, principalmente para los productores que cosechan más de un producto.
- 
-Los aspectos que proponen cambiar/ajustar en el marco conceptual son
-menos preguntas y más puntuales
-mayor claridad en las unidades de medida
-Mejorar texto sobre la diferencia entre pérdida, desperdicio, deshecho, merma
-Incluir más ejemplos desde la capacitación, para una mejor comprensión de los conceptos
- 
-La opción de incluir nuevas preguntas para futuros cuestionarios, un supervisor sugiere adicionar el desperdicio de alimentos en hogares, otro hace mención a incluir preguntas cerradas (opciones de respuesta) para hacer más fluida la entrevista
- 
-En relación con la baja apreciación de desperdicio en los cuestionarios de establecimientos, los supervisores sugieren:
-hacer campañas de concientización y sensibilización previa a la entrevista
-implementar registros de pérdida y desperdicio, para obtener respuestas más puntuales
-usar el concepto de desperdicio sólo en establecimientos
-apoyarse de fotos/imágenes, videos cortos sobre pérdida, desperdicios para que los informantes puedan diferenciar estos conceptos.
- 
-En cuanto a los resultados, la única propuesta sobre cómo presentar en cuanto a lo conceptual y la estrategia operativa, fue la de implementar una difusión a través de contacto con cluster (agroalimentario, biotecnología y similares de acuerdo a los estados), video y folletos para enviar en distintas plataformas digitales.
- 
-Y otras dos propuestas en cuanto a la representación de los resultados:
-Realizar pruebas de estadística inferencial
-Incluir ecuaciones para conocer la base implementada para obtener los porcentajes de cada una de las secciones.
+Se obtuvieron dos propuestas en cuanto a la representación de los resultados, las cuales consisten en:
+
+*	Realizar pruebas de estadística inferencial
+*	Incluir ecuaciones para conocer la base implementada para obtener los porcentajes de cada una de las secciones
+
 <br>
 <br>
 <br>
