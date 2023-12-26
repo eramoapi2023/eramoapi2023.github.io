@@ -1,0 +1,3697 @@
+
+<br>
+
+```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
+
+knitr::include_graphics("imagenes/Mapas.JPG")
+
+```
+
+<div class=text-justify>
+<br/>
+<br/>
+
+## **5.1. Entrevistas **
+
+<br>
+
+### **Relación entre entrevistadores registrados y activos**
+
+**Entrevistador registrado:** Son los usuarios registrados en la plataforma con rol de entrevistador y provilegios para cargar entrevistas al servidor.
+
+**Entrevistador activo:** Son los usuarios registrados en la plataforma con rol de entrevistadores que cargaron al servidor al menos una entrevista.
+
+<br/>
+<br/>
+
+```{r graf_1, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
+
+library(RPostgreSQL)
+
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select descrip entidad, entrev_reg registrados, entrev_actv activos from public.entidad
+where entrev_actv is not null");
+
+library(plotly)
+
+data <- datos[,c('entidad', 'registrados', 'activos')]
+
+fig <- plot_ly(data, x = ~entidad, y = ~registrados, type = 'bar', name = 'Entrevistadores registrados',
+               marker = list(color = '#68912b'))
+fig <- fig %>% add_trace(y = ~activos, name = 'Entrevistadores activos',
+                         marker = list(color = '#AB7A5A', showlegend = TRUE))
+fig <- fig %>% layout(title=("Entrevistadores registrados vs Entrevistadores activos"),
+                      xaxis = list(title = "Entidades"), #categoryorder = "total ascending"),
+                      yaxis = list(title = "Número de entrevistadores", barmode = 'group'))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+
+<br/>
+
+
+Porcentaje de entrevistadores registrados en la plataforma que participaron activamente como encuestadores de la **Prueba Piloto ERAMO 2021.**
+
+<br/>
+
+```{r mapaActReg, echo = FALSE, message = FALSE, fig.height=6, warning = FALSE, out.width = "100%", cache=TRUE}
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)  
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+datos <- dbGetQuery(conn,"select descrip, st_astext(geom) as wkt, round((entrev_actv*100/entrev_reg:: numeric),2) p_activ_regist from public.entidad
+where entrev_actv is not null")
+res <- dbDisconnect(conn)
+
+row.names(datos) = datos$descrip
+
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj <- datos %$%
+mapply(rgeos::readWKT, id = descrip, text = wkt) %>%
+do.call(sp::rbind.SpatialPolygons, .)
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(5)
+
+## Create SpatialPolygonsDataFrame
+sp_df = SpatialPolygonsDataFrame(sp_obj, datos[-2])
+sp_df$descrip <- factor(sp_df$descrip)
+datos$descrip <- factor(datos$descrip)
+#pal <- colorFactor(rainbow(15), levels = levels(datos$nom_ent), na.color = "white")
+breaks3 <- c(10,25,40,55,70)
+binpal3 <- colorBin(colors, sp_df$p_activ_regist, breaks3)
+
+
+
+leaflet() %>%
+#addTiles() %>%
+addProviderTiles("CartoDB.Positron") %>%
+addPolygons(
+data = sp_df,
+fillOpacity = 0.8,
+smoothFactor = 0.2,
+weight = 1,
+color = ~binpal3(p_activ_regist),
+popup = paste0("<strong>Entidad: </strong>", sp_df$descrip, "</br>",
+               "<strong>Porcentaje: </strong>", sp_df$p_activ_regist, "%")
+
+
+) %>%
+  addLegend(
+    "bottomleft", pal = binpal3, values = sp_df$p_activ_regist,
+    title = "Porcentaje de entrevistadores </br> activos",
+    opacity = 0.7
+  )
+
+
+```
+
+<p align="center"> **Mapa 5.1. Porcentaje de entrevistadores activos en relación con los registrados, por entidad federativa** </p>
+
+
+<br/>
+
+
+## **5.2. Unidades de Producción Agrícola (UPA)**
+
+<br/>
+
+### **5.2.1. Unidades de producción agrícola y productos reportados**
+
+El siguiente mapa muestra la ubicación de las UPA, así como información sobre los productos declarados en cada una de ellas.
+
+<br/>
+
+```{r mapaleaflet_agricolabis, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_agropecuario")
+
+datos1 <- datos[which(datos$cuest_agricola=="Sí"),]
+datos2 <- datos[which(datos$lleva_registro_a=="Sí"),]
+
+datos0 <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_productos_a")
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$nom_ent
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj0 <- datos0 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$id_agrop)
+datos1$key <- factor(datos1$id_agrop)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$id_agrop)
+datos2$key <- factor(datos2$id_agrop)
+
+sp_df0 = SpatialPointsDataFrame(sp_obj0, datos0[-2])
+sp_df0$key <- factor(sp_df0$gid)
+datos0$key <- factor(datos0$gid)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+
+ 
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df1$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df1$nom_mun, "</br>",
+                           "<strong>Has. cultivadas: </strong>", sp_df1$tot_ha_prod, "</br>"),
+           group = "Unidades de Producción (UP) Agrícola"
+           ) %>% 
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df2$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df2$nom_mun, "</br>",
+                           "<strong>Proceso(s) en el (los) que lleva registro: </strong>", sp_df2$registro_proc_a, "</br>"),
+           group = "UP donde se lleva registro en los procesos"
+           ) %>%
+  
+  
+  addMarkers(data= sp_df0,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df0$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df0$nom_otro_producto, "</br>",
+                           "<strong>Has. producidas: </strong>", sp_df0$ha_producidas, "</br>",
+                           "<strong>Has. a cielo abierto: </strong>", sp_df0$agr_cieloabierto, "</br>",
+                           "<strong>Has. agricultura protegida: </strong>", sp_df0$agr_protegida, "</br>",
+                           "<strong>Has. riego: </strong>", sp_df0$agr_riego, "</br>",
+                           "<strong>Has. temporal: </strong>", sp_df0$agr_temporal, "</br>",
+                           "<strong>Porc. consumo humano: </strong>", sp_df0$consumo_hum, "</br>",
+                           "<strong>Porc. consumo animal: </strong>", sp_df0$consumo_anim, "</br>",
+                           "<strong>Porc. consumo desconocido: </strong>", sp_df0$consumo_desc, "</br>",
+                           "<strong>Producción esperada: </strong>", sp_df0$ton_esperada, "</br>",
+                           "<strong>Producción final: </strong>", sp_df0$ton_final, "</br>"),
+           group = "Productos reportados"
+           ) %>%
+  
+
+  addLayersControl(#m,
+                   baseGroups = c("Unidades de Producción (UP) Agrícola", "UP donde se lleva registro en los procesos", "Productos reportados")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+
+#hideGroup(m, "agroPerd")
+
+
+```
+
+<p align="center"> **Mapa 5.2. Ubicación de UPA y productos declarados.** </p>
+
+<br/>
+<br/>
+
+### **5.2.2. Pérdida de alimentos por Entidad Federativa**
+
+El siguiente mapa muestra el porcentaje de pérdida de alimentos en las UPA, por Entidad Federativa.
+
+<br/>
+
+```{r mapaleaflet_agricola, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select nom_ent, st_astext(geom) as wkt, porc 
+from public.agricola_porc_perdida_ent_new ")
+res <- dbDisconnect(conn)
+
+row.names(datos) = datos$nom_ent
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj <- datos %$%
+mapply(rgeos::readWKT, id = nom_ent, text = wkt) %>%
+do.call(sp::rbind.SpatialPolygons, .)
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(7)
+
+## Create SpatialPolygonsDataFrame
+sp_df = SpatialPolygonsDataFrame(sp_obj, datos[-2])
+sp_df$nom_ent <- factor(sp_df$nom_ent)
+datos$nom_ent <- factor(datos$nom_ent)
+#pal <- colorFactor(rainbow(15), levels = levels(datos$nom_ent), na.color = "white")
+breaks5 <- c(1,5,10,15,20,50)
+binpal5 <- colorBin(colors, sp_df$porc, breaks5)
+
+
+
+leaflet() %>%
+#addTiles() %>%
+addProviderTiles("CartoDB.Positron") %>%
+addPolygons(
+data = sp_df,
+fillOpacity = 0.8,
+smoothFactor = 0.2,
+weight = 1,
+color = ~binpal5(porc),
+popup = paste0("<strong>Entidad: </strong>", sp_df$nom_ent, "</br>",
+"<strong>Porc. Pérdida: </strong>", sp_df$porc, "%")
+
+) %>%
+  addLegend(
+    "bottomleft", pal = binpal5, values = sp_df$porc,
+    title = "Porcentajes de </br> pérdida",
+    opacity = 0.7
+  )
+
+```
+<p align="center"> **Mapa 5.3. Porcentaje de pérdida por Entidad Federativa.** </p>
+
+<br/>
+<br/>
+
+
+
+### **5.2.3. Procesos de producción donde se presentan las pérdidas de alimentos**
+
+El siguiente mapa muestra la ubicación de las UPA que presentan pérdida de productos alimenticios, por proceso de producción..
+
+* Almacenamiento
+* Cosecha 
+* Selección/Empaque
+* Transporte 
+* Venta
+* Otro proceso
+
+<br/>
+
+```{r mapaleaflet_agricola_procesos, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_perdidas_a")
+
+datos1 <- datos[which(datos$proceso=="Almacenamiento"),]
+datos2 <- datos[which(datos$proceso=="Cosecha"),]
+datos3 <- datos[which(datos$proceso=="Selección/Empaque"),]
+datos4 <- datos[which(datos$proceso=="Transporte"),]
+datos5 <- datos[which(datos$proceso=="Venta"),]
+datos6 <- datos[which(datos$proceso=="Otro proceso"),]
+
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$causa
+
+#row.names(datos) = datos$producto
+
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$gid)
+datos1$key <- factor(datos1$gid)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$gid)
+datos2$key <- factor(datos2$gid)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$gid)
+datos3$key <- factor(datos3$gid)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$gid)
+datos4$key <- factor(datos4$gid)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$gid)
+datos5$key <- factor(datos5$gid)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$gid)
+datos6$key <- factor(datos6$gid)
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df1$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df1$nom_otro_producto_a, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df1$perdida, "</br>",
+                           "<strong>Proceso: </strong>", sp_df1$proceso, "</br>",
+                           "<strong>Causa: </strong>", sp_df1$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df1$destino, "</br>"),
+           group = "Almacenamiento"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df2$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df2$nom_otro_producto_a, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df2$perdida, "</br>",
+                           "<strong>Proceso: </strong>", sp_df2$proceso, "</br>",
+                           "<strong>Causa: </strong>", sp_df2$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df2$destino, "</br>"),
+           group = "Cosecha"
+           ) %>%
+
+
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df3$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df3$nom_otro_producto_a, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df3$perdida, "</br>",
+                           "<strong>Proceso: </strong>", sp_df3$proceso, "</br>",
+                           "<strong>Causa: </strong>", sp_df3$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df3$destino, "</br>"),
+           group = "Selección/Empaque"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df4$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df4$nom_otro_producto_a, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df4$perdida, "</br>",
+                           "<strong>Proceso: </strong>", sp_df4$proceso, "</br>",
+                           "<strong>Causa: </strong>", sp_df4$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df4$destino, "</br>"),
+           group = "Transporte"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df5$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df5$nom_otro_producto_a, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df5$perdida, "</br>",
+                           "<strong>Proceso: </strong>", sp_df5$proceso, "</br>",
+                           "<strong>Causa: </strong>", sp_df5$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df5$destino, "</br>"),
+           group = "Venta"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df6$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df6$nom_otro_producto_a, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df6$perdida, "</br>",
+                           "<strong>Proceso: </strong>", sp_df6$proceso, "</br>",
+                           "<strong>Causa: </strong>", sp_df6$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df6$destino, "</br>"),
+           group = "Otro proceso"
+           ) %>%
+  
+  
+  addLayersControl(#m,
+                   baseGroups = c("Almacenamiento", "Cosecha", "Selección/Empaque", "Transporte", "Venta", "Otro proceso")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+
+#hideGroup(m, "agroPerd")
+
+
+```
+
+<p align="center"> **Mapa 5.4. Procesos en los que ocurren las pérdidas.** </p>
+
+<br/>
+<br/>
+
+### **5.2.4. Causas que originan la pérdida de alimentos**
+
+En el siguiente mapa se muestra el comportamiento geográfico de las causas que originan la pérdida de alimentos en las UPA.
+
+<br/>
+
+```{r mapaleaflet_agricola_causas, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_perdidas_a")
+
+datos1 <- datos[which(datos$causa=="Bajas o nulas ventas"),]
+datos2 <- datos[which(datos$causa=="Calidad del producto (aspecto, tamaño, golpes)"),]
+datos3 <- datos[which(datos$causa=="Desastres ambientales"),]
+datos4 <- datos[which(datos$causa=="Factores meteorológicos (sequía, humedad, temperatura)"),]
+datos5 <- datos[which(datos$causa=="Manejo inadecuado del cultivo (preparación, siembra y cosecha)"),]
+datos6 <- datos[which(datos$causa=="Manejo inadecuado del producto (embalaje, transporte y almacenamiento)"),]
+datos7 <- datos[which(datos$causa=="Plagas y enfermedades"),]
+datos8 <- datos[which(datos$causa=="Robo, saqueo"),]
+datos9 <- datos[which(datos$causa=="No se pudo determinar"),]
+datos10 <- datos[which(datos$causa=="Otras causas"),]
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$causa
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj7 <- datos7 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj8 <- datos8 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj9 <- datos9 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj10 <- datos10 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$gid)
+datos1$key <- factor(datos1$gid)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$gid)
+datos2$key <- factor(datos2$gid)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$gid)
+datos3$key <- factor(datos3$gid)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$gid)
+datos4$key <- factor(datos4$gid)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$gid)
+datos5$key <- factor(datos5$gid)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$gid)
+datos6$key <- factor(datos6$gid)
+
+sp_df7 = SpatialPointsDataFrame(sp_obj7, datos7[-2])
+sp_df7$key <- factor(sp_df7$gid)
+datos7$key <- factor(datos7$gid)
+
+sp_df8 = SpatialPointsDataFrame(sp_obj8, datos8[-2])
+sp_df8$key <- factor(sp_df8$gid)
+datos8$key <- factor(datos8$gid)
+
+sp_df9 = SpatialPointsDataFrame(sp_obj9, datos9[-2])
+sp_df9$key <- factor(sp_df9$gid)
+datos9$key <- factor(datos9$gid)
+
+sp_df10 = SpatialPointsDataFrame(sp_obj10, datos10[-2])
+sp_df10$key <- factor(sp_df10$gid)
+datos10$key <- factor(datos10$gid)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df1$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df1$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df1$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df1$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df1$destino, "</br>"),
+           group = "Bajas o nulas ventas"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df2$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df2$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df2$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df2$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df2$destino, "</br>"),
+           group = "Calidad del producto (aspecto, tamaño, golpes)"
+           ) %>%
+
+
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df3$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df3$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df3$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df3$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df3$destino, "</br>"),
+           group = "Desastres ambientales"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df4$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df4$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df4$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df4$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df4$destino, "</br>"),
+           group = "Factores meteorológicos (sequía, humedad, temperatura)"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df5$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df5$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df5$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df5$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df5$destino, "</br>"),
+           group = "Manejo inadecuado del cultivo (preparación, siembra y cosecha)"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df6$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df6$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df6$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df6$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df6$destino, "</br>"),
+           group = "Manejo inadecuado del producto (embalaje, transporte y almacenamiento)"
+           ) %>%
+  
+  addMarkers(data= sp_df7,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df7$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df7$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df7$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df7$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df7$destino, "</br>"),
+           group = "Plagas y enfermedades"
+           ) %>%
+  
+  addMarkers(data= sp_df8,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df8$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df8$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df8$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df8$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df8$destino, "</br>"),
+           group = "Robo, saqueo"
+           ) %>%
+  
+  addMarkers(data= sp_df9,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df9$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df9$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df9$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df9$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df9$destino, "</br>"),
+           group = "No se pudo determinar"
+           ) %>%
+  
+  addMarkers(data= sp_df10,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df10$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df10$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df10$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df10$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df10$destino, "</br>"),
+           group = "Otras causas"
+           ) %>%
+  
+  addLayersControl(#m,
+                   baseGroups = c("Bajas o nulas ventas", "Calidad del producto (aspecto, tamaño, golpes)", "Desastres ambientales", "Factores meteorológicos (sequía, humedad, temperatura)", "Manejo inadecuado del cultivo (preparación, siembra y cosecha)", "Manejo inadecuado del producto (embalaje, transporte y almacenamiento)", "Plagas y enfermedades", "Robo, saqueo", "No se pudo determinar", "Otras causas")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+#hideGroup(m, "agroPerd")
+
+```
+
+<p align="center"> **Mapa 5.5. Causas que originan la pérdida de alimentos en las UPA.** </p>
+
+<br/>
+<br/>
+
+### **5.2.5. Destino de la pérdida de alimentos**
+
+En el siguiente mapa se muestra el comportamiento geográfico de el **Destino** de las pérdidas en las UPA.
+
+<br/>
+
+```{r mapaleaflet_agricola_destinos, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_perdidas_a")
+
+datos1 <- datos[which(datos$destino=="Abandono durante la transportación"),]
+datos2 <- datos[which(datos$destino=="Abono a la tierra (se incorporada al suelo, se hace composta)"),]
+datos3 <- datos[which(datos$destino=="Alimentación de animales"),]
+datos4 <- datos[which(datos$destino=="Desecho, basura (Se entierra, quema)"),]
+datos5 <- datos[which(datos$destino=="Donación, regalo"),]
+datos6 <- datos[which(datos$destino=="Industria de la transformación (se convierte en otro producto)"),]
+datos7 <- datos[which(datos$destino=="No hubo producción, no se logró"),]
+datos8 <- datos[which(datos$destino=="Robo, saqueo"),]
+datos9 <- datos[which(datos$destino=="Venta a menor precio, intermediarios"),]
+datos10 <- datos[which(datos$destino=="No se pudo determinar"),]
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$causa
+
+#row.names(datos) = datos$producto
+
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj7 <- datos7 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj8 <- datos8 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj9 <- datos9 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj10 <- datos10 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$gid)
+datos1$key <- factor(datos1$gid)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$gid)
+datos2$key <- factor(datos2$gid)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$gid)
+datos3$key <- factor(datos3$gid)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$gid)
+datos4$key <- factor(datos4$gid)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$gid)
+datos5$key <- factor(datos5$gid)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$gid)
+datos6$key <- factor(datos6$gid)
+
+sp_df7 = SpatialPointsDataFrame(sp_obj7, datos7[-2])
+sp_df7$key <- factor(sp_df7$gid)
+datos7$key <- factor(datos7$gid)
+
+sp_df8 = SpatialPointsDataFrame(sp_obj8, datos8[-2])
+sp_df8$key <- factor(sp_df8$gid)
+datos8$key <- factor(datos8$gid)
+
+sp_df9 = SpatialPointsDataFrame(sp_obj9, datos9[-2])
+sp_df9$key <- factor(sp_df9$gid)
+datos9$key <- factor(datos9$gid)
+
+sp_df10 = SpatialPointsDataFrame(sp_obj10, datos10[-2])
+sp_df10$key <- factor(sp_df10$gid)
+datos10$key <- factor(datos10$gid)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df1$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df1$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df1$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df1$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df1$causa, "</br>"),
+           group = "Abandono durante la transportación"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df2$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df2$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df2$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df2$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df2$causa, "</br>"),
+           group = "Abono a la tierra (se incorporada al suelo, se hace composta)"
+           ) %>%
+
+
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df3$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df3$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df3$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df3$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df3$causa, "</br>"),
+           group = "Alimentación de animales"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df4$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df4$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df4$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df4$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df4$causa, "</br>"),
+           group = "Desecho, basura (Se entierra, quema)"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df5$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df5$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df5$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df5$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df5$causa, "</br>"),
+           group = "Donación, regalo"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df6$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df6$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df6$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df6$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df6$causa, "</br>"),
+           group = "Industria de la transformación (se convierte en otro producto)"
+           ) %>%
+  
+  addMarkers(data= sp_df7,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df7$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df7$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df7$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df7$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df7$causa, "</br>"),
+           group = "No hubo producción, no se logró"
+           ) %>%
+  
+  addMarkers(data= sp_df8,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df8$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df8$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df8$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df8$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df8$causa, "</br>"),
+           group = "Robo, saqueo"
+           ) %>%
+  
+  addMarkers(data= sp_df9,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df9$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df9$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df9$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df9$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df9$causa, "</br>"),
+           group = "Venta a menor precio, intermediarios"
+           ) %>%
+  
+  addMarkers(data= sp_df10,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df10$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df10$nom_otro_producto_a, "</br>",
+                           "<strong>Proceso: </strong>", sp_df10$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df10$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df10$causa, "</br>"),
+           group = "No se pudo determinar"
+           ) %>%
+  
+  
+  addLayersControl(#m,
+                   baseGroups = c("Abandono durante la transportación", "Abono a la tierra (se incorporada al suelo, se hace composta)", "Alimentación de animales", "Desecho, basura (Se entierra, quema)", "Donación, regalo", "Industria de la transformación (se convierte en otro producto)", "No hubo producción, no se logró", "Robo, saqueo", "Venta a menor precio, intermediarios", "No se pudo determinar")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+#hideGroup(m, "agroPerd")
+
+```
+
+<p align="center"> **Mapa 5.6. Destino de las pérdidas en UPA.** </p>
+
+<br/>
+<br/>
+
+### **5.2.6. Medidas que adaptan las UPA para evitar y/o disminuir la pérdida de alimentos**
+
+Ubicación de unidades de producción agrícola que llevan medidas para reducir y/o disminuir la pérdida de alimentos.
+
+<br/>
+
+```{r mapaleaflet_agricola_medidas, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_agropecuario")
+
+datos1 <- datos[which(datos$medidas_a=="Mejorar insumos de producción"),]
+datos2 <- datos[which(datos$medidas_a=="Mejorar prácticas de producción"),]
+datos3 <- datos[which(datos$medidas_a=="Prever fenómenos meteorológicos"),]
+datos4 <- datos[which(datos$medidas_a=="Regalar, donar a banco alimentos"),]
+datos5 <- datos[which(datos$medidas_a=="Transformar los productos (procesos secundarios, uso diferente)"),]
+datos6 <- datos[which(datos$medidas_a=="Uso alterno no comercial"),]
+datos7 <- datos[which(datos$medidas_a=="Otras medidas"),]
+
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$nom_ent
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj7 <- datos7 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$id_agrop)
+datos1$key <- factor(datos1$id_agrop)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$id_agrop)
+datos2$key <- factor(datos2$id_agrop)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$id_agrop)
+datos3$key <- factor(datos3$id_agrop)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$id_agrop)
+datos4$key <- factor(datos4$id_agrop)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$id_agrop)
+datos5$key <- factor(datos5$id_agrop)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$id_agrop)
+datos6$key <- factor(datos6$id_agrop)
+
+sp_df7 = SpatialPointsDataFrame(sp_obj7, datos7[-2])
+sp_df7$key <- factor(sp_df7$id_agrop)
+datos7$key <- factor(datos7$id_agrop)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+
+ 
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df1$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df1$nom_mun, "</br>"
+                           #"<strong>Has. cultivadas: </strong>", sp_df0$tot_ha_prod, "</br>"
+                           ),
+           group = "Mejorar insumos de producción"
+           ) %>% 
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df2$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df2$nom_mun, "</br>"
+                           #"<strong>Proceso(s) en el (los) que lleva registro: </strong>", sp_df4$registro_proc_a, "</br>"
+                           ),
+           group = "Mejorar prácticas de producción"
+           ) %>%
+  
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df3$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df3$nom_mun, "</br>"
+                           #"<strong>Alternativas: </strong>", sp_df5$alternativa_a, "</br>"
+                           ),
+           group = "Prever fenómenos meteorológicos"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df4$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df4$nom_mun, "</br>"
+                           #"<strong>Medidas: </strong>", sp_df6$medidas_a, "</br>"
+                           ),
+           group = "Regalar, donar a banco alimentos"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df5$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df5$nom_mun, "</br>"
+                           #"<strong>Medidas: </strong>", sp_df6$medidas_a, "</br>"
+                           ),
+           group = "Transformar los productos (procesos secundarios, uso diferente)"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df6$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df6$nom_mun, "</br>"
+                           #"<strong>Medidas: </strong>", sp_df6$medidas_a, "</br>"
+                           ),
+           group = "Uso alterno no comercial"
+           ) %>%
+  
+  addMarkers(data= sp_df7,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df7$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df7$nom_mun, "</br>"
+                           #"<strong>Medidas: </strong>", sp_df6$medidas_a, "</br>"
+                           ),
+           group = "Otras medidas"
+           ) %>%
+  
+
+  addLayersControl(#m,
+                   baseGroups = c("Mejorar insumos de producción", "Mejorar prácticas de producción", "Prever fenómenos meteorológicos", "Regalar, donar a banco alimentos", "Transformar los productos (procesos secundarios, uso diferente)", "Uso alterno no comercial", "Otras medidas")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+
+#hideGroup(m, "agroPerd")
+
+
+```
+
+<p align="center"> **Mapa 5.6. Medidas para evitar y/o disminuir la pérdida de alimentos en las UPA.** </p>
+
+<br/>
+<br/>
+
+
+### **5.2.7. Percepción Ambiental**
+
+Ubicación de UPA donde tienen conocimiento sobre:
+
+- Bancos de alimentos
+- Redes alimentarias
+- Campañas para reducir la PDA
+
+<br/>
+
+```{r mapaleaflet_ambiental_agricola, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_agropecuario")
+
+datos1 <- datos[which(datos$cuest_agricola=="Sí" & datos$conoce_bancos=="Sí"),]
+datos2 <- datos[which(datos$cuest_agricola=="Sí" & datos$conoce_redalimentaria=="Sí"),]
+datos3 <- datos[which(datos$cuest_agricola=="Sí" & datos$conoce_programas=="Sí"),]
+
+
+res <- dbDisconnect(conn)
+
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj <- datos %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+sp_df = SpatialPointsDataFrame(sp_obj, datos[-2])
+sp_df$key <- factor(sp_df$id_agrop)
+datos$key <- factor(datos$id_agrop)
+
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$id_agrop)
+datos1$key <- factor(datos1$id_agrop)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$id_agrop)
+datos2$key <- factor(datos2$id_agrop)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$id_agrop)
+datos3$key <- factor(datos3$id_agrop)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+library(sp)
+library(rgdal)
+library(leaflet)
+library(htmltools)
+library(htmlwidgets)
+library(leaflet.extras)
+library(mapview)
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  addProviderTiles("CartoDB.Positron") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addFullscreenControl()
+
+
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+  
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df1$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df1$nom_mun, "</br>"
+                           ),
+           group = "Bancos de alimentos"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df2$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df2$nom_mun, "</br>"),
+           group = "Redes alimentarias"
+           ) %>%
+  
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df3$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df3$nom_mun, "</br>"),
+           group = "Campañas para reducir la PDA"
+           ) %>%
+  
+  
+  addLayersControl(#m,
+                   baseGroups = c("Bancos de alimentos", "Redes alimentarias", "Campañas para reducir la PDA")
+                   #overlayGroups = c("uAgropecuarias", "uAgro", "uPec", "uAmb"),
+                   #options = layersControlOptions(collapsed = FALSE)
+                   )
+
+```
+
+<p align="center"> **Mapa 5.7. Percepción ambiental en las UPA.** </p>
+
+<br/>
+<br/>
+
+
+## **5.3. Unidades de Producción Pecuaria (UPP)**
+****
+
+<br/>
+
+### **5.3.1. Unidades de producción pecuaria y productos reportados**
+
+Ubicación de las unidades pecuarias con información sobre los procesos donde se lleva registro y los productos reportados.
+
+<br/>
+
+```{r mapaleaflet_pecuariobis, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_agropecuario")
+
+datos0 <- datos[which(datos$cuest_pecuario=="Sí"),]
+datos2 <- datos[which(datos$lleva_registro_p=="Sí"),]
+
+datos1 <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_productos_p")
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$nom_ent
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+
+sp_obj0 <- datos0 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+
+sp_df0 = SpatialPointsDataFrame(sp_obj0, datos0[-2])
+sp_df0$key <- factor(sp_df0$id_agrop)
+datos0$key <- factor(datos0$id_agrop)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$id_agrop)
+datos2$key <- factor(datos2$id_agrop)
+
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$gid)
+datos1$key <- factor(datos1$gid)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron, group = "Esri") %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+
+ 
+  addMarkers(data= sp_df0,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df0$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df0$nom_mun, "</br>"),
+           group = "Unidades de Producción (UP) Pecuaria"
+           ) %>% 
+
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df2$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df2$nom_mun, "</br>",
+                           "<strong>Proceso(s) en el (los) que lleva registro: </strong>", sp_df2$registro_proc_p, "</br>"),
+           group = "UP donde se lleva registro en los procesos"
+           ) %>%
+  
+
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df1$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df1$nom_otro_producto, "</br>",
+                           "<strong>Porc. consumo humano: </strong>", sp_df1$consumo_hum, "</br>",
+                           "<strong>Porc. consumo animal: </strong>", sp_df1$consumo_anim, "</br>",
+                           "<strong>Porc. consumo desconocido: </strong>", sp_df1$consumo_desc, "</br>",
+                           "<strong>Producción esperada (ton): </strong>", sp_df1$ton_esperado, "</br>",
+                           "<strong>Producción final (ton): </strong>", sp_df1$ton_final, "</br>"),
+           group = "Productos reportados"
+           ) %>%
+  
+  
+  addLayersControl(#m,
+                   baseGroups = c("Unidades de Producción (UP) Pecuaria", "UP donde se lleva registro en los procesos", "Productos reportados")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+```
+<p align="center"> **Mapa 5.8. Ubicación de unidades pecuarias y productos reportados.** </p>
+
+<br/>
+<br/>
+
+### **5.3.2. Pérdida de alimentos por estado**
+
+Porcentaje de pérdida de alimentos y materia orgánica en unidades pecuarias por estado.
+
+<br/>
+
+```{r mapaleaflet_pecuario, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select nom_ent, st_astext(geom) as wkt, porc 
+from public.pecuario_porc_perdida_ent_new ")
+
+res <- dbDisconnect(conn)
+
+row.names(datos) = datos$nom_ent
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj <- datos %$%
+mapply(rgeos::readWKT, id = nom_ent, text = wkt) %>%
+do.call(sp::rbind.SpatialPolygons, .)
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(7)
+
+## Create SpatialPolygonsDataFrame
+sp_df = SpatialPolygonsDataFrame(sp_obj, datos[-2])
+sp_df$nom_ent <- factor(sp_df$nom_ent)
+datos$nom_ent <- factor(datos$nom_ent)
+#pal <- colorFactor(rainbow(15), levels = levels(datos$nom_ent), na.color = "white")
+breaks7 <- c(0,5,10,20,30)
+binpal7 <- colorBin(colors, sp_df$porc, breaks7)
+
+
+leaflet() %>%
+#addTiles() %>%
+addProviderTiles("CartoDB.Positron") %>%
+addPolygons(
+data = sp_df,
+fillOpacity = 0.8,
+smoothFactor = 0.2,
+weight = 1,
+color = ~binpal7(porc),
+popup = paste0("<strong>Entidad: </strong>", sp_df$nom_ent, "</br>",
+"<strong>Porc. Pérdida: </strong>", sp_df$porc, "%")
+
+) %>%
+  addLegend(
+    "bottomleft", pal = binpal7, values = sp_df$porc,
+    title = "Porcentajes de </br> pérdida",
+    opacity = 0.7
+  )
+
+```
+
+<p align="center"> **Mapa 5.9. Pérdida de alimentos en unidades pecuarias por estado.** </p>
+
+<br/>
+<br/>
+
+### **5.3.3. Medidas**
+
+Ubicación de unidades de producción pecuaria donde llevan medidas para reducir la pérdida de alimentos.
+
+<br/>
+
+```{r mapaleaflet_pecuario_medidas, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_agropecuario")
+
+datos1 <- datos[which(datos$medidas_p=="Dar uso alterno productivo"),]
+datos2 <- datos[which(datos$medidas_p=="Mejorar insumos de producción"),]
+datos3 <- datos[which(datos$medidas_p=="Mejorar prácticas de producción"),]
+datos4 <- datos[which(datos$medidas_p=="Regalar, donar a bancos alimentos"),]
+
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$nom_ent
+
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+
+## Create SpatialPolygonsDataFrame
+
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$id_agrop)
+datos1$key <- factor(datos1$id_agrop)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$id_agrop)
+datos2$key <- factor(datos2$id_agrop)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$id_agrop)
+datos3$key <- factor(datos3$id_agrop)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$id_agrop)
+datos4$key <- factor(datos4$id_agrop)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+
+ 
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df1$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df1$nom_mun, "</br>"
+                           #"<strong>Has. cultivadas: </strong>", sp_df0$tot_ha_prod, "</br>"
+                           ),
+           group = "Dar uso alterno productivo"
+           ) %>% 
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df2$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df2$nom_mun, "</br>"
+                           #"<strong>Proceso(s) en el (los) que lleva registro: </strong>", sp_df4$registro_proc_a, "</br>"
+                           ),
+           group = "Mejorar insumos de producción"
+           ) %>%
+  
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df3$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df3$nom_mun, "</br>"
+                           #"<strong>Alternativas: </strong>", sp_df5$alternativa_a, "</br>"
+                           ),
+           group = "Mejorar prácticas de producción"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df4$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df4$nom_mun, "</br>"
+                           #"<strong>Medidas: </strong>", sp_df6$medidas_a, "</br>"
+                           ),
+           group = "Regalar, donar a bancos de alimentos"
+           ) %>%
+  
+
+  addLayersControl(#m,
+                   baseGroups = c("Dar uso alterno productivo", "Mejorar insumos de producción", "Mejorar prácticas de producción", "Regalar, donar a bancos de alimentos")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+#hideGroup(m, "agroPerd")
+
+```
+
+<p align="center"> **Mapa 5.10. Ubicación de unidades pecuarias con medidas.** </p>
+
+<br/>
+<br/>
+
+### **5.3.4. Procesos con pérdidas**
+
+Procesos en los que ocurren las pérdidas para las unidades pecuarias.
+
+<br/>
+
+```{r mapaleaflet_pecuario_procesos, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_perdidas_p")
+
+datos1 <- datos[which(datos$proceso=="Almacenamiento"),]
+datos2 <- datos[which(datos$proceso=="Desarrollo/Engorda"),]
+datos3 <- datos[which(datos$proceso=="Nacimiento/Ordeña"),]
+datos4 <- datos[which(datos$proceso=="Sacrificio/Muerte"),]
+datos5 <- datos[which(datos$proceso=="Transporte"),]
+datos6 <- datos[which(datos$proceso=="Otro proceso"),]
+
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$causa
+
+#row.names(datos) = datos$producto
+
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$gid)
+datos1$key <- factor(datos1$gid)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$gid)
+datos2$key <- factor(datos2$gid)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$gid)
+datos3$key <- factor(datos3$gid)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$gid)
+datos4$key <- factor(datos4$gid)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$gid)
+datos5$key <- factor(datos5$gid)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$gid)
+datos6$key <- factor(datos6$gid)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df1$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df1$nom_otro_producto_p, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df1$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df1$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df1$destino, "</br>"),
+           group = "Almacenamiento"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df2$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df2$nom_otro_producto_p, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df2$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df2$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df2$destino, "</br>"),
+           group = "Desarrollo/Engorda"
+           ) %>%
+
+
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df3$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df3$nom_otro_producto_p, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df3$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df3$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df3$destino, "</br>"),
+           group = "Nacimiento/Ordeña"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df4$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df4$nom_otro_producto_p, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df4$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df4$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df4$destino, "</br>"),
+           group = "Sacrificio/Muerte"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df5$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df5$nom_otro_producto_p, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df5$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df5$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df5$destino, "</br>"),
+           group = "Transporte"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df6$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df6$nom_otro_producto_p, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df6$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df6$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df6$destino, "</br>"),
+           group = "Otro proceso"
+           ) %>%
+  
+  
+  addLayersControl(#m,
+                   baseGroups = c("Almacenamiento", "Desarrollo/Engorda", "Nacimiento/Ordeña", "Sacrificio/Muerte", "Transporte", "Otro proceso")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+#hideGroup(m, "agroPerd")
+
+```
+
+<p align="center"> **Mapa 5.11. Procesos en los que ocurren las pérdidas.** </p>
+
+<br/>
+<br/>
+
+### **5.3.5. Causas**
+
+Causas de pérdida de alimentos en unidades de producción pecuaria.
+
+<br/>
+
+```{r mapaleaflet_pecuario_causas, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_perdidas_p")
+
+datos1 <- datos[which(datos$causa=="Calidad del producto (aspecto, tamaño, golpes)"),]
+datos2 <- datos[which(datos$causa=="Enfermedades y muerte (por causas naturales, depredadores y mal parto)"),]
+datos3 <- datos[which(datos$causa=="Factores meteorológicos (sequía, humedad, temperatura)"),]
+datos4 <- datos[which(datos$causa=="Mala refrigeración del producto"),]
+datos5 <- datos[which(datos$causa=="Manejo inadecuado del producto (falta de atención, maltrato)"),]
+datos6 <- datos[which(datos$causa=="Robo, saqueo"),]
+datos7 <- datos[which(datos$causa=="No se pudo determinar"),]
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$causa
+
+#row.names(datos) = datos$producto
+
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj7 <- datos7 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$gid)
+datos1$key <- factor(datos1$gid)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$gid)
+datos2$key <- factor(datos2$gid)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$gid)
+datos3$key <- factor(datos3$gid)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$gid)
+datos4$key <- factor(datos4$gid)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$gid)
+datos5$key <- factor(datos5$gid)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$gid)
+datos6$key <- factor(datos6$gid)
+
+sp_df7 = SpatialPointsDataFrame(sp_obj7, datos7[-2])
+sp_df7$key <- factor(sp_df7$gid)
+datos7$key <- factor(datos7$gid)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df1$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df1$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df1$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df1$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df1$destino, "</br>"),
+           group = "Calidad del producto (aspecto, tamaño, golpes)"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df2$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df2$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df2$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df2$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df2$destino, "</br>"),
+           group = "Enfermedades y muerte (por causas naturales, depredadores y mal parto)"
+           ) %>%
+
+
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df3$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df3$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df3$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df3$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df3$destino, "</br>"),
+           group = "Factores meteorológicos (sequía, humedad, temperatura)"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df4$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df4$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df4$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df4$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df4$destino, "</br>"),
+           group = "Mala refrigeración del producto"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df5$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df5$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df5$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df5$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df5$destino, "</br>"),
+           group = "Manejo inadecuado del producto (falta de atención, maltrato)"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df6$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df6$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df6$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df6$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df6$destino, "</br>"),
+           group = "Robo, saqueo"
+           ) %>%
+  
+  addMarkers(data= sp_df7,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df7$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df7$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df7$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df7$perdida, "</br>",
+                           "<strong>Destino: </strong>", sp_df7$destino, "</br>"),
+           group = "No se pudo determinar"
+           ) %>%
+  
+  
+  addLayersControl(#m,
+                   baseGroups = c("Calidad del producto (aspecto, tamaño, golpes)", "Enfermedades y muerte (por causas naturales, depredadores y mal parto)", "Factores meteorológicos (sequía, humedad, temperatura)", "Mala refrigeración del producto", "Manejo inadecuado del producto (falta de atención, maltrato)", "Robo, saqueo", "No se pudo determinar")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+#hideGroup(m, "agroPerd")
+
+```
+
+<p align="center"> **Mapa 5.12. Causas de pérdida en unidades pecuarias.** </p>
+
+<br/>
+<br/>
+
+### **5.3.6. Destinos**
+
+Destino de las pérdidas en unidades de producción pecuaria.
+
+<br/>
+
+```{r mapaleaflet_pecuario_destinos, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_perdidas_p")
+
+datos1 <- datos[which(datos$destino=="Alimentación de animales"),]
+datos2 <- datos[which(datos$destino=="Desecho, basura (Se tira al mar, fosa, se entierra o quema)"),]
+datos3 <- datos[which(datos$destino=="Donación, regalo"),]
+datos4 <- datos[which(datos$destino=="Fertilizante, composta"),]
+datos5 <- datos[which(datos$destino=="Industria de la transformación (se convierte en otro producto)"),]
+datos6 <- datos[which(datos$destino=="No hubo producción, no se logró"),]
+datos7 <- datos[which(datos$destino=="Venta a menor precio, intermediarios"),]
+datos8 <- datos[which(datos$destino=="No se pudo determinar"),]
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$causa
+
+#row.names(datos) = datos$producto
+
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj7 <- datos7 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj8 <- datos8 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$gid)
+datos1$key <- factor(datos1$gid)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$gid)
+datos2$key <- factor(datos2$gid)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$gid)
+datos3$key <- factor(datos3$gid)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$gid)
+datos4$key <- factor(datos4$gid)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$gid)
+datos5$key <- factor(datos5$gid)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$gid)
+datos6$key <- factor(datos6$gid)
+
+sp_df7 = SpatialPointsDataFrame(sp_obj7, datos7[-2])
+sp_df7$key <- factor(sp_df7$gid)
+datos7$key <- factor(datos7$gid)
+
+sp_df8 = SpatialPointsDataFrame(sp_obj8, datos8[-2])
+sp_df8$key <- factor(sp_df8$gid)
+datos8$key <- factor(datos8$gid)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df1$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df1$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df1$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df1$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df1$causa, "</br>"),
+           group = "Alimentación de animales"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df2$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df2$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df2$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df2$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df2$causa, "</br>"),
+           group = "Desecho, basura (Se tira al mar, fosa, se entierra o quema)"
+           ) %>%
+
+
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df3$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df3$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df3$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df3$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df3$causa, "</br>"),
+           group = "Donación, regalo"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df4$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df4$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df4$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df4$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df4$causa, "</br>"),
+           group = "Fertilizante, composta"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df5$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df5$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df5$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df5$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df5$causa, "</br>"),
+           group = "Industria de la transformación (se convierte en otro producto)"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df6$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df6$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df6$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df6$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df6$causa, "</br>"),
+           group = "No hubo producción, no se logró"
+           ) %>%
+  
+  addMarkers(data= sp_df7,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df7$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df7$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df7$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df7$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df7$causa, "</br>"),
+           group = "Venta a menor precio, intermediarios"
+           ) %>%
+  
+  addMarkers(data= sp_df8,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df8$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df8$nom_otro_producto_p, "</br>",
+                           "<strong>Proceso: </strong>", sp_df8$proceso, "</br>",
+                           "<strong>Pérdida (ton): </strong>", sp_df8$perdida, "</br>",
+                           "<strong>Causa: </strong>", sp_df8$causa, "</br>"),
+           group = "No se pudo determinar"
+           ) %>%
+  
+  
+  addLayersControl(#m,
+                   baseGroups = c("Alimentación de animales", "Desecho, basura (Se tira al mar, fosa, se entierra o quema)", "Donación, regalo", "Fertilizante, composta", "Industria de la transformación (se convierte en otro producto)", "No hubo producción, no se logró", "Venta a menor precio, intermediarios", "No se pudo determinar")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+#hideGroup(m, "agroPerd")
+
+```
+
+<p align="center"> **Mapa 5.13. Destino de las pérdidas en UPP.** </p>
+
+<br/>
+<br/>
+
+### **5.3.7. Percepción Ambiental**
+
+Ubicación de UP Agrícola donde tienen conocimiento de:
+
+- Bancos de alimentos
+- Redes alimentarias
+- Campañas para reducir la PDA
+
+<br/>
+
+```{r mapaleaflet_ambiental_pecuaria, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_agropecuario")
+
+datos1 <- datos[which(datos$cuest_pecuario=="Sí" & datos$conoce_bancos=="Sí"),]
+datos2 <- datos[which(datos$cuest_pecuario=="Sí" & datos$conoce_redalimentaria=="Sí"),]
+datos3 <- datos[which(datos$cuest_pecuario=="Sí" & datos$conoce_programas=="Sí"),]
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj <- datos %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = id_agrop, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+sp_df = SpatialPointsDataFrame(sp_obj, datos[-2])
+sp_df$key <- factor(sp_df$id_agrop)
+datos$key <- factor(datos$id_agrop)
+
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$id_agrop)
+datos1$key <- factor(datos1$id_agrop)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$id_agrop)
+datos2$key <- factor(datos2$id_agrop)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$id_agrop)
+datos3$key <- factor(datos3$id_agrop)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+library(sp)
+library(rgdal)
+library(leaflet)
+library(htmltools)
+library(htmlwidgets)
+library(leaflet.extras)
+library(mapview)
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles("CartoDB.Positron") %>%
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+
+
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+  
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df1$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df1$nom_mun, "</br>"),
+           group = "Bancos de alimentos"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df2$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df2$nom_mun, "</br>"),
+           group = "Redes alimentarias"
+           ) %>%
+  
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df3$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df3$nom_mun, "</br>"),
+           group = "Campañas para reducir la PDA"
+           ) %>%
+
+  
+  
+  addLayersControl(#m,
+                   baseGroups = c("Bancos de alimentos", "Redes alimentarias", "Campañas para reducir la PDA")
+                   #overlayGroups = c("uAgropecuarias", "uAgro", "uPec", "uAmb"),
+                   #options = layersControlOptions(collapsed = FALSE)
+                   )
+
+```
+
+<p align="center"> **Mapa 5.14. Percepción ambiental pecuaria.** </p>
+
+<br/>
+<br/>
+
+
+## **5.4. Establecimientos**
+****
+
+### **5.4.1. Establecimientos, productos y desperdicio**
+
+Ubicación de los establecimientos y productos reportados. 
+
+<br/>
+
+```{r mapaleaflet_establecimientosbis, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos1 <- dbGetQuery(conn,"select *, st_astext(centroide) as point from public.super_establecimientos")
+datos3 <- datos1[which(datos1$registro=="Sí"),]
+#datos4 <- datos1[which(datos1$medidas=="Sí"),]
+datos2 <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_productos_e")
+
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$nom_ent
+
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+## Create SpatialPolygonsDataFrame
+
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$id_estab)
+datos1$key <- factor(datos1$id_estab)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$id_estab)
+datos3$key <- factor(datos3$id_estab)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$gid)
+datos2$key <- factor(datos2$gid)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(providers$OpenTopoMap, group = "Topo") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df1$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df1$nom_mun, "</br>",
+                           "<strong>Personal ocupado: </strong>", sp_df1$per_ocupado, "</br>"),
+           group = "Establecimientos"
+           ) %>%
+  
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df3$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df3$nom_mun, "</br>",
+                           "<strong>Tipo de regsitro: </strong>", sp_df3$tipo_registro, "</br>"),
+           group = "Estab. donde llevan registro"
+           ) %>%
+  
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df2$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df2$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df2$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df2$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df2$causa, "</br>",
+                           "<strong>Destino: </strong>", sp_df2$destino, "</br>"),
+           group = "Productos reportados y su desperdicio"
+           ) %>%
+ 
+  addLayersControl(#m,
+                   baseGroups = c("Establecimientos", "Estab. donde llevan registro", "Productos reportados y su desperdicio")
+                   #overlayGroups = c("estabPorc", "estabPunt", "Unidades donde cuentan con medidas", "Productos registrados y sus pérdidas")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   )
+
+```
+<p align="center"> **Mapa 5.15. Ubicación de establecimientos y productos, con su desperdicio.** </p>
+
+<br/>
+<br/>
+
+### **5.4.2. Desperdicio de alimentos por estado**
+
+Porcentaje de desperdicio de alimentos en establecimientos por estado.
+
+<br/>
+
+```{r mapaleaflet_establecimientos, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select nom_ent, st_astext(geom) as wkt, porc_perd 
+from public.estab_porc_perdida_ent 
+where nom_ent <> 'No especificado' and porc_perd <> -9999.00")
+
+res <- dbDisconnect(conn)
+
+
+row.names(datos) = datos$nom_ent
+
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj <- datos %$%
+mapply(rgeos::readWKT, id = nom_ent, text = wkt) %>%
+do.call(sp::rbind.SpatialPolygons, .)
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(7)
+
+## Create SpatialPolygonsDataFrame
+sp_df = SpatialPolygonsDataFrame(sp_obj, datos[-2])
+sp_df$nom_ent <- factor(sp_df$nom_ent)
+datos$nom_ent <- factor(datos$nom_ent)
+#pal <- colorFactor(rainbow(15), levels = levels(datos$nom_ent), na.color = "white")
+breaks6 <- c(4,6,8,12,32)
+binpal6 <- colorBin(colors, sp_df$porc_perd, breaks6)
+
+leaflet() %>% 
+  #addTiles() %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    data = sp_df, 
+    fillOpacity = 0.8,
+    smoothFactor = 0.2,
+    weight = 1,
+    color = ~binpal6(porc_perd),
+    popup=paste0("<strong>Entidad: </strong>", sp_df$nom_ent, "</br>",
+    "<strong>Porc. Pérdida.: </strong>", sp_df$porc_perd, "%")
+    
+ )   %>%
+  addLegend(
+    "bottomleft", pal = binpal6, values = sp_df$porc_perd,
+    title = "Porcentajes de </br> pérdida",
+    opacity = 0.7
+  )
+  
+
+```
+
+<p align="center"> **Mapa 5.16. Desperdicio de alimentos y materia orgánica en establecimientos por estado.** </p>
+
+<br/>
+<br/>
+
+### **5.4.3. Medidas**
+
+Ubicación de establecimientos donde llevan medidas para reducir el desperdicio de alimentos.
+
+<br/>
+
+```{r mapaleaflet_establecimientos_medidas, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroide) as point from public.super_establecimientos")
+
+datos1 <- datos[which(datos$tipo_medidas=="Administrar la oferta - costo - demanda"),]
+datos2 <- datos[which(datos$tipo_medidas=="Aplicar mantenimiento y actualización de maquinaria "),]
+datos3 <- datos[which(datos$tipo_medidas=="Aprovechar los residuos para otros fines "),]
+datos4 <- datos[which(datos$tipo_medidas=="Concientizar sobre la PDA "),]
+datos5 <- datos[which(datos$tipo_medidas=="Manejar buenas prácticas"),]
+datos6 <- datos[which(datos$tipo_medidas=="Planear una justa y adecuada compra y preparación de productos"),]
+datos7 <- datos[which(datos$tipo_medidas=="Otras medidas"),]
+
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$nom_ent
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj7 <- datos7 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$id_estab)
+datos1$key <- factor(datos1$id_estab)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$id_estab)
+datos2$key <- factor(datos2$id_estab)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$id_estab)
+datos3$key <- factor(datos3$id_estab)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$id_estab)
+datos4$key <- factor(datos4$id_estab)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$id_estab)
+datos5$key <- factor(datos5$id_estab)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$id_estab)
+datos6$key <- factor(datos6$id_estab)
+
+sp_df7 = SpatialPointsDataFrame(sp_obj7, datos7[-2])
+sp_df7$key <- factor(sp_df7$id_estab)
+datos7$key <- factor(datos7$id_estab)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(providers$OpenTopoMap, group = "Topo") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df1$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df1$nom_mun, "</br>"
+                           ),
+           group = "Administrar la oferta - costo - demanda"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df2$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df2$nom_mun, "</br>"
+                           ),
+           group = "Aplicar mantenimiento y actualización de maquinaria "
+           ) %>%
+  
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df3$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df3$nom_mun, "</br>"),
+           group = "Aprovechar los residuos para otros fines "
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df4$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df4$nom_mun, "</br>"),
+           group = "Concientizar sobre la PDA "
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df5$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df5$nom_mun, "</br>"
+                           ),
+           group = "Manejar buenas prácticas"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df6$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df6$nom_mun, "</br>"
+                           ),
+           group = "Planear una justa y adecuada compra y preparación de productos"
+           ) %>%
+  
+  addMarkers(data= sp_df7,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df7$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df7$nom_mun, "</br>"
+                           ),
+           group = "Otras medidas"
+           ) %>%
+  
+
+ 
+  addLayersControl(#m,
+                   baseGroups = c("Administrar la oferta - costo - demanda", "Aplicar mantenimiento y actualización de maquinaria ", "Aprovechar los residuos para otros fines ", "Concientizar sobre la PDA ", "Manejar buenas prácticas", "Planear una justa y adecuada compra y preparación de productos", "Otras medidas")
+                   #overlayGroups = c("estabPorc", "estabPunt", "Unidades donde cuentan con medidas", "Productos registrados y sus pérdidas")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   )
+
+```
+<p align="center"> **Mapa 5.17. Medidas en establecimientos.** </p>
+
+<br/>
+<br/>
+
+### **5.4.4. Causas**
+
+Causas del desperdicio de alimentos en establecimientos.
+
+<br/>
+
+```{r mapaleaflet_establecimientos_causas, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_productos_e")
+
+datos1 <- datos[which(datos$causa=="Deterioro debido a factores antrópicos"),]
+datos2 <- datos[which(datos$causa=="Deterioro debido a factores no antrópicos"),]
+datos3 <- datos[which(datos$causa=="Disminución de clientes y de ventas"),]
+datos4 <- datos[which(datos$causa=="Fecha de caducidad"),]
+datos5 <- datos[which(datos$causa=="Merma"),]
+datos6 <- datos[which(datos$causa=="Partes no comestibles"),]
+datos7 <- datos[which(datos$causa=="Planificación inadecuada"),]
+datos8 <- datos[which(datos$causa=="Sobrantes y restos alimenticios"),]
+datos9 <- datos[which(datos$causa=="No se pudo determinar"),]
+datos10 <- datos[which(datos$causa=="Otras causas"),]
+
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$nom_ent
+
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj7 <- datos7 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj8 <- datos8 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj9 <- datos9 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj10 <- datos10 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+options(scipen = 100, digits = 4)
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$gid)
+datos1$key <- factor(datos1$gid)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$gid)
+datos2$key <- factor(datos2$gid)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$gid)
+datos3$key <- factor(datos3$gid)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$gid)
+datos4$key <- factor(datos4$gid)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$gid)
+datos5$key <- factor(datos5$gid)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$gid)
+datos6$key <- factor(datos6$gid)
+
+sp_df7 = SpatialPointsDataFrame(sp_obj7, datos7[-2])
+sp_df7$key <- factor(sp_df7$gid)
+datos7$key <- factor(datos7$gid)
+
+sp_df8 = SpatialPointsDataFrame(sp_obj8, datos8[-2])
+sp_df8$key <- factor(sp_df8$gid)
+datos8$key <- factor(datos8$gid)
+
+sp_df9 = SpatialPointsDataFrame(sp_obj9, datos9[-2])
+sp_df9$key <- factor(sp_df9$gid)
+datos9$key <- factor(datos9$gid)
+
+sp_df10 = SpatialPointsDataFrame(sp_obj10, datos10[-2])
+sp_df10$key <- factor(sp_df10$gid)
+datos10$key <- factor(datos10$gid)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(providers$OpenTopoMap, group = "Topo") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df1$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df1$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df1$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df1$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df1$destino, "</br>"),
+           group = "Deterioro debido a factores antrópicos"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df2$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df2$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df2$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df2$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df2$destino, "</br>"),
+           group = "Deterioro debido a factores no antrópicos"
+           ) %>%
+  
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df3$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df3$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df3$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df3$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df3$destino, "</br>"),
+           group = "Disminución de clientes y de ventas"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df4$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df4$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df4$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df4$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df4$destino, "</br>"),
+           group = "Fecha de caducidad"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df5$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df5$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df5$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df5$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df5$destino, "</br>"),
+           group = "Merma"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df6$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df6$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df6$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df6$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df6$destino, "</br>"),
+           group = "Partes no comestibles"
+           ) %>%
+  
+  addMarkers(data= sp_df7,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df7$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df7$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df7$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df7$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df7$destino, "</br>"),
+           group = "Planificación inadecuada"
+           ) %>%
+  
+  addMarkers(data= sp_df8,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df8$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df8$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df8$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df8$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df8$destino, "</br>"),
+           group = "Sobrantes y restos alimenticios"
+           ) %>%
+  
+  addMarkers(data= sp_df9,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df9$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df9$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df9$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df9$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df9$destino, "</br>"),
+           group = "No se pudo determinar"
+           ) %>%
+  
+  addMarkers(data= sp_df10,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df10$producto, "</br>",
+                           "<strong>Otro Producto: </strong>", sp_df10$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df10$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df10$perdida_kg, "</br>",
+                           "<strong>Destino: </strong>", sp_df10$destino, "</br>"),
+           group = "Otras causas"
+           ) %>%
+ 
+  addLayersControl(#m,
+                   baseGroups = c("Deterioro debido a factores antrópicos","Deterioro debido a factores no antrópicos","Disminución de clientes y de ventas", "Fecha de caducidad", "Merma", "Partes no comestibles", "Planificación inadecuada", "Sobrantes y restos alimenticios", "No se pudo determinar", "Otras causas")
+                   #overlayGroups = c("estabPorc", "estabPunt", "Unidades donde cuentan con medidas", "Productos registrados y sus pérdidas")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   )
+
+```
+<p align="center"> **Mapa 5.18. Causas del desperdicio en establecimientos.** </p>
+
+<br/>
+<br/>
+
+### **5.4.5. Destinos**
+
+Destinos del desperdicio en establecimientos.
+
+<br/>
+
+```{r mapaleaflet_establecimientos_destinos, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_productos_e")
+
+datos1 <- datos[which(datos$destino=="Alcantarillado"),]
+datos2 <- datos[which(datos$destino=="Alimentación de animales"),]
+datos3 <- datos[which(datos$destino=="Banco de alimentos"),]
+datos4 <- datos[which(datos$destino=="Basurero / relleno sanitario"),]
+datos5 <- datos[which(datos$destino=="Comedores públicos (organización religiosa, altruista, anexos de rehabilitación de adicciones, orfanatos, entre otros)"),]
+datos6 <- datos[which(datos$destino=="Composteo / procesos aeróbicos"),]
+datos7 <- datos[which(datos$destino=="Consumo propio"),]
+datos8 <- datos[which(datos$destino=="Devolución del producto"),]
+datos9 <- datos[which(datos$destino=="Lo regaló"),]
+datos10 <- datos[which(datos$destino=="Lo vendió"),]
+datos11 <- datos[which(datos$destino=="Reciclaje o reutilización"),]
+datos12 <- datos[which(datos$destino=="Redes alimentarias alternativas (o Circuitos cortos)"),]
+datos13 <- datos[which(datos$destino=="Tratamiento de aguas residuales"),]
+datos14 <- datos[which(datos$destino=="No se pudo determinar"),]
+datos15 <- datos[which(datos$destino=="Otro destino"),]
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$causa
+
+#row.names(datos) = datos$producto
+
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+sp_obj1 <- datos1 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj7 <- datos7 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj8 <- datos8 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj9 <- datos9 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj10 <- datos10 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj11 <- datos11 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj12 <- datos12 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj13 <- datos13 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj14 <- datos14 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj15 <- datos15 %$%
+mapply(rgeos::readWKT, id = gid, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+
+## Create SpatialPolygonsDataFrame
+sp_df1 = SpatialPointsDataFrame(sp_obj1, datos1[-2])
+sp_df1$key <- factor(sp_df1$gid)
+datos1$key <- factor(datos1$gid)
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$gid)
+datos2$key <- factor(datos2$gid)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$gid)
+datos3$key <- factor(datos3$gid)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$gid)
+datos4$key <- factor(datos4$gid)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$gid)
+datos5$key <- factor(datos5$gid)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$gid)
+datos6$key <- factor(datos6$gid)
+
+sp_df7 = SpatialPointsDataFrame(sp_obj7, datos7[-2])
+sp_df7$key <- factor(sp_df7$gid)
+datos7$key <- factor(datos7$gid)
+
+sp_df8 = SpatialPointsDataFrame(sp_obj8, datos8[-2])
+sp_df8$key <- factor(sp_df8$gid)
+datos8$key <- factor(datos8$gid)
+
+sp_df9 = SpatialPointsDataFrame(sp_obj9, datos9[-2])
+sp_df9$key <- factor(sp_df9$gid)
+datos9$key <- factor(datos9$gid)
+
+sp_df10 = SpatialPointsDataFrame(sp_obj10, datos10[-2])
+sp_df10$key <- factor(sp_df10$gid)
+datos10$key <- factor(datos10$gid)
+
+sp_df11 = SpatialPointsDataFrame(sp_obj11, datos11[-2])
+sp_df11$key <- factor(sp_df11$gid)
+datos11$key <- factor(datos11$gid)
+
+sp_df12 = SpatialPointsDataFrame(sp_obj12, datos12[-2])
+sp_df12$key <- factor(sp_df12$gid)
+datos12$key <- factor(datos12$gid)
+
+sp_df13 = SpatialPointsDataFrame(sp_obj13, datos13[-2])
+sp_df13$key <- factor(sp_df13$gid)
+datos13$key <- factor(datos13$gid)
+
+sp_df14 = SpatialPointsDataFrame(sp_obj14, datos14[-2])
+sp_df14$key <- factor(sp_df14$gid)
+datos14$key <- factor(datos14$gid)
+
+sp_df15 = SpatialPointsDataFrame(sp_obj15, datos15[-2])
+sp_df15$key <- factor(sp_df15$gid)
+datos15$key <- factor(datos15$gid)
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  #addProviderTiles(CartoDB.Positron) %>%
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+  
+  addMarkers(data= sp_df1,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df1$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df1$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df1$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df1$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df1$causa, "</br>"),
+           group = "Alcantarillado"
+           ) %>%
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df2$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df2$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df2$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df2$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df2$causa, "</br>"),
+           group = "Alimentación de animales"
+           ) %>%
+
+
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df3$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df3$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df3$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df3$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df3$causa, "</br>"),
+           group = "Banco de alimentos"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df4$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df4$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df4$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df4$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df4$causa, "</br>"),
+           group = "Basurero / relleno sanitario"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df5$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df5$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df5$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df5$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df5$causa, "</br>"),
+           group = "Comedores públicos (org. religiosa, altruista, anexos de rehab. de adicciones, orfanatos, etc.)"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df6$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df6$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df6$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df6$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df6$causa, "</br>"),
+           group = "Composteo / procesos aeróbicos"
+           ) %>%
+  
+  addMarkers(data= sp_df7,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df7$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df7$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df7$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df7$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df7$causa, "</br>"),
+           group = "Consumo propio"
+           ) %>%
+  
+  addMarkers(data= sp_df8,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df8$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df8$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df8$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df8$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df8$causa, "</br>"),
+           group = "Devolución del producto"
+           ) %>%
+  
+  addMarkers(data= sp_df9,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df9$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df9$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df9$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df9$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df9$causa, "</br>"),
+           group = "Lo regaló"
+           ) %>%
+  
+  addMarkers(data= sp_df10,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df10$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df10$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df10$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df10$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df10$causa, "</br>"),
+           group = "Lo vendió"
+           ) %>%
+  
+  addMarkers(data= sp_df11,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df11$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df11$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df11$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df11$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df11$causa, "</br>"),
+           group = "Reciclaje o reutilización"
+           ) %>%
+  
+  addMarkers(data= sp_df12,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df12$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df12$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df12$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df12$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df12$causa, "</br>"),
+           group = "Redes alimentarias alternativas (o Circuitos cortos)"
+           ) %>%
+  
+  addMarkers(data= sp_df13,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df13$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df13$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df13$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df13$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df13$causa, "</br>"),
+           group = "Tratamiento de aguas residuales"
+           ) %>%
+  
+  addMarkers(data= sp_df14,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df14$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df14$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df14$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df14$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df14$causa, "</br>"),
+           group = "No se pudo determinar"
+           ) %>%
+  
+  addMarkers(data= sp_df15,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Producto: </strong>", sp_df15$producto, "</br>",
+                           "<strong>Otro producto: </strong>", sp_df15$nom_otro_producto, "</br>",
+                           "<strong>Manejo total (kg): </strong>", sp_df15$manejo_kg, "</br>",
+                           "<strong>Desperdicio (kg): </strong>", sp_df15$perdida_kg, "</br>",
+                           "<strong>Causa: </strong>", sp_df15$causa, "</br>"),
+           group = "Otro destino"
+           ) %>%
+  
+  
+  addLayersControl(#m,
+                   baseGroups = c("Alcantarillado", "Alimentación de animales", "Banco de alimentos","Basurero / relleno sanitario", "Comedores públicos (org. religiosa, altruista, anexos de rehab. de adicciones, orfanatos, etc.)", "Composteo / procesos aeróbicos", "Consumo propio","Devolución del producto", "Lo regaló", "Lo vendió", "Reciclaje o reutilización", "Redes alimentarias alternativas (o Circuitos cortos)", "Tratamiento de aguas residuales", "No se pudo determinar", "Otro destino")
+                   #opacity = 0.7
+                   #options = layersControlOptions(collapsed = FALSE)
+                   ) 
+
+
+#hideGroup(m, "agroPerd")
+
+
+```
+
+<p align="center"> **Mapa 5.19. Destinos del desperdicio en establecimientos.** </p>
+
+<br/>
+<br/>
+
+### **5.4.6. Percepción Ambiental**
+
+Ubicación de establecimientos donde tienen conocimiento de:
+
+- Bancos de alimentos
+- Redes Alimentarias
+- Campañas para reducir PDA
+- NOM-251
+- Distintivo H
+
+<br/>
+
+```{r mapaleaflet_establecimientos_ambiental, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, cache =TRUE, out.width = "100%"}
+
+
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE)
+
+
+library(RPostgreSQL)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(leaflet.extras)
+library(mapview)
+library(htmltools)
+library(htmlwidgets)
+
+
+conn <- dbConnect(dbDriver("PostgreSQL"), dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos1 <- dbGetQuery(conn,"select *, st_astext(centroide) as point from public.super_establecimientos")
+datos2 <- datos1[which(datos1$conoce_ban=="Sí"),]
+datos3 <- datos1[which(datos1$conoce_red_alim=="Sí"),]
+datos4 <- datos1[which(datos1$conoce_progr=="Sí"),]
+datos5 <- datos1[which(datos1$conoce_nom251=="Sí"),]
+datos6 <- datos1[which(datos1$conoce_dist_h=="Sí"),]
+#datos4 <- datos1[which(datos1$medidas=="Sí"),]
+#datos2 <- dbGetQuery(conn,"select *, st_astext(centroid) as point from public.super_productos_e")
+
+#datos1 <- datos[which(datos$cuest_pecuario=="Sí" & datos$conoce_bancos=="Sí"),]
+
+res <- dbDisconnect(conn)
+
+#row.names(datos) = datos$nom_ent
+
+#row.names(datos) = datos$producto
+
+## Load projections
+EPSG <- make_EPSG()
+p4s <- EPSG[which(EPSG$code == 4326), "prj4"]
+
+
+# Create polygons from WKT
+
+sp_obj2 <- datos2 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj3 <- datos3 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj4 <- datos4 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj5 <- datos5 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+sp_obj6 <- datos6 %$%
+mapply(rgeos::readWKT, id = id_estab, text = point) %>%
+do.call(sp::rbind.SpatialPoints, .)
+
+## Create SpatialPolygonsDataFrame
+
+sp_df2 = SpatialPointsDataFrame(sp_obj2, datos2[-2])
+sp_df2$key <- factor(sp_df2$id_estab)
+datos2$key <- factor(datos2$id_estab)
+
+sp_df3 = SpatialPointsDataFrame(sp_obj3, datos3[-2])
+sp_df3$key <- factor(sp_df3$id_estab)
+datos3$key <- factor(datos3$id_estab)
+
+sp_df4 = SpatialPointsDataFrame(sp_obj4, datos4[-2])
+sp_df4$key <- factor(sp_df4$id_estab)
+datos4$key <- factor(datos4$id_estab)
+
+sp_df5 = SpatialPointsDataFrame(sp_obj5, datos5[-2])
+sp_df5$key <- factor(sp_df5$id_estab)
+datos5$key <- factor(datos5$id_estab)
+
+sp_df6 = SpatialPointsDataFrame(sp_obj6, datos6[-2])
+sp_df6$key <- factor(sp_df6$id_estab)
+datos6$key <- factor(datos6$id_estab)
+
+
+## pal <- colorFactor(rainbow(15), levels = levels(datos$interview__key), na.color = "white")
+
+
+m <- leaflet() %>% 
+  
+  #addTiles(group = "OSM") %>% 
+  addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+  #addProviderTiles(providers$OpenTopoMap, group = "Topo") %>%
+  addFullscreenControl()
+m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
+
+  
+  addMarkers(data= sp_df2,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df2$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df2$nom_mun, "</br>"),
+           group = "Bancos de Alimentos"
+           ) %>%
+  
+  addMarkers(data= sp_df3,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df3$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df3$nom_mun, "</br>"),
+           group = "Redes Alimentarias"
+           ) %>%
+  
+  addMarkers(data= sp_df4,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df4$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df4$nom_mun, "</br>"),
+           group = "Campañas para reducir PDA"
+           ) %>%
+  
+  addMarkers(data= sp_df5,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df5$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df5$nom_mun, "</br>"),
+           group = "NOM-251"
+           ) %>%
+  
+  addMarkers(data= sp_df6,
+           clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T),
+           popup = paste0( "<strong>Entidad: </strong>", sp_df6$nom_ent, "</br>",
+                           "<strong>Municipio: </strong>", sp_df6$nom_mun, "</br>"),
+           group = "Distintivo H"
+           ) %>%
+  
+ 
+  addLayersControl(#m,
+                   baseGroups = c("Bancos de Alimentos", "Redes Alimentarias", "Campañas para reducir PDA", "NOM-251", "Distintivo H")
+                   #overlayGroups = c("estabPorc", "estabPunt", "Unidades donde cuentan con medidas", "Productos registrados y sus pérdidas")
+                   #options = layersControlOptions(collapsed = FALSE)
+                   )
+
+
+```
+
+<p align="center"> **Mapa 5.20. Percepción ambiental en establecimientos.** </p>
+
+</div>
