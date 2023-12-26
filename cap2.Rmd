@@ -154,7 +154,7 @@ Las instituciones académicas qu conforman el CTE se describen a continuación:
 
 ```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
 
-knitr::include_graphics("imagenes/instituciones_pp2020_.PNG")
+knitr::include_graphics("imagenes/Instituciones_pp2020_.PNG")
 
 ```
 
@@ -455,7 +455,7 @@ En el siguiente mapa podemos apreciar cada una de las instituciones participante
 
 ```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
 
-knitr::include_graphics("imagenes/Mapa_uni.png")
+knitr::include_graphics("imagenes/mapa_uni.png")
 
 ```
 
@@ -793,7 +793,7 @@ El universo de estudio se redujo un 29.3%, es decir, de las 2,867 entrevistas, s
 
 ```{r fig.align='center', out.width= '75%', echo=FALSE, cache=TRUE}
 
-knitr::include_graphics("imagenes/universo_2.png")
+knitr::include_graphics("imagenes/universo_2.PNG")
 
 ```
 
