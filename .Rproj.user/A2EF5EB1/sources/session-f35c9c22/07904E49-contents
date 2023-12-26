@@ -102,7 +102,7 @@ El **GIE** está integrado por representantes de las siguientes instituciones:
 
 ```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
 
-knitr::include_graphics("imagenes/gi.png")
+knitr::include_graphics("imagenes/gi.PNG")
 
 ```
 
@@ -154,7 +154,7 @@ Las instituciones académicas qu conforman el CTE se describen a continuación:
 
 ```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
 
-knitr::include_graphics("imagenes/instituciones_pp2020_.png")
+knitr::include_graphics("imagenes/instituciones_pp2020_.PNG")
 
 ```
 
