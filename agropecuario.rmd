@@ -350,7 +350,7 @@ fig
 
 ## **4.1.5. Hectáreas cultivadas/sembradas de los productos reportados por las Unidades de Producción Agrícola**
 
-Una de las principales variables captadas en la ERAMO 2021 es la referida al número de hectáreas ocupadas para el cultivo/siembra en cada uno de los producto declarados. La siguiente gráfica muestra el comportamiento de esta variable, donde el *Maíz grano* es el producto agrícola con mayor número de hectáreas ocupadas para el cultivo/siembra y el que tuvo representatividad en la mayoría de las entidades participantes. 
+Una de las principales variables captadas en la ERAMO 2021 es la referida al número de hectáreas ocupadas para el cultivo/siembra en cada uno de los productos declarados. La siguiente gráfica muestra el comportamiento de esta variable, donde el *Maíz grano* es el producto agrícola con mayor número de hectáreas ocupadas para el cultivo/siembra y el que tuvo representatividad en la mayoría de las entidades participantes. 
 
 ```{r graf_1.5, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
 
@@ -403,7 +403,7 @@ fig
 <br>
 <br>
 
-## **4.1.6. Destino de consumo de los productos reportados por Unidades de Producció**
+## **4.1.6. Destino de consumo de los productos reportados por Unidades de Producción**
 
 Algo relevante sobre cada producto reportado, es conocer el destino de consumo al cual fue dirigido, ya sea para el consumo humano, consumo animal, combinación de estos e inclusive desconocimiento por parte del informante.
 
@@ -521,7 +521,7 @@ fig
 
 El destino de consumo en los productos pecuarios fue en su mayoría para el **Consumo Humano** con 89 puntos porcentuales.
 
-* Cabe mencionar que la producción de alimentos obtenida en las unidades pecuarias, se aprovecha casi en su totalidad, así también, se identificó que de los productos reportados ninguno fue en exclusiva para consumo animal.
+* Cabe mencionar que la producción de alimentos obtenida en las unidades pecuarias se aprovecha casi en su totalidad, así también, se identificó que de los productos reportados ninguno fue en exclusiva para consumo animal.
 
 <br>
 <br>
@@ -591,7 +591,7 @@ fig
 
 ```
 
-De acuerdo a la gráfica anterior, el mercado minorista predominó con un valor porcentual de 50.6, para el mercado de entidades de gobierno nacionales, reportó sólo el 1.19% del total de la producción, ya que para este rubro se consideran sólo a los productores de maíz y frijol registrados en convenio con DICONSA. 
+De acuerdo con la gráfica anterior, el mercado minorista predominó con un valor porcentual de 50.6, para el mercado de entidades de gobierno nacionales, reportó sólo el 1.19% del total de la producción, ya que para este rubro se consideran sólo a los productores de maíz y frijol registrados en convenio con DICONSA. 
 
 <br>
 
@@ -658,14 +658,14 @@ fig
 
 Situación similar ocurre en la producción pecuaria, donde el mercado minorista es el que reportó 72.8 puntos porcentuales sobresaliendo de las demás categorías.
 
-El mercado extranjero y el de entidades de gobierno nacionales obtuvieron ambos un valor de 1.73%, ya que estás aplican principalmente en los estados colindantes con la frontera norte del pais, así como aquellos productores de leche de bovino que se encontraron en convenio con LICONSA, respectivamente.
+El mercado extranjero y el de entidades de gobierno nacionales obtuvieron ambos un valor de 1.73%, ya que estás aplican principalmente en los estados colindantes con la frontera norte del país, así como aquellos productores de leche de bovino que se encontraron en convenio con LICONSA, respectivamente.
 
 <br>
 <br>
 
 ## **4.1.8. Cosecha esperada vs. Cosecha final obtenida en las Unidades de Producción Agrícola**
 
-Una forma de identificar la PDA en los productos reportados, es por medio de las variables cosecha esperada-producción esperada (la que se esperaba obtener) y cosecha final-producción obtenida (la que se obtuvo finalmente). En la siguientes gráficas se muestra el comportamiento de estas variables para ambos apartados. 
+Una forma de identificar la PDA en los productos reportados es por medio de las variables cosecha esperada-producción esperada (la que se esperaba obtener) y cosecha final-producción obtenida (la que se obtuvo finalmente). En la siguiente gráfica se muestra el comportamiento de estas variables para ambos apartados. 
 
 ```{r graf_1.8, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE}
 
@@ -787,7 +787,7 @@ La pérdida, se refiere a todas las cantidades de productos alimenticios, comest
 
 <br>
 
-### **4.2.1.1 Porcentaje de productos con al menos un registro de pérdida en alguno de sus proceso de producción**
+### **4.2.1.1 Porcentaje de productos con al menos un registro de pérdida en alguno de sus procesos de producción**
 
 De los productos reportados, una proporción del 28% afirmó no haber tenido pérdida en su producción, es decir, casi 3 cuartas partes del total de productos agrícolas (72%) reportaron pérdida.
 
@@ -1114,7 +1114,7 @@ fig
 
 ```
 
-De acuerdo con la gráfica anterior, las categorías **Desecho, basura** y **No hubo producción**, son los principales destinos de los residuos alimenticios agrícolas, con un valores porcentuales de 34.8 y 27.3 respectivamente.
+De acuerdo con la gráfica anterior, las categorías **Desecho, basura** y **No hubo producción**, son los principales destinos de los residuos alimenticios agrícolas, con valores porcentuales de 34.8 y 27.3 respectivamente.
 
 <br>
 
@@ -1126,7 +1126,7 @@ Conocer el **volumen de pérdida** de los productos pecuarios, las **principales
 
 ## **4.3.1. Pérdidas reportadas**
 
-### **4.3.1.1. Porcentaje de productos con al menos un registro de pérdida en alguno de sus proceso de producción**
+### **4.3.1.1. Porcentaje de productos con al menos un registro de pérdida en alguno de sus procesos de producción**
 
 <br>
 

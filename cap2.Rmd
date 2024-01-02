@@ -27,19 +27,19 @@ orgánicos, mediante la generación de información estadística y geográfica v
 ### **2.1.2. Objetivos específicos**. 
 
 
-•  Aumentar la claridad de temas, variables y conceptos.
+• Aumentar la claridad de temas, variables y conceptos.
 
-•  Verificar la congruencia en la redacción de preguntas, así como su secuencia lógica.
+• Verificar la congruencia en la redacción de preguntas, así como su secuencia lógica.
 
-•  Evaluar los tiempos de aplicación de los instrumentos conformados.
+• Evaluar los tiempos de aplicación de los instrumentos conformados.
 
-•  Medir el porcentaje de respuesta de los informantes.
+• Medir el porcentaje de respuesta de los informantes.
 
-•  Comprobar la funcionalidad de la aplicación, dispositivo móvil y plataforma digital de entrevistas.
+• Comprobar la funcionalidad de la aplicación, dispositivo móvil y plataforma digital de entrevistas.
 
-•  Discernir la efectividad de la estrategia operativa.
+• Discernir la efectividad de la estrategia operativa.
 
-•  Realizar el análisis de la calidad de la información captada.
+• Realizar el análisis de la calidad de la información captada.
 
 
 <br>
@@ -86,7 +86,7 @@ por muchas otras instituciones que trabajan para la medición de la pérdida y d
 
 <br>
 
-#### **Prueba piloto sobre pérdida de alimentos poscosecha en frutas y hortalizas** 
+#### **Prueba piloto sobre pérdida de alimentos postcosecha en frutas y hortalizas** 
 
 A principios de julio de 2018 la FAO propuso al INEGI la realización de una prueba piloto, con la finalidad probar la metodología de indicadores de pérdida de alimentos SDG 12.3 en frutas y verduras. La metodología se basa en una medición nacional de pérdida de alimentos desarrollada por el Instituto de Investigación en Estadísticas Agropecuarias de la India (ICAR, por sus siglas en inglés). Una característica especial de esta metodología es que combina la encuesta (entrevistas cara a cara con los productores) y medición real (tomando muestras del producto en campo) de las pérdidas de alimentos. La prueba piloto dejó como aprendizaje, que cada producto, frutas o vegetales, debe tener un tratamiento diferenciado para la estimación de pérdidas o mermas en los diferentes eslabones de la cadena de valor, el cual debe estar en función de los flujos de comercialización que sigue cada producto.
 
@@ -127,28 +127,21 @@ En conjunto, se ha trabajado hasta el momento en la construcción de un marco co
 
 #### **Prueba de conceptualización ERAMO 2019**
 
-Durante el año 2019 se llevó a cabo el primer ejercicio de la ERAMO unicamente en establecimientos de la ciudad de Aguascalientes, visitando un 
-total de 138 unidades económicas relacionadas con el sector alimenticio; considerando que las unidades de observación no hubieran sido elegidas 
-para otras encuestas, esta actividad se hizo con el apoyo de la coordinación estatal de esta entidad, con quienes se consensaron las unidades de 
-muestreo.
+Durante el año 2019 se llevó a cabo el primer ejercicio de la ERAMO únicamente en establecimientos de la ciudad de Aguascalientes, visitando un total de 138 unidades económicas relacionadas con el sector alimenticio; considerando que las unidades de observación no hubieran sido elegidas para otras encuestas, esta actividad se hizo con el apoyo de la coordinación estatal de esta entidad, con quienes se consensaron las unidades de muestreo.
 
-Los objetivos de la prueba consistieron en validar el contenido temático; la comprensión del informante sobre la redacción de las preguntas; 
-la estrategia operativa; los dispositivos móviles; la transferencia de archivos y la funcionalidad de la plataforma informática.
+Los objetivos de la prueba consistieron en validar el contenido temático; la comprensión del informante sobre la redacción de las preguntas; la estrategia operativa; los dispositivos móviles; la transferencia de archivos y la funcionalidad de la plataforma informática.
 
-El levantamiento de información se realizó a partir del 30 de septiembre hasta el 11 de octubre de 2019. Los datos fueron captados por 
-medio de entrevistas directas en las unidades de la muestra definida sólo para establecimientos durante dicho ejercicio (2019).
+El levantamiento de información se realizó a partir del 30 de septiembre hasta el 11 de octubre de 2019. Los datos fueron captados por medio de entrevistas directas en las unidades de la muestra definida sólo para establecimientos durante dicho ejercicio (2019).
 
-El número captado de entrevistas completas fue de 120, la duración de la entrevista tuvo un tiempo aproximado de 16 minutos, esto se realizó en 
-un cuestionario electrónico, para ello fue necesario cargar estos cuestionarios en dispositivos móviles que tuvieran sensor GPS y con sistema 
-operativo Android. Posteriormente se descargó la información desde una plataforma informática llamada Survey Solutions del Banco Mundial.
+El número captado de entrevistas completas fue de 120, la duración de la entrevista tuvo un tiempo aproximado de 16 minutos, esto se realizó en un cuestionario electrónico, para ello fue necesario cargar estos cuestionarios en dispositivos móviles que tuvieran sensor GPS y con sistema operativo Android. Posteriormente se descargó la información desde una plataforma informática llamada Survey Solutions del Banco Mundial.
 
 <br>
 
 #### **Prueba de instrumentos de captación y estrategia operativa ERAMO 2020**
 
-En 2020 se conformó un **Comité Técnico Especialzado (CTE)** entre el INEGI y diversas instituciones académicas de alto prestigio en el país. El CTE se encargó de diseñar los instrumentos de captación, así como coordinar la estrategia operativa para el levantamiento de cuestionarios. Los principales objetivos de este ejercicio inedito consistieron en percibir la conceptualziación de los informantes, la claridad de los temas, variables y conceptos, así como probar los instrumentos de captación y la estrategia operativa implementada.
+En 2020 se conformó un **Comité Técnico Especializado (CTE)** entre el INEGI y diversas instituciones académicas de alto prestigio en el país. El CTE se encargó de diseñar los instrumentos de captación, así como coordinar la estrategia operativa para el levantamiento de cuestionarios. Los principales objetivos de este ejercicio inédito consistieron en percibir la conceptualización de los informantes, la claridad de los temas, variables y conceptos, así como probar los instrumentos de captación y la estrategia operativa implementada.
 
-Las instituciones académicas qu conforman el CTE se describen a continuación:
+Las instituciones académicas que conforman el CTE se describen a continuación:
 
 <br>
 
@@ -160,17 +153,14 @@ knitr::include_graphics("imagenes/Instituciones_pp2020_.PNG")
 
 <br>
 
-Para este ejercicio, las unidades de observación fueron productores agropecuarios y establecimientos conocidos o con ubicaciones accesibles para los entrevistadores; no siendo esta una muestra representativa, por lo que sus resultados no tienen representatividad estadística. La recolección de los datos en campo ha sido realizado por los participantes voluntarios y alumnos de instituciones académicas que forman parte de la RED 12.3 PDA México[^1^], o que estudian el fenómeno de la pérdida y desperdicio de alimentos desde alguna de sus dimensiones e implicaciones (económica, social, ambiental, cultural). 
+Para este ejercicio, las unidades de observación fueron productores agropecuarios y establecimientos conocidos o con ubicaciones accesibles para los entrevistadores; no siendo esta una muestra representativa, por lo que sus resultados no tienen representatividad estadística. La recolección de los datos en campo ha sido realizada por los participantes voluntarios y alumnos de instituciones académicas que forman parte de la RED 12.3 PDA México[^1^], o que estudian el fenómeno de la pérdida y desperdicio de alimentos desde alguna de sus dimensiones e implicaciones (económica, social, ambiental, cultural). 
 
 [^1^]: La [RED 12.3 PDA México](http://red123pda.org.mx/#/){   target="_blank_"}  es una organización basada en un grupo de trabajo multidisciplinario de investigadores con instituciones tanto públicas como privadas, tecnólogos, empresarios y organizaciones, para contribuir a la sustentabilidad de las cadenas de suministro de alimentos, a través de diseñar, establecer y evaluar estrategias, tanto tecnológicas como de innovación social, que conduzcan a reducir la pérdida y desperdicio de alimentos en México.
 
 Los objetivos específicos fueron: ampliar la claridad de temas, variables y conceptos, así como mejorar la redacción de 
 preguntas y verificación de secuencias de estas.
 
-La muestra utilizada en el operativo fue seleccionada por conveniencia o por cuotas (muestra dirigida a productores agropecuarios y 
-establecimientos conocidos o con ubicaciones accesibles a los entrevistadores); no siento ésta una muestra probabilística, por lo que sus 
-resultados no tienen representatividad estadística. Los datos pueden servir únicamente para efectos de análisis, tendencias, y exploración del 
-comportamiento del fenómeno en las unidades de producción observadas.
+La muestra utilizada en el operativo fue seleccionada por conveniencia o por cuotas (muestra dirigida a productores agropecuarios y establecimientos conocidos o con ubicaciones accesibles a los entrevistadores); no siento ésta una muestra probabilística, por lo que sus resultados no tienen representatividad estadística. Los datos pueden servir únicamente para efectos de análisis, tendencias, y exploración del comportamiento del fenómeno en las unidades de producción observadas.
 
 Los instrumentos para captar la información fueron de tipo electrónico. La plataforma para la administración, gestión, recolección y visualización de los datos fue [_Survey Solutions_](https://mysurvey.solutions/es/). De forma alterna, se elaboraron versiones imprimibles de los cuestionarios, para los casos en los que el entrevistador no contaba con un dispositivo electrónico con sistema operativo Android o presentara alguna dificultad en la utilización de la plataforma. Posteriormente, la información se integró a la plataforma para el almacenamiento y aprovechamiento homogéneo de los datos.
 
@@ -189,7 +179,7 @@ A inicios del año 2021, el Comité Técnico Especializado (CTE) en conjunto con
 
 El objetivo principal consistió en verificar la viabilidad y utilidad de los instrumentos de captación diseñados y actualizados para la ERAMO. Se llevó a cabo ampliando el grupo de entrevistadores y conservando la estrategia operativa, logrando obtener un mayor número de datos indicativos del fenómeno.
 
-**Los objetivos particulares fueron:** asegurar que los temas, variables y conceptos fueran claros para los entrevistadores e informantes; que la redacción y secuencia de las preguntas fuera entendible y congruente en ambos cuestionarios; evaluar los tiempos de aplicación del instrumento, así como medir el porcentaje de no respuesta en un operativo de mayor envergadura en contexto de pandemia. 
+**Los objetivos particulares fueron:** Asegurar que los temas, variables y conceptos fueran claros para los entrevistadores e informantes; que la redacción y secuencia de las preguntas fuera entendible y congruente en ambos cuestionarios; evaluar los tiempos de aplicación del instrumento, así como medir el porcentaje de no respuesta en un operativo de mayor envergadura en contexto de pandemia. 
 
 Esta prueba se llevó a cabo en 15 entidades federativas señaladas a continuación.
 
@@ -275,7 +265,7 @@ labelOptions = labelOptions(
 
 <br>
 
-Mediante un levantamiento presencial o vía remota, según las condiciones epidemiológicas y climáticas, con un estimado de 300 cuestionarios por entidad (200 unidades de producción agropecuaria y 100 de establecimientos); con cargas de trabajo distribuidas en equipos de estudiantes de las diferentes instituciones académicas participantes, colaborando como prestadores de servicio social; equipos coordinados por una o más personas designadas como coordinadores responsables en cada entidad. A Continuación se abordará una sintesís metodológica sobre dicha prueba piloto.
+Mediante un levantamiento presencial o vía remota, según las condiciones epidemiológicas y climáticas, con un estimado de 300 cuestionarios por entidad (200 unidades de producción agropecuaria y 100 de establecimientos); con cargas de trabajo distribuidas en equipos de estudiantes de las diferentes instituciones académicas participantes, colaborando como prestadores de servicio social; equipos coordinados por una o más personas designadas como coordinadores responsables en cada entidad. A continuación, se abordará una síntesis metodológica sobre dicha prueba piloto.
 
 <br>
 
@@ -297,7 +287,7 @@ La muestra de establecimientos y unidades agropecuarias no pudo ser de utilidad 
 
 ### **2.3.2. Periodo de realización** 
 
-El 24 de septiembre 2021 se impartió la primera capacitación a los participantes de la entidad de Guanajuato, el resto de capacitaciones se impartió entre los días 29 de septiembre al 8 de octubre del mismo año en sesiones de trabajo de 4 horas por grupo y dos grupos por día, eventualmente hubo algunos grupos de recuperación en los días siguientes. En su mayoría, las capacitaciones en comento se realizaron a través de la plataforma Microsoft Teams; la única capacitación presencial fue realizada en la entidad Baja California, por petición propia de los responsables de la ERAMO en dicha entidad.
+El 24 de septiembre 2021 se impartió la primera capacitación a los participantes de la entidad de Guanajuato, el resto de las capacitaciones se impartió entre los días 29 de septiembre al 8 de octubre del mismo año en sesiones de trabajo de 4 horas por grupo y dos grupos por día, eventualmente hubo algunos grupos de recuperación en los días siguientes. En su mayoría, las capacitaciones en comento se realizaron a través de la plataforma Microsoft Teams; la única capacitación presencial fue realizada en la entidad Baja California, por petición propia de los responsables de la ERAMO en dicha entidad.
 
 [**Consulta una sesión de capacitación aquí**](https://365inegi.sharepoint.com/sites/Indicadores888/_layouts/15/stream.aspx?id=%2Fsites%2FIndicadores888%2FShared%20Documents%2FERAMO%2FRecordings%2FCurso%5FERAMO%5F8%5Foctubre20211008%5F133942Grabac%2Emp4&referrer=Teams%2ETEAMS%2DELECTRON&referrerScenario=teamsSdk%2DopenFilePreview){target="_blank_"}
 
@@ -369,7 +359,7 @@ cada institución académica identificar a sus estudiantes como parte del equipo
 
 ### **2.3.6.	Captación de la información**
 
-1. Durante el operativo se puso a prueba el funcionamiento correcto de los dispositivos móviles, sin que se presentaran problemas. Algunas limitaciones que se presentaron furon con aquellos dispositivos con sistema IOS o versiones Android menores a 8.0. Un aspecto para considerar y solventar las limitantes antes mencionadas es utilizando la plataforma web del Survey Solutions, la cual permite, al igual que en los dispositivos moviles, captar datos desde una PC sin estar restringida a utilizar únicamente dispositivos móviles, de este modo se resguardan directamente las entrevistas en el servidor.
+1. Durante el operativo se puso a prueba el funcionamiento correcto de los dispositivos móviles, sin que se presentaran problemas. Algunas limitaciones que se presentaron fueron con aquellos dispositivos con sistema IOS o versiones Android menores a 8.0. Un aspecto para considerar y solventar las limitantes antes mencionadas es utilizando la plataforma web del Survey Solutions, la cual permite, al igual que en los dispositivos móviles, captar datos desde una PC sin estar restringida a utilizar únicamente dispositivos móviles, de este modo se resguardan directamente las entrevistas en el servidor.
 
 2. La plataforma gratuita denominada Survey Solutions, mostró solidez y buen funcionamiento; aunque se tuvo que trasladar el proyecto de los servidores gratuitos del Banco Mundial a uno contratado con una empresa privada (Amazon Web Services) para asegurar que la información estuviera en correcto resguardo.
 
@@ -379,9 +369,9 @@ cada institución académica identificar a sus estudiantes como parte del equipo
 
 5. La plataforma de Survey Solutions permite la descarga correcta de la base de datos. De forma paralela a la captación de datos en tiempo real, se realizaron descargas parciales de las bases de datos para su análisis, con la finalidad de verificar la estructura, correcto almacenamiento y consistencia lógica de los datos, obteniendo resultados satisfactorios.
 
-6. Una de las principales ventajas de haber realizado la mayoría de las entrevistas en dispositivos móviles, fue la de evitar un proceso de captura manual de cuestionarios. Los datos que ingresaron al sistema, se almacenaron directamente en un respaldo en el repositorio web de la aplicación y al final del levantamiento se descargaron en una base de datos de formato ".csv" para su procesamiento.
+6. Una de las principales ventajas de haber realizado la mayoría de las entrevistas en dispositivos móviles, fue la de evitar un proceso de captura manual de cuestionarios. Los datos que ingresaron al sistema se almacenaron directamente en un respaldo en el repositorio web de la aplicación y al final del levantamiento se descargaron en una base de datos de formato ".csv" para su procesamiento.
 
-La prueba piloto de la ERAMO se diseñó de tal manera que gran parte de las variables de interés se obtuvieran mediante preguntas abiertas (ej. causa por la que se producen los residuos) y su codificación se realizara de forma manual. Las variables con categorías de respuesta (catálogos), incluían la opción "Otro(a)", longrando obtener respuestas distintas a las consideradas en la batería de preguntas. Este tipo de codificación requirió de un proceso de análisis, en el que se generaron nuevos criterios de estandarización/homologación de textos, identificación de sinónimos, entre otros, para posteriormente generar catálogos que facilitarían la interpretación de los resultados.
+La prueba piloto de la ERAMO se diseñó de tal manera que gran parte de las variables de interés se obtuvieran mediante preguntas abiertas (ej. causa por la que se producen los residuos) y su codificación se realizara de forma manual. Las variables con categorías de respuesta (catálogos), incluían la opción "Otro(a)", logrando obtener respuestas distintas a las consideradas en la batería de preguntas. Este tipo de codificación requirió de un proceso de análisis, en el que se generaron nuevos criterios de estandarización/homologación de textos, identificación de sinónimos, entre otros, para posteriormente generar catálogos que facilitarían la interpretación de los resultados.
 
 <br>
 <br>
@@ -415,7 +405,7 @@ Entre los indicadores de error que se lograron revisar, se encuentran los siguie
 •	Alto porcentaje de respuestas ilógicas.  
 •	Alto porcentaje de incongruencias entre preguntas relacionadas.  
 
-Para garantizar que la información analizada fuera lo más confiable posible, la integración de la base de datos se conformó sólo con aquellos cuestionarios que adquieron el estatus de validados y consistentes.   
+Para garantizar que la información analizada fuera lo más confiable posible, la integración de la base de datos se conformó sólo con aquellos cuestionarios que adquirieron el estatus de validados y consistentes.   
 
 En adicional, la aplicación para el diseño del cuestionario puede incluir validaciones básicas entre variables, tales como:
 
@@ -443,7 +433,7 @@ Una vez aplicados los tratamientos tanto manuales como automatizados; asegurada 
 
 ### **2.3.8.	Presentación de resultados**
 
-Debido a los tiempos del levantamiento, el servidor de captura concluyó el día 17 de diciembre de 2021, así como la posterior fase de tratamiento de la información, la presentación de resultados se programa para el final del primer trimestre del año 2022. Primeramente los resultados preliminares se consultaron al Comité Técnico para abordar temas o variables no considerados o mejorar la perspectiva de la presentación, la interpretación de los datos y enfoques, etc, considerando que los resultados del ejercicio reflejan una correspondencia con estudios realizados por expertos en el tema; aún cuando no son estadísticamente representativos, son indicativos del fenómeno
+Debido a los tiempos del levantamiento, el servidor de captura concluyó el día 17 de diciembre de 2021, así como la posterior fase de tratamiento de la información, la presentación de resultados se programa para el final del primer trimestre del año 2022. Primeramente, los resultados preliminares se consultaron al Comité Técnico para abordar temas o variables no considerados o mejorar la perspectiva de la presentación, la interpretación de los datos y enfoques, etc. considerando que los resultados del ejercicio reflejan una correspondencia con estudios realizados por expertos en el tema; aun cuando no son estadísticamente representativos, son indicativos del fenómeno
 
 Posteriormente se realizó la presentación de los resultados obtenidos en la prueba piloto 2021 a las Instituciones participantes, siendo de forma presencial, presentando estadísticas nacionales y regionales. La entrega de resultados sirvió para refrendar el compromiso con una encuesta futura, así como agradecer y fortalecer las redes ciudadanas para algún otro proyecto en conjunto con el INEGI.
 
@@ -490,7 +480,7 @@ El inicio de la prueba piloto 2021 de la ERAMO inicia con la evaluación de la p
 
 La plataforma tecnológica utilizada se encuentra disponible en el sitio [https://mysurvey.solutions/](https://mysurvey.solutions/){target='_blank'}.  Se trata de una aplicación abierta y gratuita desarrollada por el Banco Mundial para el desarrollo de encuestas. La aplicación tiene diversas funcionalidades, como la posibilidad de incluir toma de coordenadas GPS para georreferenciar las unidades de observación, capturar fotografías, incluir validaciones, filtros y pases entre preguntas, incluir catálogos como opciones de respuesta, macros, entre otras funciones.
 
-La aplicación puede adaptarse a teléfonos celulares, así como a otros dispositivos como tablets, Lap top o computadora personal para la captación vía web (entrevistas por internet). 
+La aplicación puede adaptarse a teléfonos celulares, así como a otros dispositivos como tablets, laptop o computadora personal para la captación vía web (entrevistas por internet). 
 
 Un aspecto principal que definió la prueba 2021 fue la imposibilidad de contar con un presupuesto o recursos financieros para un operativo tradicional con personal del INEGI, dispositivos y servidores del instituto, razón por la que se decidió la importancia de llevar a cabo una encuesta que no significara la impresión de cuestionarios, pago de personal, viáticos, etc.; esto es, mediante dispositivos móviles de los estudiantes colaboradores que pudieran capturar la entrevista y posteriormente enviar a un servidor.
 
@@ -500,7 +490,7 @@ Para que lo anterior sucediera, el entrevistador podía enviar los cuestionarios
 
 El resultado fue satisfactorio para una gama importante de dispositivos móviles, pues se utilizaron desde versiones muy sencillas hasta modelos recientes. Para versiones anteriores previamente se detectó la dificultad para operar, para ello se utilizaron alternativas mencionadas con anterioridad.
 
-En la mayoría de los casos, la captura de coordenadas, cuando la entrevista fue presencial, así como la toma de fotografías no fue llevada a cabo con frecuencia, ya que, para la toma de fotografías, los establecimientos o unidades de producción no contaba con evidencia de la pérdida o el desperdicio de alimentos al momento de la entrevista, los unicos establecimientos donde se obtuvieron coordenadas fueron aquellos donde la entrevista se realizó de manera presencial y capturada directamente con el dispositivo movil. 
+En la mayoría de los casos, la captura de coordenadas, cuando la entrevista fue presencial, así como la toma de fotografías no fue llevada a cabo con frecuencia, ya que, para la toma de fotografías, los establecimientos o unidades de producción no contaba con evidencia de la pérdida o el desperdicio de alimentos al momento de la entrevista, los únicos establecimientos donde se obtuvieron coordenadas fueron aquellos donde la entrevista se realizó de manera presencial y capturada directamente con el dispositivo móvil. 
 
 Diariamente se comprobó que la conexión a la nube fuera satisfactoria para recibir los cuestionarios sin que hubiera pérdida de información alguna.
 
@@ -516,7 +506,7 @@ knitr::include_graphics("imagenes/movil2.jpg")
 <br>
 <br>
 
-### **2.4.2. Estrategia operativa**
+### **2.4.2. Estrategia operativa:**
 
 <br>
 
@@ -535,9 +525,9 @@ El instructor, fue el encargado de capacitar a las figuras operativas como el en
 
 •	Un equipo responsable de la publicación de la información.
 
-**Estructura Estatal**
+**Estructura Estatal:**
 
-•	Equipos de trabajo conformado por 1 supervisor y un número determinado de entrevistadores, de acuerdo a la distribución de trabajo de cada entidad federativa, ya que en algunos casos se requirieron más de un equipo en la misma entidad.
+Equipos de trabajo conformado por 1 supervisor y un número determinado de entrevistadores, de acuerdo con la distribución de trabajo de cada entidad federativa, ya que en algunos casos se requirieron más de un equipo en la misma entidad.
 
 Los supervisores, fueron los encargados de coordinar la distribución y asignación de las cargas de trabajo, revisar y evaluar el contenido de las entrevistas llevadas a cabo por cada uno de los entrevistadores a su cargo, así como brindar asesoría a fin de cumplir con las actividades en el tiempo y forma encomendado. 
 
@@ -559,7 +549,7 @@ Para dar certeza y confianza de la calidad de los datos obtenidos, fue necesario
 
 Se definió una muestra basada en aproximadamente 180 clases de actividad relacionadas con alimentos, tomando como base para la selección el [Sistema de Clasificación Industrial de América del Norte, 2018 (SCIAN 2018)](https://www.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/nueva_estruc/702825099695.pdf). Para la elección de las unidades de muestreo, se utilizaron el [Directorio Estadístico Nacional de unidades de observación (DENUE)](https://www.inegi.org.mx/app/mapa/denue/default.aspx), directorios de [SEGALMEX](https://www.gob.mx/segalmex) y del [SIAP](https://www.gob.mx/siap). Con base en esos directorios se eligió una muestra para 15 entidades federativas, que finalmente fue hecho a un lado y sustituido, en algunos casos, por aquellas unidades de observación que estuvieran cercanas a la residencia de los entrevistadores, por razones de distancias, económicas, conocimiento de la región, relación de vecindad con los entrevistadores, entre otras.
 
-La información obtenida carece de representatividad dado a que le levantamiento no se realizó siguiendo una muestra con representatividad estadística. La información resultate solo puede ser utilizada como indicativa del comportamiento de la Pérdida y Desperdicio de Alimentos en nuestro país. 
+La información obtenida carece de representatividad dado a que le levantamiento no se realizó siguiendo una muestra con representatividad estadística. La información resultante solo puede ser utilizada como indicativa del comportamiento de la Pérdida y Desperdicio de Alimentos en nuestro país. 
 
 **Sectores y subsectores de actividad considerados en el universo de estudio para la muestra**
 
@@ -586,7 +576,7 @@ DT::datatable(tab3, filter = 'top', options = list(
 
 Inicialmente se definieron 300 cuestionarios por cada una de las 15 entidades participantes (200 unidades agropecuarias y 100 de establecimientos) y dependiendo del número de entrevistadores registrados, establecer el total asignado entre el número de entrevistadores, entrevistadoras.
 
-Entre los objetivos de la prueba se encuentra probar los tiempos de traslado, duración de la entrevista, mecanismos de comunicación y coordinación entre equipos y con la organización central, con la premisa de la seguridad del personal en campo. Cabe destacar que, de acuerdo con experiencias de los entrevistadores, la organización entre los coordinadores de las entidades participantes con los alumnos entrevistadores cumplio las expectativas de la estrategia operativa, pues en algunas entidades federativas los entrevistadores, en compañia de los coordinadores, se transladaron a las unidades de observación de conocidos que facilmente pudieron dar respuesta al cuestionario empleado.
+Entre los objetivos de la prueba se encuentra probar los tiempos de traslado, duración de la entrevista, mecanismos de comunicación y coordinación entre equipos y con la organización central, con la premisa de la seguridad del personal en campo. Cabe destacar que, de acuerdo con experiencias de los entrevistadores, la organización entre los coordinadores de las entidades participantes con los alumnos entrevistadores cumplió las expectativas de la estrategia operativa, pues en algunas entidades federativas los entrevistadores, en compañía de los coordinadores, se trasladaron a las unidades de observación de conocidos que fácilmente pudieron dar respuesta al cuestionario empleado.
 
 <br>
 
@@ -612,7 +602,7 @@ Adicional a la capacitación, y con el objetivo de reforzar el conocimiento sobr
 * Cuestionario Agropecuario (**Consulta [aquí](https://365inegi-my.sharepoint.com/:b:/g/personal/carlos_lopezl_inegi_org_mx/EdDUOr4SkS5Pux_2ffK3x2YB7FpK8HuSgmzVtIV1aHU1gw?e=ZxpT5N){target="_blank_"}**).
 * Instructivo de llenado para el cuestionario Establecimientos (**Consulta [aquí](https://365inegi-my.sharepoint.com/:b:/g/personal/carlos_lopezl_inegi_org_mx/EbgY7bUWKwFAtQeB3cU-Iv8Bj99aANiMXMfy9jJCJAQ7Qw?e=EGRccB){target="_blank_"}**).
 * Instructivo de llenado para el cuestionario Agropecuario (**Consulta [aquí](https://365inegi-my.sharepoint.com/:b:/g/personal/carlos_lopezl_inegi_org_mx/ETS8nbkxGDdCrTJSNiS4VP4BXQ09JAhu1JpvP8odclAk0w?e=N2fv6C){target="_blank_"}**).
-* Lista de alimentos sugeridos a levantar(**Consulta [aquí](https://365inegi-my.sharepoint.com/:b:/g/personal/carlos_lopezl_inegi_org_mx/EZUt7maOHA1PoXXBFvRF0AcBJqQaBvMWPCI8yAayg-hRsA?e=w27nQP){target="_blank_"}**).
+* Lista de alimentos sugeridos a levantar (**Consulta [aquí](https://365inegi-my.sharepoint.com/:b:/g/personal/carlos_lopezl_inegi_org_mx/EZUt7maOHA1PoXXBFvRF0AcBJqQaBvMWPCI8yAayg-hRsA?e=w27nQP){target="_blank_"}**).
 
 
 <br>
@@ -769,7 +759,7 @@ Una de las grandes ventajas que proporcionó el uso de la plataforma del cuestio
 
 **2) Rangos válidos.** El cuestionario electrónico garantiza que una variable no podrá contener un rango distinto de valores para lo que se programa. Esto excluye también la posibilidad de captar caracteres o tipos de datos ajenos a lo que se espera.
 
-**3) Validaciones especiales.** El diseñador del cuestionario puede incluir validaciones adicionales relacionadas con aspectos lógicos o conceptuales de interrelación entre dos o más preguntas del cuestionario. Específicamente, para esta encuesta se construyeron validaciones para hacer consistentes las unidades de medida de los residuos declarados entre sí, de modo que si alguien declara una cantidad de residuos total, al momento de desglosar cada residuo no resulte mayor que el total. También se verifica que si alguien declaró, por ejemplo, unidad de medida en litros para una pregunta, no pueda declarar toneladas en otra.
+**3) Validaciones especiales.** El diseñador del cuestionario puede incluir validaciones adicionales relacionadas con aspectos lógicos o conceptuales de interrelación entre dos o más preguntas del cuestionario. Específicamente, para esta encuesta se construyeron validaciones para hacer consistentes las unidades de medida de los residuos declarados entre sí, de modo que si alguien declara una cantidad de residuos total, al momento de desglosar cada residuo no resulte mayor que el total. También se verifica que, si alguien declaró, por ejemplo, unidad de medida en litros para una pregunta, no pueda declarar toneladas en otra.
 
 Adicional a las validaciones establecidas en el diseño de los cuestionarios, se establecieron criterios de validación mismos que dieron tratamiento a la información captada, estos se describen en los siguientes diagramas de flujo.
 
@@ -787,7 +777,7 @@ Adicional a las validaciones establecidas en el diseño de los cuestionarios, se
 
 <br>
 
-Como se mencinó anteriormente, se logró obtener 2,867 entrevistas completadas, sin embargo, no todas cumplieron con los requerimientos mínimos necesarios para su explotación, por lo que se descartaron.
+Como se mencionó anteriormente, se logró obtener 2,867 entrevistas completadas, sin embargo, no todas cumplieron con los requerimientos mínimos necesarios para su explotación, por lo que se descartaron.
 
 El universo de estudio se redujo un 29.3%, es decir, de las 2,867 entrevistas, sólo 2,022 cumplieron los criterios de validación, con un desglose de 1,574 entrevistas en unidades económicas y 448 entrevistas en unidades de producción agrícolas/pecuarias. Es a partir de estas entrevistas que se integró la Base de Datos de Explotación.
 
@@ -800,7 +790,7 @@ knitr::include_graphics("imagenes/universo_2.PNG")
 
 ### **2.5.3. Bitácora de procesamiento**
 
-El conjunto de procedimientos aplicados a la BD de salida para llegar hasta la construcción de la BD para explotación, puede encontrarse en el documento que se muestra a continuación, denominado *Bitácora de Procesamiento*.
+El conjunto de procedimientos aplicados a la BD de salida para llegar hasta la construcción de la BD para explotación puede encontrarse en el documento que se muestra a continuación, denominado *Bitácora de Procesamiento*.
 
 <br>
 
@@ -817,7 +807,7 @@ El conjunto de procedimientos aplicados a la BD de salida para llegar hasta la c
 
 <br>
 
-La base de datos liberada para explotación, presenta la siguiente estructura:
+La base de datos liberada para explotación presenta la siguiente estructura:
 
 <br>
 
@@ -842,7 +832,7 @@ Para facilitar la explotación de la base de datos se diseñó un descriptor de 
 
 #### **2.5.4.2. Diagrama Entidad-Relación**
 
-El modelo de interrelaciones de la base de datos liberada para explotación queda de acuerdo al siguiente diagrama:
+El modelo de interrelaciones de la base de datos liberada para explotación queda de acuerdo con el siguiente diagrama:
 
 <br>
 
@@ -919,7 +909,7 @@ En relación con la baja apreciación de desperdicio en los cuestionarios de est
 *	Usar el concepto de desperdicio sólo en establecimientos
 *	Apoyarse de fotos/imágenes, videos cortos sobre pérdida y desperdicios, para que los informantes puedan diferenciar estos conceptos
 
-En cuanto a los resultados, la única propuesta sobre cómo presentar en cuanto a lo conceptual y la estrategia operativa, fue la implementar una difusión a través de contacto con cluster (agroalimentario, biotecnología y similares de acuerdo a los estados), videos y folletos para enviar en distintas plataformas digitales.
+En cuanto a los resultados, la única propuesta sobre cómo presentar lo conceptual y la estrategia operativa, fue implementar una difusión a través de contacto con clúster (agroalimentario, biotecnología y similares de acuerdo a los estados), videos y folletos para enviar en distintas plataformas digitales.
  
 Se obtuvieron dos propuestas en cuanto a la representación de los resultados, las cuales consisten en:
 

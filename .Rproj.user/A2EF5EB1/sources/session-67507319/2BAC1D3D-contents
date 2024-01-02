@@ -1,0 +1,1480 @@
+
+<br>
+
+```{r fig.align='center', out.width= '100%', echo=FALSE, cache=TRUE}
+
+knitr::include_graphics("imagenes/Establecimientos.JPG")
+
+```
+
+<div class=text-justify>
+
+<br>
+
+### **Consideración inicial acerca de los resultados obtenidos**
+
+El siguiente contenido corresponde al análisis de los datos obtenidos en el operativo de la Prueba Piloto ERAMO 2021 para el cuestionario aplicado a los establecimientos o unidades económicas. Es importante mencionar que los resultados obtenidos **no son considerados de carácter oficial** ya que no provienen de una muestra estadísticamente representativa.
+
+<br>
+<br>
+
+### **Resumen de entrevistas captadas**
+
+Como resultado del procesamiento de la información, se identificaron 1,574 cuestionarios completos obtenidos en establecimientos dedicados a la venta de alimentos.
+
+Sobre estos registros es que se considerará nuestro **universo de estudio**, en el que, mediante un procesamiento analítico sobre las variables, se logró generar algunos **indicadores y gráficos** con la finalidad compartir y difundir los resultados obtenidos en esta prueba piloto 2021. 
+
+<br>
+
+
+
+# **3.1. Resultados en los Establecimientos Económicos**  
+
+<br>
+
+## **3.1.1. Personal ocupado en los establecimientos** 
+
+La distribución del tamaño de los establecimientos se basó en el número del personal ocupado, siendo más frecuente los establecimientos pequeños con un 83.5%, con rango del personal ocupado de 0 a 5 personas.
+
+<br> 
+
+```{r graf_1.0., fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+library(RPostgreSQL) 
+
+
+drv <- dbDriver("PostgreSQL") 
+
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select per.descripcion clase, count(*) frec 
+from catalogos.cat_per_ocupado per left join explotacion.establecimientos est 
+on per.id = est.personal_ocup 
+group by per.id, per.descripcion 
+order by per.id;") 
+
+ 
+
+library(plotly) 
+
+#colors <- c('#186A3B','#196F3D', '#1E8449', '#229954', '#27AE60','#58D68D', '#82E0AA','#ABEBC6','#D5F5E3', '#EAFAF1')
+ 
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(7)
+
+
+plot_ly(datos, labels = ~clase, values = ~frec, type = 'pie', textinfo = 'porcent',  
+
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+
+  layout(title = '', 
+
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F)) 
+
+#dbDisconnect(conn)
+ 
+``` 
+
+<br> 
+
+<br> 
+
+## **3.1.2. Destino del consumo de los productos alimenticios declarados por las unidades económicas**
+Los establecimientos entrevistados declararon que el 78.9% de sus productos son para consumo humano, 0.2% para consumo animal, el 20.4% para ambos tipos de consumo, el resto menciona que lo desconoce.
+
+<br> 
+
+```{r graf_1.2., fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+
+ 
+
+#drv <- dbDriver("PostgreSQL") 
+
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select 'Totalmente consumo humano' as consumo,(select sum(consumo_hum) tot_p_humano_100 
+from explotacion.establecimientos where consumo_hum = 100) as valores union 
+select 'Totalmente consumo animal',(select sum(consumo_anim) tot_p_animal_100 
+from explotacion.establecimientos where consumo_anim = 100)union 
+select 'Ambos (consumo humano y animal) ',(select (sum(consumo_hum) + sum(consumo_anim)) tot_p_ambos 
+from explotacion.establecimientos where consumo_hum <> 100 and consumo_anim <> 100)union 
+select 'No sabe',(select sum(consumo_desc) tot_p_nosabe 
+from explotacion.establecimientos) order by valores desc;") 
+
+ 
+
+library(plotly) 
+
+data <- datos[,c('consumo', 'valores')] 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(4)
+
+fig <- plot_ly(data, labels = ~consumo, values = ~valores, type = 'pie', 
+textposition = 'outside', 
+textinfo = 'percent', 
+hoverinfo = 'text', 
+text = ~paste('',consumo , ''), 
+marker = list(colors = colors,  
+line = list(color = '#FFFFFF', width = 1)), 
+showlegend = T) 
+fig <- fig %>% layout(title = '', 
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+ #dbDisconnect(conn)
+
+fig 
+
+``` 
+<br> 
+<br> 
+
+## **3.1.3. Mercado objetivo de los productos alimenticios declarados por las unidades económicas**						 
+En lo que corresponde al mercado al que se destinan sus ventas o servicios, el 79.4% declaró como destino exclusivo el mercado nacional minorista,  2.5% exclusivamente al mercado nacional mayorista,  el 0.3% totalmente extranjero y el 17.7% de los tres tipos.
+
+<br> 
+
+```{r graf_1.3., fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn," 
+
+select 'Totalmente nacional minorista' as mercado,(select sum(mercado_min) tot_min_100 from explotacion.establecimientos where mercado_min = 100) as valores union 
+select 'Totalmente nacional mayorista',(select sum(mercado_may) tot_may_100 from explotacion.establecimientos where mercado_may = 100)union 
+select 'Totalmente extranjero',(select sum(mercado_extra) tot_extra from explotacion.establecimientos where mercado_extra = 100)union 
+select 'Nacional mayorista, minorista y extranjero',(select (sum(mercado_min) + sum(mercado_may) + sum(mercado_extra)) tot_merc_ambos from explotacion.establecimientos where mercado_min <> 100 and mercado_may <> 100 and mercado_extra <>100)
+order by valores desc
+
+;") 
+
+ 
+
+library(plotly) 
+
+data <- datos[,c('mercado', 'valores')] 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(4)
+
+fig <- plot_ly(data, labels = ~mercado, values = ~valores, type = 'pie',
+textposition = 'outside', 
+textinfo = 'percent', 
+hoverinfo = 'text', 
+text = ~paste('',mercado , ''), 
+marker = list(colors = colors, 
+line = list(color = '#FFFFFF', width = 1)), 
+showlegend = T) 
+fig <- fig %>% layout(title = '', 
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+#dbDisconnect(conn) 
+
+fig 
+
+``` 
+
+<br> 
+<br> 
+
+## **3.1.4. Origen de los productos alimenticios** 
+En el caso del origen de los alimentos que se comercializan, la mayoría de los establecimientos vende o presta servicios de alimentos de origen nacional, representado con un 77.9%.
+<br> 
+
+```{r graf_1.4., fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn," 
+
+select 'Totalmente Nacional' as origen,(select sum(origen_nac) tot_nacional from explotacion.establecimientos where origen_nac = 100) as valores union 
+select 'Totalmente Importado',(select sum(origen_impo) tot_importado from explotacion.establecimientos where origen_impo = 100) union
+select 'Nacional e Importado', (select (sum(origen_nac) + sum(origen_impo)) tot_ambos from explotacion.establecimientos where origen_nac <> 100 and origen_impo <> 100)union
+select 'No sabe',(select sum(origen_desc) tot_nosabe from explotacion.establecimientos) order by valores desc
+
+;") 
+
+
+library(plotly) 
+
+ 
+
+data <- datos[,c('origen', 'valores')] 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(4)
+
+t <- list(
+  family = "sans serif",
+  size = 14,
+  color = toRGB("grey50"))
+
+fig <- plot_ly(data, labels = ~origen, values = ~valores, type = 'pie', 
+textposition = 'outside',
+textinfo = 'percent', 
+hoverinfo = 'text', 
+text = ~paste('',origen , ''), 
+marker = list(colors = colors, 
+line = list(color = '#FFFFFF', width = 1)), 
+showlegend = T)
+fig <- fig %>% layout(title = '', 
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+#dbDisconnect(conn)
+
+fig 
+
+``` 
+
+<br> 
+<br> 
+
+## **3.1.5. Registro del manejo o desperdicio de productos** 
+Como se observa en la siguiente gráfica, aproximadamente un 58.8% no lleva ningún registro en el **desperdicio de alimentos.** Del 37.7% que sí lleva un registro, el 66.2% lo realiza en bitácora y un 25.4% en un libro en Excel.
+
+<br> 
+
+```{r graf_1.5.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="85%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn," 
+select rp.descrip registro, count(*) frec  
+from catalogos.si_no rp left join explotacion.establecimientos est on rp.gid = est.registro where rp.gid not in (4,5) group by rp.descrip order by rp.descrip;") 
+
+library(plotly) 
+
+data <- datos[,c('registro', 'frec')] 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(3)
+
+fig <- plot_ly(data, labels = ~registro, values = ~frec, type = 'pie', 
+textposition = 'outside', 
+textinfo = 'percent', 
+hoverinfo = 'text', 
+text = ~paste('',registro , ''), 
+marker = list(colors = colors, 
+line = list(color = '#FFFFFF', width = 1)), 
+showlegend = T) 
+fig <- fig %>% layout(title = '1.5.a.  Porcentaje de establecimientos que llevan un registro <br>en el manejo o desperdicio de sus productos', 
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+
+ #dbDisconnect(conn)
+
+fig 
+
+``` 
+
+<br> 
+
+```{r graf_1.5b., fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select per.descrip clase, count(*) frec 
+from catalogos.cat_registro per left join explotacion.establecimientos est on per.id = est.tipo_registro
+where est.tipo_registro <> 8
+group by per.id, per.descrip 
+order by per.id;") 
+
+library(plotly) 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(7)
+
+
+plot_ly(datos, labels = ~clase, values = ~frec, type = 'pie', textinfo = 'porcent',  
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+  layout(title = '1.5.b. Tipo de registro en el manejo o desperdicio de sus productos', 
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F)) 
+#dbDisconnect(conn)
+
+``` 
+
+<br> 
+<br> 
+
+# **3.2. Manejo**
+
+<br> 
+
+## **3.2.1. Cantidad de productos alimenticios declarados** 
+La siguiente gráfica muestra el porcentaje de la frecuencia de productos alimenticios que manejó, almacenó, procesó, distribuyó, vendió y ofreció como servicio alimentario por establecimiento, siendo un 38.9% de estos que únicamente reportaron un solo producto y el 5.84% de establecimientos reportaron 10 o más productos. 
+
+<br>
+
+```{r graf_2.1., fig.align='center', fig.height=6, fig.width=12, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+
+ 
+
+library(RPostgreSQL) 
+drv <- dbDriver("PostgreSQL") 
+conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn," select * from explotacion.estab_num_prod
+union all
+select * from explotacion.estab_num_prod10;") 
+
+ 
+library(plotly) 
+
+
+ 
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(10)
+
+plot_ly(datos, labels = ~clase,  values = ~frec, type = 'pie', textinfo = 'porcent',  
+
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+
+  layout(title = '', autosize = T,
+
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F))
+
+#dbDisconnect(conn)
+
+``` 
+
+<br> 
+
+<br> 
+
+## **3.2.2. Productos alimenticios reportados** 
+Se logró captar información de 73 productos alimenticios distintos, la siguiente gráfica muestra la frecuencia de cada uno de los productos alimenticios reportados.
+
+* La categoría "No especificó" se refiere a que el informante no detalló a que producto alimenticio se refieren sus datos
+
+<br> 
+
+```{r graf_2.2., fig.align='center', fig.height=8, fig.width=15, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"select producto, sum(frec) frecuencia 
+from 
+( 
+select b.descrip producto, count(*) frec 
+from explotacion.productos_establecimientos a 
+join catalogos.prod_establecimientos b 
+on a.producto_e = b.gid 
+where b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3') 
+group by b.descrip 
+union all 
+select nombre_otro_prod producto, count(*) frec 
+from explotacion.productos_establecimientos
+where producto_e in (135, 136, 137) 
+group by nombre_otro_prod 
+) as query 
+group by producto 
+order by frecuencia desc;") 
+
+ 
+
+library(plotly) 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))
+ 
+plotter <- plot_ly( 
+x = ~datos$producto, 
+y = ~datos$frecuencia, 
+name = 'Productos reportados', 
+type = 'bar', 
+marker = list(color = '#68912B', 
+              line = list(color = '#AB7A5A', 
+                                  width = 1))) %>% 
+layout( 
+title=(""), 
+yaxis = list(title = "Cantidad"), 
+xaxis = list(title = "Producto", categoryorder = "total descending"), 
+#margin = list(b = 100), 
+
+#barmode = 'group' 
+barmode = 'stack' 
+
+) 
+
+plotter 
+
+#dbDisconnect(conn) 
+
+``` 
+
+<br> 
+
+<br> 
+
+## **3.2.3. Cantidad (en promedio mensual) que manejó, procesó, almacenó, distribuyó, o vendió en los productos alimenticios reportados**
+
+Gráfica de caja y bigotes que muestra los datos del promedio mensual del manejo de cada uno de los productos reportados.
+
+<br> 
+
+```{r echo = FALSE, message = FALSE, fig.height= 6, fig.width= 8, warning = FALSE, cache=F}
+
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select producto, sum(manejo_kg) manejo_kg
+from
+(
+select b.descrip producto, a.manejo_kg_e manejo_kg
+from explotacion.productos_establecimientos a
+join catalogos.prod_establecimientos b
+on a.producto_e = b.gid and b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3')
+union all
+select nombre_otro_prod producto, manejo_kg_e manejo_kg
+from explotacion.productos_establecimientos
+where producto_e in (135, 136, 137)
+	group by producto, manejo_kg
+) as query 
+group by producto, manejo_kg
+order by manejo_kg desc;")
+
+
+library(plotly)
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))
+
+data <- datos[,c('producto', 'manejo_kg')]
+fig <- plot_ly(data, x = ~producto, y = ~manejo_kg, type = 'box', color = ~producto,
+               marker = list(colors = colors))
+fig <- fig %>% layout(title=(""),
+                      xaxis = list(showgrid = TRUE, zeroline = TRUE, showticklabels = FALSE, title = "Producto", categoryorder = "total descending"),
+                      yaxis = list(showgrid = TRUE, zeroline = TRUE, showticklabels = TRUE, title = "Kilogramos"))
+
+#dbDisconnect(conn)
+
+fig
+
+
+
+```
+
+<br> 
+
+<br> 
+
+
+# **3.3. Desperdicio alimentos**  
+
+<br>
+
+## **3.3.1. Porcentaje de productos alimenticios en los que declara tener desperdicio**
+
+De los 5,021 datos sobre los productos reportados en establecimientos, el 55.9% de los productos reportaron tener desperdicio.
+
+<br>
+
+```{r graf_3.1., fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+datos <- dbGetQuery(conn,"select * from explotacion.count_perdida ;")
+
+
+library(plotly) 
+
+ 
+
+data <- datos[,c('tipo', 'count')] 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(2)
+
+fig <- plot_ly(data, labels = ~tipo, values = ~count, type = 'pie', 
+
+textposition = 'outside', 
+
+textinfo = 'percent', 
+
+hoverinfo = 'text', 
+
+text = ~paste('',tipo , ''), 
+
+marker = list(colors = colors, 
+
+line = list(color = '#FFFFFF', width = 1)), 
+
+showlegend = T) 
+
+fig <- fig %>% layout(title = '', 
+
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
+
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+
+# dbDisconnect(conn)
+
+fig 
+
+``` 
+
+<br>
+
+<br>
+
+## **3.3.2. Porcentaje global del desperdicio**
+
+La siguiente gráfica permite visualizar la proporción relacionada a la cantidad del manejo de alimentos con la cantidad reportada de desperdicio, correspondiendo un 10.7%. 
+
+<br>
+
+```{r graf_3.2., fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+datos <- dbGetQuery(conn,"select * from explotacion.estab_manejo_perdida;")
+
+
+library(plotly) 
+
+
+data <- datos[,c('tipo', 'dato')] 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(2)
+
+fig <- plot_ly(data, labels = ~tipo, values = ~dato, type = 'pie', 
+
+textposition = 'outside', 
+
+textinfo = 'percent', 
+
+hoverinfo = 'text', 
+
+text = ~paste('',tipo , ''), 
+
+marker = list(colors = colors, 
+
+line = list(color = '#FFFFFF', width = 1)), 
+
+showlegend = T) 
+
+fig <- fig %>% layout(title = '', 
+
+xaxis = list(title = "", showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
+
+yaxis = list(title = "", showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+
+#dbDisconnect(conn) 
+
+fig 
+
+``` 
+
+<br>
+
+<br>
+
+## **3.3.3. Porcentaje del desperdicio desglosado por producto**
+
+En el siguiente gráfico se muestran los datos atomizados del porcentaje del desperdicio reportado por los informantes agrupado por producto alimenticio.
+
+<br>
+
+```{r echo = FALSE, message = FALSE, fig.height= 6, fig.width= 8, warning = FALSE, cache=F}
+
+
+#library(RPostgreSQL) 
+
+#drv <- dbDriver("PostgreSQL") 
+
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"select producto, manejo, perdida, round(perdida/manejo*100,2) porcent_perdida
+from
+(
+select b.descrip producto, a.manejo_kg_e manejo, a.perdida_kg_e perdida
+from explotacion.productos_establecimientos a
+join catalogos.prod_establecimientos b
+on a.producto_e = b.gid and b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3')
+union all
+select nombre_otro_prod producto, manejo_kg_e manejo, perdida_kg_e perdida
+from explotacion.productos_establecimientos
+where producto_e in (135, 136, 137)
+) as query
+order by porcent_perdida desc;")
+
+
+library(plotly)
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))
+
+data <- datos[,c('producto', 'porcent_perdida')]
+fig <- plot_ly(data, x = ~producto, y = ~porcent_perdida, type = 'box', color = ~producto,
+               marker = list(colors = colors))
+fig <- fig %>% layout(title=(""),
+                      xaxis = list(showgrid = TRUE, zeroline = TRUE, showticklabels = FALSE, title = "Producto", categoryorder = "total descending"),
+                      yaxis = list(showgrid = TRUE, zeroline = TRUE, showticklabels = TRUE, title = "Porcentaje del desperdicio"))
+
+#list(title = "Productos"
+#list(title = "Frecuencia"
+#dbDisconnect(conn)
+
+fig
+
+
+```
+
+<br>
+
+<br>
+
+## **3.3.4. Porcentaje del desperdicio declarado por productos alimenticios**
+
+<br>
+
+```{r graf_3.4., fig.align='center', fig.height=8, fig.width=15, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select producto, sum(manejo) manejo, sum(perdida) perdida, sum(perdida)/1000 perdida_ton, round(sum((perdida))/(sum(manejo))*100,2) porcent_perdida
+from
+(
+select b.descrip producto, a.manejo_kg_e manejo, a.perdida_kg_e perdida
+from explotacion.productos_establecimientos a
+join catalogos.prod_establecimientos b
+on a.producto_e = b.gid and b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3')
+union all
+select nombre_otro_prod producto, manejo_kg_e manejo, perdida_kg_e perdida
+from explotacion.productos_establecimientos
+where producto_e in (135, 136, 137)
+) as query
+group by producto
+order by porcent_perdida desc;") 
+
+ 
+
+library(plotly) 
+
+ 
+
+plotter <- plot_ly( 
+
+x = ~datos$producto, 
+
+y = ~datos$porcent_perdida, 
+
+name = 'Productos declarados', type = 'bar', 
+
+marker = list(color = '#68912B', 
+
+              line = list(color = '#AB7A5A', 
+
+                                  width = 1))) %>% 
+
+layout( title=(""), 
+
+yaxis = list(title = "Porcentaje del desperdicio"), 
+xaxis = list(title = "Producto", categoryorder = "total descending"), 
+
+#margin = list(b = 100), 
+
+barmode = 'group' ) 
+
+plotter 
+#dbDisconnect(conn) 
+ 
+
+``` 
+
+Masa de maíz y el Chayote son los productos que mayor porcentaje del desperdicio presentan, esto se debe a que son productos con poca representatividad y los únicos registros reportados muestran un elevado porcentaje de desperdicio (Ver gráfico 3.2.2 y 3.3.3). 
+
+<br>
+
+<br>
+
+## **3.3.5. Porcentaje global del desperdicio que era todavía comestible para otras personas**
+
+Del total del desperdicio, un 32.4% era todavía comestible para otras personas. 
+
+<br>
+
+```{r graf_3.5.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+datos <- dbGetQuery(conn,"select * from explotacion.estab_perdida_comestible;")
+
+
+library(plotly) 
+
+ 
+
+data <- datos[,c('tipo', 'dato')] 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(2)
+
+fig <- plot_ly(data, labels = ~tipo, values = ~dato, type = 'pie', 
+
+textposition = 'outside', 
+
+textinfo = 'percent', 
+
+hoverinfo = 'text', 
+
+text = ~paste('',tipo , ''), 
+
+marker = list(colors = colors, 
+
+line = list(color = '#FFFFFF', width = 1)), 
+
+showlegend = T) 
+
+fig <- fig %>% layout(title = '3.5.a Porcentaje global del desperdicio que era todavía comestible para otras personas', 
+
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
+
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+
+#dbDisconnect(conn) 
+
+fig 
+
+``` 
+
+<br>
+
+Productos que fueron reportados como desperdicio pero aun eran comestibles para otras personas. Podemos ver jamaica, hierbas, soya, col, chayote, entre otros.
+
+<br>
+
+```{r graf_3.5_b, fig.align='center', fig.height=8, fig.width=15, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+#library(RPostgreSQL) 
+
+#drv <- dbDriver("PostgreSQL") 
+ 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.731",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"select producto, perdida, toda_comest, round(toda_comest::numeric/perdida::numeric*100, 2) porc_comes, round(total::numeric/perdida::numeric*100, 2) porc_nocomes
+from (select producto, perdida, toda_comest, (perdida - toda_comest) total 
+	  from 
+(select nombre_otro_prod producto, count (*) frec, round(sum(perdida_kg_e),3) perdida, round(sum(comestible_kg_e),3) toda_comest
+from explotacion.productos_establecimientos
+where nombre_otro_prod is not null and producto_e in (135,136,137) and perdida_kg_e > 0
+group by producto 
+union all 
+select b.descrip producto, count(*) frec, sum(perdida_kg_e), sum(comestible_kg_e) toda_comest
+from explotacion.productos_establecimientos a
+join catalogos.prod_establecimientos b
+on a.producto_e = b.gid
+where b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3') and perdida_kg_e > 0
+group by b.descrip
+order by frec desc 
+) as query2
+ order by producto desc)
+ as query3
+ order by porc_comes desc;") 
+
+ library(plotly)
+data <- datos[,c('producto', 'porc_comes')]
+fig <- plot_ly(data, x = ~producto, y = ~porc_comes, type = 'bar',
+      marker = list(color = '#68912B',line = list(color = '#AB7A5A', 
+
+                                  width = 1))) 
+     #'rgb(33, 97, 140)', 'rgb(155, 200, 200)'
+fig <- fig %>% layout(title=(" 3.5.b Porcentaje, por producto, del desperdicio que era todavía comestible para otras personas."),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje del desperdicio aún comestible"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+
+<br>
+<br>
+
+## **3.3.6. Porcentaje del desperdicio que era todavía comestible para otras personas cuyo destino fue dirigido a bancos de alimentos (BA)** 
+
+
+El 15% del desperdicio que era todavía comestible para otras personas se destinó a los bancos de alimentos
+
+<br>
+
+```{r graf_3.6.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+
+#library(RPostgreSQL)
+#drv <- dbDriver("PostgreSQL")
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+datos <- dbGetQuery(conn,"select * from explotacion.estab_comestible_bancos;")
+
+
+library(plotly) 
+
+ 
+
+data <- datos[,c('tipo', 'dato')] 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(2) 
+
+
+fig <- plot_ly(data, labels = ~tipo, values = ~dato, type = 'pie', 
+
+textposition = 'outside', 
+
+textinfo = 'percent', 
+
+hoverinfo = 'text', 
+
+text = ~paste('',tipo , ''), 
+
+marker = list(colors = colors, 
+
+line = list(color = '#FFFFFF', width = 1)), 
+
+showlegend = TRUE) 
+
+#fig <- fig %>% layout(title = '3.6.a Porcentaje del desperdicio que era todavía comestible para otras personas, destinada BA',
+
+fig <- fig %>% layout(title = '3.6.a Porcentaje del desperdicio que era todavía comestible para otras personas, destinada BA', 
+
+xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE), 
+
+yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+
+ 
+#dbDisconnect(conn)
+
+fig 
+
+``` 
+<br>
+
+El siguiente gráfico muestra el porcentaje de los productos que todavía eran comestibles y se destinaron a los bancos de alimentos. En un 100% tenemos las pastas y la soya, siguiendo el aceite vegetal con 94.6% y el pan blanco y dulce con aproximadamente un 30%.
+
+<br>
+
+```{r graf_3.6_b, fig.align='center', fig.height=8, fig.width=15, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+#library(RPostgreSQL) 
+
+#drv <- dbDriver("PostgreSQL") 
+ 
+
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+
+datos <- dbGetQuery(conn,"select producto, comestible_kg, destino_bancos, porcentaje
+from(
+select producto, round(sum(comestible),2) comestible_kg, round(sum(destino_bancos),2) destino_bancos, round(sum(destino_bancos)/(sum(comestible))*100,2) porcentaje
+from
+(
+	select b.descrip producto, a.comestible_kg_e comestible, a.bancos_kg_e destino_bancos
+	from explotacion.productos_establecimientos a
+	join catalogos.prod_establecimientos b
+	on a.producto_e = b.gid and b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3')
+	where a.comestible_kg_e >= 0
+	union all
+	select nombre_otro_prod producto, comestible_kg_e comestible, bancos_kg_e destino_bancos
+	from explotacion.productos_establecimientos 
+	where producto_e in (135,136,137) and comestible_kg_e >= 0
+)
+as query
+group by producto
+order by porcentaje desc
+	) as query
+	where porcentaje is not null;") 
+
+ library(plotly)
+data <- datos[,c('producto', 'porcentaje')]
+fig <- plot_ly(data, x = ~producto, y = ~porcentaje, type = 'bar',
+      marker = list(color = '#68912B',line = list(color = '#AB7A5A', 
+
+                                  width = 1)))  
+     #'rgb(33, 97, 140)', 'rgb(155, 200, 200)'
+fig <- fig %>% layout(title=("3.6.b. Porcentaje del desperdicio, por producto, que era todavía comestible <br>para otras personas destinada a bancos de alimentos."),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje del desperdicio aún comestible destinada a BA"))
+
+
+#dbDisconnect(conn)
+fig
+
+```
+<br>
+<br>
+
+# **3.4. Causas del desperdicio**
+
+<br>
+
+Catálogo de causas definido para la codificación de la variable: 
+
+**Deterioro debido a factores no antrópicos -->** Factores biológicos, meteorológicos y químicos
+
+**Disminución de clientes y de ventas -->** Incluye pandemia, cancelación de pedidos, competencia en el mercado, entre otros
+
+**Deterioro debido a factores antrópicos -->** Mal manejo en: transporte; almacenamiento; procesamiento y trasformación; venta; servicios alimentarios; entre otros
+
+**Sobrantes y restos alimenticios -->** Restos dejados por los comensales, recorte de productos, restos en maquinaria empleada
+
+**Partes no comestibles -->** Grasa, huesos, cartílago, entre otros
+
+**Planificación inadecuada -->** Compra, transporte, almacenamiento; procesamiento y trasformación; venta; servicios alimentarios; entre otros
+
+**Otras causas -->** Procesos de descongelación, gusto - preferencias, eventos inesperados, rezago
+<br> 
+<br> 
+
+La siguiente gráfica muestra el porcentaje de la causa principal de desperdicio, respeto al volumen de cantidad total de desperdicio, siendo la disminución de clientes de ventas la de mayor porcentaje con un 33.5%, siguiendo fecha de caducidad con un 26.6% y Deterioro debido a factores no antrópico con un 18.5%, el resto de las causas fueron con porcentajes menores al 6%. 
+<br> 
+```{r graf_4.2., fig.align='center', fig.height=8, fig.width=15, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"Select causa, frec, total, perdida2, round(perdida2/total*100, 1) porc
+ from
+  (select causa, frec, total, round(perdida/1000,0) perdida2
+from
+ (select *, (select sum(perdida_kg_e)/1000 from explotacion.productos_establecimientos where causa_perd_e <>11) as total
+    from
+    (select b.descrip causa, count(*) frec, round(sum(perdida_kg_e),3) perdida
+     from explotacion.productos_establecimientos a
+     join catalogos.cat_causas b
+     on a.causa_perd_e = b.gid
+     where a.causa_perd_e <>11
+     group by b.descrip
+     order by perdida desc
+	 ) as query
+) as query2
+   ) as query3
+order by porc desc;") 
+
+
+
+library(plotly)
+data <- datos[,c('causa', 'porc')]
+fig <- plot_ly(data, x = ~causa, y = ~porc, type = 'bar',
+      marker = list(color = '#68912B'))  
+     #'rgb(33, 97, 140)', 'rgb(155, 200, 200)'
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Destino", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje del desperdicio"))
+
+
+#dbDisconnect(conn)
+
+fig
+
+
+```
+
+<br> 
+
+<br> 
+
+
+# **3.5. Destino del desperdicio** 
+
+<br> 
+
+## **3.5.1. Porcentaje de desperdicio por destino reportado**
+
+La siguiente gráfica nos muestra el porcentaje de desperdicio para cada uno de los destinos reportados, respecto al volumen de la cantidad de desperdicio, siendo el banco de alimentos con mayor volumen de acuerdo con lo reportado por los informantes, representando un 24.13%, siguiendo el destino de lo regaló con un 23.23%, y continuando el destino del basurero y relleno sanitario con un 21.39%. 
+
+<br> 
+
+```{r graf_5.2., fig.align='center', fig.height=8, fig.width=15, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"Select producto destino, frec, total, perdida2, round(perdida2/total*100, 2) porc
+ from
+  (select producto, frec, total, round(perdida/1000,3) perdida2
+from
+ (select *, (select sum(perdida_kg_e)/1000 from explotacion.productos_establecimientos where destino_perd_e <> 16) as total
+    from
+    (select substring(b.descrip,1,30) producto, count(*) frec, round(sum(perdida_kg_e),3) perdida
+     from explotacion.productos_establecimientos a
+     join catalogos.cat_destino_res b
+     on a.destino_perd_e = b.gid
+     where destino_perd_e <> 16
+     group by b.descrip
+     order by perdida desc
+	 ) as query
+) as query2
+   ) as query3
+order by porc desc;") 
+
+
+
+library(plotly)
+data <- datos[,c('destino', 'porc')]
+fig <- plot_ly(data, x = ~destino, y = ~porc, type = 'bar',
+      marker = list(color = '#68912B'))  
+     #'rgb(33, 97, 140)', 'rgb(155, 200, 200)'
+fig <- fig %>% layout(title=(""),
+xaxis = list(title = "Destino", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje del desperdicio"))
+
+#dbDisconnect(conn)
+
+fig
+
+```
+**Como otro destino tenemos:** incineración, robo, almacenamiento, trampas de grasa.
+
+<br> 
+
+<br> 
+
+## **3.5.2. Porcentaje de desperdicio que se destinó al basurero / relleno sanitario, por producto**
+
+La carne de res, de cerdo, el pollo y el jitomate fueron los productos con mayor volumen de desperdicio cuyo principal destino fue al basurero / relleno sanitario.
+
+<br>
+
+```{r graf_5.3., fig.align='center', fig.height=8, fig.width=15, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+
+datos <- dbGetQuery(conn,"select producto, frec, total, perdida, round(perdida/total*100, 2) porc
+from (select *, (select sum(perdida_kg_e) from explotacion.productos_establecimientos where destino_perd_e = 7) as total
+	  from 
+(select nombre_otro_prod producto, count (*) frec, round(sum(perdida_kg_e),3) perdida
+from explotacion.productos_establecimientos 
+where destino_perd_e = 7 and nombre_otro_prod is not null and producto_e in (135,136,137)
+group by producto 
+union all 
+select b.descrip producto, count(*) frec, sum(perdida_kg_e)
+from explotacion.productos_establecimientos  a
+join catalogos.prod_establecimientos b
+on a.producto_e = b.gid
+where b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3') and a.destino_perd_e = 7
+group by b.descrip
+order by frec desc
+    ) as query
+) as query2
+order by porc desc;") 
+
+ library(plotly)
+data <- datos[,c('producto', 'porc')]
+fig <- plot_ly(data, x = ~producto, y = ~porc, type = 'bar',
+      marker = list(color = '#68912B'))  
+     #'rgb(33, 97, 140)', 'rgb(155, 200, 200)'
+fig <- fig %>% layout(title=(" "),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+#dbDisconnect(conn)
+
+
+fig
+
+```
+
+<br>
+<br>
+
+## **3.5.3. Porcentaje de desperdicio que se destinó al alcantarillado, por producto**
+
+La leche, los refrescos, jugos y néctares envasados, galletas y cereales, fueron los productos con mayor volumen de desperdicio cuyo principal destino fue al alcantarillado.
+
+<br>
+
+```{r graf_5.4., fig.align='center', fig.height=8, fig.width=15, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+
+datos <- dbGetQuery(conn,"select producto, frec, total, perdida, round(perdida::numeric/total*100, 2) porc
+from (select *, (select sum(perdida_kg_e) from explotacion.productos_establecimientos where destino_perd_e = 4) as total
+	  from 
+(select nombre_otro_prod producto, count (*) frec, round(sum(perdida_kg_e),3) perdida
+from explotacion.productos_establecimientos 
+where destino_perd_e = 4 and nombre_otro_prod is not null and producto_e in (135,136,137)
+group by producto 
+union all 
+select b.descrip producto, count(*) frec, sum(perdida_kg_e)
+from explotacion.productos_establecimientos  a
+join catalogos.prod_establecimientos b
+on a.producto_e = b.gid
+where b.descrip not in ('Otro producto 1', 'Otro producto 2', 'Otro producto 3') and a.destino_perd_e = 4
+group by b.descrip
+order by frec desc
+    ) as query
+) as query2
+order by porc desc;") 
+
+ library(plotly)
+data <- datos[,c('producto', 'porc')]
+fig <- plot_ly(data, x = ~producto, y = ~porc, type = 'bar',
+      marker = list(color = '#68912B'))  
+     #'rgb(33, 97, 140)', 'rgb(155, 200, 200)'
+fig <- fig %>% layout(title=(" Porcentaje del desperdicio que se destinó al alcantarillado, por producto."),
+xaxis = list(title = "Producto", categoryorder = "total descending"),
+yaxis = list(title = "Porcentaje"))
+
+#dbDisconnect(conn)
+fig
+
+```
+
+<br>
+<br>
+
+# **3.6. Percepción ambiental**
+
+<br>
+
+## **3.6.1. Establecimientos que han tomado medidas para evitar o disminuir el desperdicio**
+
+Poco más de la mitad de los establecimientos encuestados han tomado medias para evitar o disminuir el desperdicio, principalmente planeando una justa y adecuada compra y preparación de productos, así como la aplicación de buenas prácticas.
+
+<br>
+
+### **3.6.1.a Porcentaje de establecimientos que ha tomado medidas para evitar o disminuir el desperdicio de sus productos**
+
+Un 58.7% de establecimientos si han tomado medidas para evitar o disminuir el desperdicio de alimentos
+
+<br>
+
+```{r graf_6.1.a., fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="75%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"select med.descrip medidas, count(*) frec  
+from catalogos.si_no med left join explotacion.establecimientos est 
+on med.gid = est.medidas 
+where medidas <> 3
+group by med.descrip 
+order by med.descrip;") 
+
+library(plotly) 
+
+ 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(2) 
+
+
+plot_ly(datos, labels = ~medidas, values = ~frec, type = 'pie', textinfo = 'porcent',  
+
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+
+  layout(title = '', 
+
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F)) 
+#dbDisconnect(conn)
+
+``` 
+<br>
+<br>
+
+### **3.6.1.b Tipo de medida para evitar o disminuir el desperdicio**
+
+La siguiente gráfica muestra las medidas que han tomado los establecimientos para evitar y/o disminuir el desperdicio.
+
+<br>
+
+```{r graf_6.1.b., fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"select b.descrip medida, count(*) frec
+from explotacion.establecimientos a
+join catalogos.cat_medidas b
+on a.tipo_medidas = b.gid and tipo_medidas <> 8
+group by b.descrip
+order by frec desc;") 
+
+library(plotly) 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(7)
+
+plot_ly(datos, labels = ~medida, values = ~frec, type = 'pie', textinfo = 'porcent',  
+
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+
+  layout(title = '', 
+
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F)) 
+
+ #dbDisconnect(conn)
+``` 
+
+## **3.6.2. Porcentaje de establecimientos que tienen conocimiento sobre:**
+
+<br> 
+
+### **3.6.2.a. Bancos de Alimentos**
+
+```{r graf_6.2.a, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"select b.descrip bancos_alimentos, count(*) frec 
+from explotacion.establecimientos a 
+join catalogos.si_no b 
+on a.conoce_bancos = b.gid
+group by b.descrip
+order by b.descrip;") 
+
+
+
+library(plotly) 
+
+ 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(3)
+
+plot_ly(datos, labels = ~bancos_alimentos, values = ~frec, type = 'pie', textinfo = 'porcent',  
+
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+
+  layout(title = '', 
+
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F)) 
+
+ #dbDisconnect(conn)
+``` 
+
+
+<br>
+
+### **3.6.2.b. Campañas para reducir el desperdicio**
+
+```{r graf_6.2.b, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"select b.descrip campanas, count(*) frec 
+from explotacion.establecimientos a 
+join catalogos.si_no b 
+on a.conoce_programas = b.gid
+group by b.descrip
+order by b.descrip;") 
+
+ 
+
+library(plotly) 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(3) 
+
+plot_ly(datos, labels = ~campanas, values = ~frec, type = 'pie', textinfo = 'porcent',  
+
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+
+  layout(title = '', 
+
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F)) 
+#dbDisconnect(conn)
+ 
+``` 
+
+<br>
+
+### **3.6.2.c. Redes Alimentarias Alternativas**
+
+```{r graf_6.2.c, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"select b.descrip redes, count(*) frec 
+from explotacion.establecimientos a 
+join catalogos.si_no b 
+on a.conoce_red_alim = b.gid
+group by b.descrip
+order by b.descrip;") 
+
+ 
+
+library(plotly) 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(3)
+
+plot_ly(datos, labels = ~redes, values = ~frec, type = 'pie', textinfo = 'porcent',  
+
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+
+  layout(title = '', 
+
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F)) 
+
+#dbDisconnect(conn)
+
+ 
+```
+
+
+<br>
+
+### **3.6.2.d. NOM-251-SSA1-2009**
+
+```{r graf_6.2.d, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD") 
+
+datos <- dbGetQuery(conn,"select b.descrip nom, count(*) frec 
+from explotacion.establecimientos a 
+join catalogos.si_no b 
+on a.conoce_nom251 = b.gid
+group by b.descrip
+order by b.descrip;") 
+
+ 
+
+library(plotly) 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(3) 
+
+plot_ly(datos, labels = ~nom, values = ~frec, type = 'pie', textinfo = 'porcent',  
+
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+
+  layout(title = '', 
+
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F)) 
+
+#dbDisconnect(conn) 
+```
+
+
+<br>
+
+### **3.6.2.e. Distintivo H**
+
+```{r graf_6.2.e, fig.align='center', fig.height=6, fig.width=9, echo=FALSE, out.width="100%", warning = FALSE, cache=F, message=FALSE} 
+
+ 
+
+#library(RPostgreSQL) 
+#drv <- dbDriver("PostgreSQL") 
+#conn <- dbConnect(drv,dbname="bderamo2021_gold", host="10.200.31.73",port=5432,user="eramo_gold",password="ERAMO_GOLD")
+
+datos <- dbGetQuery(conn,"select b.descrip distintivo, count(*) frec 
+from explotacion.establecimientos a 
+join catalogos.si_no b 
+on a.conoce_dist_h = b.gid
+group by b.descrip
+order by b.descrip;") 
+
+ 
+
+library(plotly) 
+
+colors <- colorRampPalette(c("#68912B","#AB7A5A"))(3)
+
+plot_ly(datos, labels = ~distintivo, values = ~frec, type = 'pie', textinfo = 'porcent',  
+
+        insidetextfont = list(color = '#FDFEFE'), outsidetextfont = list(color = '#1C2833'), 
+
+        marker = list(colors = colors, line = list(color = '#FDFEFE', width = 1)), showlegend = T) %>% 
+
+  layout(title = '', 
+
+         xaxis = list(showgrid = F, zeroline = F, showticklabels = F), 
+
+         yaxis = list(showgrid = F, zeroline = F, showticklabels = F)) 
+
+ #dbDisconnect(conn)
+```
+
+<br> 
+
+
+<div class=text-justify> 
+
+</div>
+
+

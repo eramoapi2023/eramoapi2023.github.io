@@ -20,7 +20,6 @@ El siguiente contenido corresponde al análisis de los datos obtenidos en el ope
 
 ### **Resumen de entrevistas captadas**
 
-<br>
 Como resultado del procesamiento de la información, se identificaron 1,574 cuestionarios completos obtenidos en establecimientos dedicados a la venta de alimentos.
 
 Sobre estos registros es que se considerará nuestro **universo de estudio**, en el que, mediante un procesamiento analítico sobre las variables, se logró generar algunos **indicadores y gráficos** con la finalidad compartir y difundir los resultados obtenidos en esta prueba piloto 2021. 
@@ -242,7 +241,7 @@ fig
 <br> 
 
 ## **3.1.5. Registro del manejo o desperdicio de productos** 
-Como se observa en la siguiente gráfica, aproximadamente un 58.8% no lleva ningún registro en el **desperdicio de alimentos.** Del 37.7% que sí lleva un registro, el 66.2% lo realiza en bitacora y un 25.4% en un libro de excel.
+Como se observa en la siguiente gráfica, aproximadamente un 58.8% no lleva ningún registro en el **desperdicio de alimentos.** Del 37.7% que sí lleva un registro, el 66.2% lo realiza en bitácora y un 25.4% en un libro en Excel.
 
 <br> 
 
@@ -366,7 +365,7 @@ plot_ly(datos, labels = ~clase,  values = ~frec, type = 'pie', textinfo = 'porce
 ## **3.2.2. Productos alimenticios reportados** 
 Se logró captar información de 73 productos alimenticios distintos, la siguiente gráfica muestra la frecuencia de cada uno de los productos alimenticios reportados.
 
-* La categória "No especificó" se refiere a que el informante no detalló a que producto alimenticio se refieren sus datos
+* La categoría "No especificó" se refiere a que el informante no detalló a que producto alimenticio se refieren sus datos
 
 <br> 
 
@@ -714,7 +713,7 @@ plotter
 
 ``` 
 
-Masa de maíz y el Chayote son los productos que mayor porcentaje del desperdicio presentan, esto se debe a que son productos con poca representatividad y los unicos registros reportados muestran un elevado porcentaje de desperdicio (Ver gráfico 3.2.2 y 3.3.3). 
+Masa de maíz y el Chayote son los productos que mayor porcentaje del desperdicio presentan, esto se debe a que son productos con poca representatividad y los únicos registros reportados muestran un elevado porcentaje de desperdicio (Ver gráfico 3.2.2 y 3.3.3). 
 
 <br>
 
@@ -773,7 +772,7 @@ fig
 
 <br>
 
-Productos que fueron reportados como desperdicio pero aun eran comestibles para otras personas. Podemos ver jamaica, hierbas, soya, col, chayote entre otros.
+Productos que fueron reportados como desperdicio pero aun eran comestibles para otras personas. Podemos ver jamaica, hierbas, soya, col, chayote, entre otros.
 
 <br>
 
@@ -1071,7 +1070,7 @@ fig
 
 ## **3.5.2. Porcentaje de desperdicio que se destinó al basurero / relleno sanitario, por producto**
 
-La carne de res, de cerdo, el pollo y el jitomate fueron los productos con mayor vólumen de desperdicio cuyo principal destino fue al basurero / relleno sanitario.
+La carne de res, de cerdo, el pollo y el jitomate fueron los productos con mayor volumen de desperdicio cuyo principal destino fue al basurero / relleno sanitario.
 
 <br>
 
@@ -1122,7 +1121,7 @@ fig
 
 ## **3.5.3. Porcentaje de desperdicio que se destinó al alcantarillado, por producto**
 
-La leche,los refrescos, jugos y nectares envasados, galletas y cereales, fueron los productos con mayor vólumen de desperdicio cuyo principal destino fue al alcantarillado.
+La leche, los refrescos, jugos y néctares envasados, galletas y cereales, fueron los productos con mayor volumen de desperdicio cuyo principal destino fue al alcantarillado.
 
 <br>
 
@@ -1176,13 +1175,13 @@ fig
 
 ## **3.6.1. Establecimientos que han tomado medidas para evitar o disminuir el desperdicio**
 
-Poco más de la mitad de establecimientos encuestados han tomado medias para evitar o disminuir el desperdicio, principalmente planeando una justa y adecuada compra y preparación de productos, así como la aplicación de buenas prácticas.
+Poco más de la mitad de los establecimientos encuestados han tomado medias para evitar o disminuir el desperdicio, principalmente planeando una justa y adecuada compra y preparación de productos, así como la aplicación de buenas prácticas.
 
 <br>
 
 ### **3.6.1.a Porcentaje de establecimientos que ha tomado medidas para evitar o disminuir el desperdicio de sus productos**
 
-Un 58.7% de establecimientos si han tomado medidas para evitar o disminur el desperdicio de alimentos
+Un 58.7% de establecimientos si han tomado medidas para evitar o disminuir el desperdicio de alimentos
 
 <br>
 

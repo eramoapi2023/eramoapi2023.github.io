@@ -17,7 +17,7 @@ knitr::include_graphics("imagenes/Mapas.JPG")
 
 ### **Relación entre entrevistadores registrados y activos**
 
-**Entrevistador registrado:** Son los usuarios registrados en la plataforma con rol de entrevistador y provilegios para cargar entrevistas al servidor.
+**Entrevistador registrado:** Son los usuarios registrados en la plataforma con rol de entrevistador y privilegios para cargar entrevistas al servidor.
 
 **Entrevistador activo:** Son los usuarios registrados en la plataforma con rol de entrevistadores que cargaron al servidor al menos una entrevista.
 
@@ -352,7 +352,7 @@ popup = paste0("<strong>Entidad: </strong>", sp_df$nom_ent, "</br>",
 
 ### **5.2.3. Procesos de producción donde se presentan las pérdidas de alimentos**
 
-El siguiente mapa muestra la ubicación de las UPA que presentan pérdida de productos alimenticios, por proceso de producción..
+El siguiente mapa muestra la ubicación de las UPA que presentan pérdida de productos alimenticios, por proceso de producción:
 
 * Almacenamiento
 * Cosecha 
@@ -812,7 +812,7 @@ m %>% setView(lng = -102.43, lat = 22.37, zoom = 5.4) %>%
 
 ### **5.2.5. Destino de la pérdida de alimentos**
 
-En el siguiente mapa se muestra el comportamiento geográfico de el **Destino** de las pérdidas en las UPA.
+En el siguiente mapa se muestra el comportamiento geográfico del **Destino** de las pérdidas en las UPA.
 
 <br/>
 
