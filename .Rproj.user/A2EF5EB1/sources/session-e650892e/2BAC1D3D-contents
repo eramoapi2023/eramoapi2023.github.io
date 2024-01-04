@@ -408,7 +408,7 @@ name = 'Productos reportados',
 type = 'bar', 
 marker = list(color = '#68912B', 
               line = list(color = '#AB7A5A', 
-                                  width = 1))) %>% 
+                                  width = 0))) %>% 
 layout( 
 title=(""), 
 yaxis = list(title = "Cantidad"), 
@@ -696,7 +696,7 @@ marker = list(color = '#68912B',
 
               line = list(color = '#AB7A5A', 
 
-                                  width = 1))) %>% 
+                                  width = 0))) %>% 
 
 layout( title=(""), 
 
@@ -811,7 +811,7 @@ data <- datos[,c('producto', 'porc_comes')]
 fig <- plot_ly(data, x = ~producto, y = ~porc_comes, type = 'bar',
       marker = list(color = '#68912B',line = list(color = '#AB7A5A', 
 
-                                  width = 1))) 
+                                  width = 0))) 
      #'rgb(33, 97, 140)', 'rgb(155, 200, 200)'
 fig <- fig %>% layout(title=(" 3.5.b Porcentaje, por producto, del desperdicio que era todavía comestible para otras personas."),
 xaxis = list(title = "Producto", categoryorder = "total descending"),
@@ -924,7 +924,7 @@ data <- datos[,c('producto', 'porcentaje')]
 fig <- plot_ly(data, x = ~producto, y = ~porcentaje, type = 'bar',
       marker = list(color = '#68912B',line = list(color = '#AB7A5A', 
 
-                                  width = 1)))  
+                                  width = 0)))  
      #'rgb(33, 97, 140)', 'rgb(155, 200, 200)'
 fig <- fig %>% layout(title=("3.6.b. Porcentaje del desperdicio, por producto, que era todavía comestible <br>para otras personas destinada a bancos de alimentos."),
 xaxis = list(title = "Producto", categoryorder = "total descending"),

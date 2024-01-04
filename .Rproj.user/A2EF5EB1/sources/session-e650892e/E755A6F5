@@ -1,12 +1,12 @@
 {
-    "id": "60D01056",
+    "id": "E755A6F5",
     "path": "D:/eramoapi2023/eramoapi2023.github.io/site_libs/bootstrap-3.3.5/css/bootstrap.min.css",
     "project_path": "site_libs/bootstrap-3.3.5/css/bootstrap.min.css",
     "type": "css",
     "hash": "620007680",
     "contents": "",
     "dirty": false,
-    "created": 1704234322185.0,
+    "created": 1704386428854.0,
     "source_on_save": false,
     "relative_order": 6,
     "properties": {
@@ -16,11 +16,11 @@
         "scrollLine": "5"
     },
     "folds": "",
-    "lastKnownWriteTime": 1704234343,
+    "lastKnownWriteTime": 1704386448,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1704234343346,
+    "last_content_update": 1704386448255,
     "read_only": false,
     "read_only_alternatives": []
 }
