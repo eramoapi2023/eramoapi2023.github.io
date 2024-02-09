@@ -1,7 +1,13 @@
 <div style="text-align: justify">
 <div class=text-justify>
 <div class=text-justify>
-
+<br>
+ 
+```{r organicos_aa, fig.align='center', echo=FALSE, out.width = "100%", cache=TRUE}
+ 
+knitr::include_graphics("imagenes/documentacion-proyecto.JPG")
+ 
+```
 <br>
 <br>
 

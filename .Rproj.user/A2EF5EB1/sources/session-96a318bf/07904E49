@@ -3,7 +3,7 @@
     "path": "D:/eramoapi2023/eramoapi2023.github.io/cap2.Rmd",
     "project_path": "cap2.Rmd",
     "type": "r_markdown",
-    "hash": "2933553442",
+    "hash": "1164719863",
     "contents": "",
     "dirty": false,
     "created": 1702924311417.0,
@@ -12,17 +12,17 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "3,0",
+        "cursorPosition": "7,56",
         "scrollLine": "0",
         "docOutlineVisible": "1",
         "docOutlineSize": "129"
     },
     "folds": "",
-    "lastKnownWriteTime": 1707436408,
+    "lastKnownWriteTime": 1707451307,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1707436408241,
+    "last_content_update": 1707451307418,
     "read_only": false,
     "read_only_alternatives": []
 }
