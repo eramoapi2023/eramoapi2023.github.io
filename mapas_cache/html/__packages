@@ -1,7 +1,5 @@
 DBI
 RPostgreSQL
-ggplot2
-plotly
 sp
 rgeos
 rgdal
